@@ -272,7 +272,42 @@ tar -zxvf ncbi-blast-2.15.0+-x64-linux.tar.gz
 cd ncbi-blast-2.15.0+
 export PATH=$PATH:/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin
 ```
+### BUSCO
+> BUSCO is a tool to determine how "complete" a transcriptome is by identiying the presence of highly conserved genes in your assembled transcriptome. It is a way to make sure even though you may have a lot of transcripts that it represents a "complete" biological organism and a nice checkpoint that things are on the right track.
+> Now, BUSCO requires a lot of dependencies or user permissions that I could not get (at the time of writing this).
+Below are the resources I have in my attempts to install BUSCO. 
+```
+TRINITY QUALITY ASSESSMENT
+BUSCO
 
+git clone https://gitlab.com/ezlab/busco.git
+cd busco/
+export PATH=:/home/cns.local/nicholas.macknight/software/busco/bin$PATH
+
+# Install using conda
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+sh Miniconda3-latest-Linux-x86_64.sh -b -p /home/cns.local/nicholas.macknight/software/busco/miniconda
+eval "$(/home/cns.local/nicholas.macknight/software/busco/miniconda/bin/conda shell.bash hook)"
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda update --all
+
+conda activate 
+conda create -n busco_env
+conda activate busco_env
+conda install busco=4.0.6
+
+
+conda install -c conda-forge mamba
+
+# EXAMPLE of busco command:
+busco -i [SEQUENCE_FILE] -m [MODE] [OTHER OPTIONS]
+
+# Modified for our test data:
+~/.local/bin/busco -i /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -m transcriptome
+~/.local/bin/busco -i /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/final_coral_reference_transcriptome.fa -m transcriptome
+```
 
 
 
@@ -366,12 +401,11 @@ Example:
 /space/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/insilico_read_normalization.pl --seqType fq \
   --JM 100G --left PastPA3Disease-5_S62_L001_clean_R1.fastq.gz --right PastPA3Disease-5_S62_L001_clean_R2.fastq.gz 
 ```
-# Adjust the --JM parameter until it fits within your available memory.
-# Total Memory Requirement:
+Adjust the --JM parameter until it fits within your available memory.
 
-# Once you have estimated the memory requirement for one sample, multiply it by the number of samples you want to process concurrently.
-
-# Total Memory = Memory per Sample * Number of Samples
+Total Memory Requirement:
+Once you have estimated the memory requirement for one sample, multiply it by the number of samples you want to process concurrently.
+Total Memory = Memory per Sample * Number of Samples
 
 
 
@@ -389,10 +423,12 @@ clean:
 
 
 
-Test Trinity installation with ./runMe.sh in /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/sample_data/test_Trinity_Assembly
-
-# To successfully run Trinity, we need to tell the server where to look to find Trinity's dependencies. 
-# export PATH=:$PATH
+Test Trinity installation in /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/sample_data/test_Trinity_Assembly with:
+```
+./runMe.sh
+```
+To successfully run Trinity, we need to tell the server where to look to find Trinity's dependencies. 
+```
 export TRINITY_HOME=/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0
 export PATH=/home/cns.local/nicholas.macknight/software:$PATH
 export PATH=/home/cns.local/nicholas.macknight/software/samtools-1.14:$PATH
@@ -405,126 +441,37 @@ export PATH=/home/cns.local/nicholas.macknight/anaconda3/:$PATH
 export PATH=:/usr/bin/screen$PATH
 export PATH=/bin:$PATH
 export PATH=/bin/anaconda3/bin:$PATH
+```
+If you need to activate the conda environmnet:
+```
 source /bin/anaconda3/etc/profile.d/conda.sh
-# cd /bin/anaconda3/bin
 conda activate #activates conda environment
+```
+Here is an example of a software that needed to be installed once you have activated a conda environment:
+```
 conda install numpy # install numpy
 cd ../../../home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/sample_data/test_Trinity_Assembly/
 ./runMe.sh # should work successfully
-# Final Trinity assemblies are written to /space/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/sample_data/test_Trinity_Assembly/trinity_out_dir.Trinity.fasta
-# Info on interpreting Trinity Output: https://github.com/trinityrnaseq/trinityrnaseq/wiki/Output-of-Trinity-Assembly
+```
 
-# count the number of "genes"
+Final Trinity assemblies are written to /space/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/sample_data/test_Trinity_Assembly/trinity_out_dir.Trinity.fasta
+[Info on interpreting Trinity Output](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Output-of-Trinity-Assembly)
+
+
+
+count the number of transcripts
+```
 grep -c '^>' trinity_out_dir.Trinity.fasta
+```
 
-TRINITY QUALITY ASSESSMENT
-BUSCO
+## Running Trinity 
 
-git clone https://gitlab.com/ezlab/busco.git
-cd busco/
-export PATH=:/home/cns.local/nicholas.macknight/software/busco/bin$PATH
+### Porites astreoides
 
-# Install using conda
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-sh Miniconda3-latest-Linux-x86_64.sh -b -p /home/cns.local/nicholas.macknight/software/busco/miniconda
-eval "$(/home/cns.local/nicholas.macknight/software/busco/miniconda/bin/conda shell.bash hook)"
-conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
-conda update --all
-
-conda activate 
-conda create -n busco_env
-conda activate busco_env
-conda install busco=4.0.6
-
-
-conda install -c conda-forge mamba
-
-# EXAMPLE of busco command:
-busco -i [SEQUENCE_FILE] -m [MODE] [OTHER OPTIONS]
-
-# Modified for our test data:
-~/.local/bin/busco -i /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -m transcriptome
-~/.local/bin/busco -i /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/final_coral_reference_transcriptome.fa -m transcriptome
-
-
-
-TEST RUNNING TRINITY WITH REAL DATA - One Sample - Single Lane
-
-/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/Trinity --seqType fq --left /home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Disease-5_S62_L001_clean_R1.fastq.gz --right /home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Disease-5_S62_L001_clean_R2.fastq.gz --CPU 64 --max_memory 400G 
-# RUN TIME: 3hr 15min (~1gb)
-
-# We can try to use the "screen" command, this will allow us to execute the command and allow the command to continue to run even if we disconnect from the ssh (internet) as a safety net to lengthy commands, or if I start the command in one location and I need to relocate without losing progress. 
-
-/usr/bin/screen #Location of screen command. 
-
-TEST RUNNING TRINITY WITH REAL MERGED DATA - One Sample - Lanes 1-8
-## Run time:
-# Start:       Sat Mar  2 17:36:26 EST 2024
-# End:         Sun Mar  3 06:40:14 EST 2024
-# Trinity   47028 seconds (13 hours)
-#   Inchworm (phase 1 - read clustering)  3872 seconds
-#   Chrysalis (phase 1 - read clustering) 35461 seconds
-#   Rest (phase 2 - parallel assembly)	   7695 seconds
-
-# These are files where the Lanes 1-8 have been merged. 
-screen 
-/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/Trinity --seqType fq --left /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/PastPA3Disease-5_S62_clean_R1_merged.fastq.gz --right /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/PastPA3Disease-5_S62_clean_R2_merged.fastq.gz --CPU 64 --max_memory 400G 
-# (March 22nd 2024): I have regained access to the server. I am renaming what i *think* is the trinity_out_dir of the above code to be named trinity_out_dir_OneSample_Lanes1-8 in /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData
-
-TEST RUNNING TRINITY WITH REAL MERGED DATA  - All Samples - Lane 1
-/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/Trinity --seqType fq --left \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Disease-5_S62_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Disease-5-2_S72_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Disease-15_S73_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Control-29_S75_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/Pastpa3Control-24_S65_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Control-22_S74_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Disease-8_S63_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Disease-2_S61_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Disease-12_S70_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Control-39_S77_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Control-34_S68_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Control-28_S67_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA1Disease-4_S71_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA1Disease-16_S69_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA1Disease-10_S64_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA1Control-31_S76_L001_clean_R1.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA1Control-21_S66_L001_clean_R1.fastq.gz \
---right /home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Disease-5_S62_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Disease-5-2_S72_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Disease-15_S73_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Control-29_S75_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/Pastpa3Control-24_S65_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA3Control-22_S74_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Disease-8_S63_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Disease-2_S61_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Disease-12_S70_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Control-39_S77_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Control-34_S68_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA2Control-28_S67_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA1Disease-4_S71_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA1Disease-16_S69_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA1Disease-10_S64_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA1Control-21_S66_L001_clean_R2.fastq.gz \
-/home/cns.local/nicholas.macknight/SCTLDRNA/Fastp_ProcessedData/PastPA1Control-31_S76_L001_clean_R2.fastq.gz \
- --CPU 64 --max_memory 200G --output trinity_out_dir_AllPastSamples_Lane1
-
-# Run time: 
-# Start:       Fri Mar 22 13:24:23 EDT 2024
-# End:         Sat Mar 23 11:36:42 EDT 2024
-# Trinity   79939 seconds (22 hours)
-#   Inchworm (phase 1 - read clustering)  6964 seconds
-#   Chrysalis (phase 1 - read clustering) 58548 seconds
-#   Rest (phase 2 - parallel assembly)	   14427 seconds
- 
-
-TEST RUNNING TRINITY WITH REAL MERGED DATA  - All Samples - Lanes 1-8
-
-
+```
 du -ch Past*R1* # 67gb
 du -ch Past*R2* # 65gb
+```
 
  Input data
   Left.fasta    30229 MByte
@@ -542,7 +489,7 @@ Trinity   305020 seconds (84.73 hours or 3.5 days)
   Chrysalis (phase 1 - read clustering) 180607 seconds
   Rest (phase 2 - parallel assembly)	   101975 seconds
   
-  
+```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/Trinity --seqType fq --left \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/PastPA3Disease-5_S62_clean_R1_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/PastPA3Disease-5-2_S72_R1_clean_merged.fastq.gz \
@@ -579,15 +526,18 @@ Trinity   305020 seconds (84.73 hours or 3.5 days)
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/PastPA1Control-21_S66_R2_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/PastPA1Control-31_S76_R2_clean_merged.fastq.gz \
  --CPU 64 --max_memory 400G --output trinity_out_dir_AllPastSamples_Lane1-8
- 
+ ```
  
 
-# Acropora cervicornis 
-# Start Time: Wed March 27th 1:31pm
-# Estimate total file size to estimate runtime. 
+### Acropora cervicornis 
+
+Estimate total file size to estimate runtime.
+```
 du -ch Acer*R1* # 59G
 du -ch Acer*R2* # 58G
- 
+```
+
+```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/Trinity --seqType fq --left \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/AcerACControl-31_S84_R1_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/AcerACControl-38_S89_R1_clean_merged.fastq.gz \
@@ -617,14 +567,16 @@ du -ch Acer*R2* # 58G
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/AcerACDisease-17_S82_R2_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/AcerACDisease-6_S79_R2_clean_merged.fastq.gz \
 --CPU 64 --max_memory 400G --output trinity_out_dir_AllAcerSamples_Lane1-8
-
+```
  
-# Montastrea cavernosa
-# Estimate total file size to estimate runtime. 
+### Montastrea cavernosa
+Estimate total file size to estimate runtime.
+```
 du -ch Mcav*R1* # 53G
 du -ch Mcav*R2* # 53G
-# Runtime: Start: 1:56pm (Running at the same time as ofav trinity)
- 
+```
+
+```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/Trinity --seqType fq --left \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/McavMC11Control-24_S54_R1_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/McavMC11Disease-1_S52_R1_clean_merged.fastq.gz \
@@ -663,21 +615,16 @@ du -ch Mcav*R2* # 53G
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/McavMC1Disease-9_S43_R2_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/McavMC36Disease-17_S53_R2_clean_merged.fastq.gz \
  --CPU 64 --max_memory 400G --output trinity_out_dir_AllMcavSamples_Lane1-8 
- 
-# Orbicella faveolata
-# Estimate total file size to estimate runtime. 
+```
+
+### Orbicella faveolata
+Estimate total file size to estimate runtime.
+
+```
 du -ch Ofav*R1* # 94G
 du -ch Ofav*R2* # 93G
-
-## So I am receiving an error due to limited storage availability on the server. I can either try to delete intermediate files to free up space or reduce the samples used to make the metatranscriptome. Id rather remove intermediates that are no longer necessary. 
-# (4.8.24) I removed:
-# trinity_out_dir_3.1_Test/ # This was one lane of one past sample. 
-# any file that was not .fasta in trinity_out_dir_OneSample_Lanes1-8 (I still want to test run busco on this to play with and see how compelete transcriptomes are that were not built with all samples to see how little samples can be input to still achieve a complete transcriptome)
-# Removed all files in trinity_out_dir_AllPastSamples_Lane1 except .fasta for this trinity run.
-# this took me from 204gb available space to 536gb. So we will rerun and see if it works. # check available space in specific folder with: df -h /folder/
-# (4.9.24): So after Emailing Madison Soden, it seems I have used up the remaining space on Holocron. Adding more storage will take time on her end. So, I have moved the .fasta files from trinity and deleted everything else to clear up intermediate files.
-
-# Removing these samples from the trinity assembly because the server was running out of ram. These samples were selected for removal because they were a third replicate of a genotype. 
+```
+> Removing these samples from the trinity assembly because the server was running out of ram. These samples were selected for removal because they were a third replicate of a genotype. 
 # R1
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav17-7Control-40_S18_R1_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav17-7Disease-9_S23_R1_clean_merged.fastq.gz \
@@ -707,7 +654,7 @@ du -ch Ofav*R2* # 93G
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Disease-18_S34_R2_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Disease-3_S39_R2_clean_merged.fastq.gz \
 
-
+```
 nohup /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/Trinity --seqType fq --left \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Control-37_S16_R1_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Control-38_S17_R1_clean_merged.fastq.gz \
@@ -742,34 +689,43 @@ nohup /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Disease-16_S33_R2_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Disease-1_S31_R2_clean_merged.fastq.gz \
 --CPU 64 --max_memory 400G --output Ofav_trinity_output
+ ```
  
  
  
+ # BBSplit 
+> Aligns metatranscriptomes to multiple references simultaneously.
+
+> REFERENCE Transcriptomes: (From Kelsey Beavers) The publicly available data used in this study include the transcriptomes for Symbiodinium CassKB8 (transcriptome assembly: http://medinalab.org/zoox/, accession number PRJNA80085), Breviolum minutum (transcriptome assembly: http://zoox.reefgenomics.org/download/, accession number PRJNA274852), Cladocopium goreaui (transcriptome assembly: http://ssid.reefgenomics.org/download/, accession number PRJNA307543) and Durusdinium trenchii (transcriptome assembly: https://datadryad.org/stash/dataset/doi:10.5061/dryad.12j173m, accession number PRJNA508937), as well as the genomes for M. cavernosa (genome assembly: https://matzlab.weebly.com/data-code.html, accession number PRJNA679067) and O. faveolata (genome assembly: https://www.ncbi.nlm.nih.gov/genome/13173?genome_assembly_id=311351, accession number PRJNA381078). The Master Coral database used in this study is available in a public Zenodo repository https://doi.org/10.5281/zenodo.783898080.
  
- # BBSplit - aligns metatranscriptomes to multiple references simultaneously.
- REFERENCE Transcriptomes: (From Kelsey Beavers) The publicly available data used in this study include the transcriptomes for Symbiodinium CassKB8 (transcriptome assembly: http://medinalab.org/zoox/, accession number PRJNA80085), Breviolum minutum (transcriptome assembly: http://zoox.reefgenomics.org/download/, accession number PRJNA274852), Cladocopium goreaui (transcriptome assembly: http://ssid.reefgenomics.org/download/, accession number PRJNA307543) and Durusdinium trenchii (transcriptome assembly: https://datadryad.org/stash/dataset/doi:10.5061/dryad.12j173m, accession number PRJNA508937), as well as the genomes for M. cavernosa (genome assembly: https://matzlab.weebly.com/data-code.html, accession number PRJNA679067) and O. faveolata (genome assembly: https://www.ncbi.nlm.nih.gov/genome/13173?genome_assembly_id=311351, accession number PRJNA381078). The Master Coral database used in this study is available in a public Zenodo repository https://doi.org/10.5281/zenodo.783898080.
+ ### Algal Symbiont
+ > These references were selected because they were the refseq or highest quality reference available for the organism. 
+ **Symbiodinium (Clade A):** https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001939145.1/ - GCA_001939145.1_ASM193914v1_genomic.fna.gz   
+ **Breviolum minutum:** https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA274852
+ **Cladocopium goreaui:** https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA307543
+ **Durusdinium trenchii:** https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA508937
  
- Algal Symbiont
- SYMBIODINIUM: https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browser&acc=SRR278715&display=download
- Symbiodinium (Clade A): https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001939145.1/ - GCA_001939145.1_ASM193914v1_genomic.fna.gz   
- Breviolum minutum: https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA274852
- Cladocopium goreaui: https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA307543
- Durusdinium trenchii: https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA508937
+Symbiodinium file contains "@" instead of ">" at the beginning of the transcript ID. so we need to replace the @ with >
+***example:***
+```
+sed 's/@/>/g' input.fa > output.fa
+```
+***modified:***
+```
+sed 's/@/>/g' symbiodinium_PRJNA80085.fasta  > symbiodinium_PRJNA80085.fasta 
+```
+
+### CORAL ONLY
+
+Master Coral Database was made using the highest quality available species genomes.
  
-# Symbiodinium file contains "@" instead of ">" at the beginning of the transcript ID. so we need to replace the @ with >
-# example: sed 's/@/>/g' input.fa > output.fa
-# modified: sed 's/@/>/g' symbiodinium_PRJNA80085.fasta  > symbiodinium_PRJNA80085.fasta 
  
- CORAL ONLY
- Master Coral Database: https://doi.org/10.5281/zenodo.7838980 # Ssid, Platygyra daedalea, Acropora millepora, Montipora aequituberculata
- 
- 
- # Orbicella faveolata # https://zenodo.org/records/10151798 - Orbicella_faveolata_gen_17.scaffolds.fa # Additional genomes - https://www.ncbi.nlm.nih.gov/datasets/genome/?taxon=1920453
- # Montastrea cavernosa # https://www.dropbox.com/s/yfqefzntt896xfz/Mcavernosa_genome.tgz?file_subpath=%2FMcav_genome%2FMcavernosa_July2018.fasta
- # Acropora cervicornis # https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_032359415.1/
+**Orbicella faveolata**  https://zenodo.org/records/10151798 - Orbicella_faveolata_gen_17.scaffolds.fa # Additional genomes - https://www.ncbi.nlm.nih.gov/datasets/genome/?taxon=1920453
+**Montastrea cavernosa** https://www.dropbox.com/s/yfqefzntt896xfz/Mcavernosa_genome.tgz?file_subpath=%2FMcav_genome%2FMcavernosa_July2018.fasta
+**Acropora cervicornis** https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_032359415.1/
  		Acropora cervicornis https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/032/359/415/GCA_032359415.1_NEU_Acer_K2/ - GCA_032359415.1_NEU_Acer_K2_genomic.fna.gz 
  		Acropora cervicornis https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/037/043/185/GCA_037043185.1_Acerv_M5/ - GCA_037043185.1_Acerv_M5_genomic.fna.gz
- # Porites astreoides 
+**Porites astreoides**
  		Porites astreoides - https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browser&acc=SRR19144705&display=download - SRR19144705.fasta.gz
  		Porites lutea - https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_958299805.1/
  		Porites australiensis - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/022/179/025/GCA_022179025.1_Paus_1.0/ - GCA_022179025.1_Paus_1.0_genomic.fna.gz 
@@ -777,12 +733,13 @@ nohup /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/
  		Porites evermanni - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/942/486/025/GCA_942486025.1_PEVE_v1/ - GCA_942486025.1_PEVE_v1_genomic.fna.gz   
  		Porites rus - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/900/290/455/GCA_900290455.1_Prus/ - GCA_900290455.1_Prus_genomic.fna.gz  	
  		
- # .zip files were not downloading properly from NCBI. So, in the NCBI link for each genome, click the three vertical dots next to: Submitted GenBank assembly
-GCA_958299805.1 and select FTP, then select the .fna.gz file to just download the genome. 
+To download the genome, .zip files were not downloading properly from NCBI. So, in the NCBI link for each genome, click the three vertical dots next to: "Submitted GenBank assembly
+GCA_958299805.1" and select "FTP", then select the .fna.gz file to download the genome. 
 
- # Files moved to /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral on holocron server.
+Files moved from local computer to /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral on holocron server.
  
- # Concatenate genomes
+ ### Concatenate genomes to create a Master Coral Reference
+ ```
  cat GCA_022179025.1_Paus_1.0_genomic.fna \
     GCA_032359415.1_NEU_Acer_K2_genomic.fna \
     GCA_037043185.1_Acerv_M5_genomic.fna \
@@ -793,11 +750,15 @@ GCA_958299805.1 and select FTP, then select the .fna.gz file to just download th
     Mcavernosa_July2018.fasta \
     Orbicella_faveolata_gen_17.scaffolds.fa \
     > concatenated_genomes.fasta
+```
 
- 
+Renaming to MasterCoral_db
+```
  /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in concatenated_genomes.fasta -parse_seqids -dbtype nucl -out MasterCoral_db
+```
 
-# Gzipping them again to reduce space. 
+Gzipping genomes to reduce space.
+```
 gzip GCA_022179025.1_Paus_1.0_genomic.fna
 gzip GCA_032359415.1_NEU_Acer_K2_genomic.fna
 gzip GCA_037043185.1_Acerv_M5_genomic.fna
@@ -807,24 +768,26 @@ gzip GCA_942486035.1_PLOB_v1_genomic.fna
 gzip GCA_958299805.1_jaPorLute2.1_alternate_haplotype_genomic.fna
 gzip Mcavernosa_July2018.fasta
 gzip Orbicella_faveolata_gen_17.scaffolds.fa
-
+```
  
   
- # Transfering references from local computer to server, I have added the NCBI accession ID to the file so the source is traceable once the reference is on the server. 
+Transfering references from local computer to server, I have added the NCBI accession ID to the file so the source is traceable once the reference is on the server. 
+```
  scp SRR278715.fasta.gz nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/symbiodinium_PRJNA80085.fasta.gz
  scp Symbiodinium_minutum.tar.gz nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/breviolum_PRJNA274852.tar.gz
  scp CladeC_Symbiodinium_transcriptome.tar.gz nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/cladicopium_PRJNA307543.tar.gz
  scp Dtrenchii_rnaseq_assembly_v1.0.fasta nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/durusdinium_PRJNA508937.fasta
  scp MasterCoral.fasta.gz nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/MasterCoral.fasta.gz
+```
 
-BACTERIA References:
-I Followed the instructions in step 2 here: https://www.ncbi.nlm.nih.gov/genome/doc/ftpfaq/#:~:text=To%20use%20the%20download%20service,button%20to%20start%20the%20download.
+###BACTERIA References:###
+I Followed the instructions in step 2 [here](https://www.ncbi.nlm.nih.gov/genome/doc/ftpfaq/#:~:text=To%20use%20the%20download%20service,button%20to%20start%20the%20download)
 Essentially, this downloaded 38,177 bacteria genomes (47.5 gb) that fit this criteria Bacteria, RefSeq, Complete Genomes. 
 Ideally this can be used to blast our metatranscriptomes against to identify bacteria transcripts. 
-# A concise article on the different available categories of bacteria genomes on NCBI: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3965038/
-# Overview of DIAMOND and MEGAN: https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpz1.59
+# A concise [article](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3965038/) on the different available categories of bacteria genomes on NCBI: 
+# [Overview of DIAMOND and MEGAN](https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpz1.59)
 
- https://www.ncbi.nlm.nih.gov/assembly#
+https://www.ncbi.nlm.nih.gov/assembly#
  
  wget ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/
 > Runtime: noon April 4th
