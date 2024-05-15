@@ -9,7 +9,8 @@
 
 <details>
 
-# <summary>Downloading Software</summary>
+<summary>Downloading Software</summary>
+
 # Downloading Software
 
 > Notes for myself: I am installing this software on a server which required me to install basic software into my user folder because it was a blank slate. I did find a parent folder that had a lot of software, but there were inconsistencies on whether I could execute using those pre-installed software tools and certainly could not write new software into that parent folder. Also, some software, I believe Trinity and Samtools were successfully compiled either by ethernet connection in the aoml building like how I mentioned below, and/or by being in a conda environment and then performing the compiling or running the code.
