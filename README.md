@@ -1,6 +1,7 @@
 # RNAseq Bioinformatics Pipeline
 
 **Project:** 4Species SCTLD
+
 **Goal:** Process sequence reads to build Metatranscriptomes, isolate holobiont components (Host, Algal Symbiont, Bacteria), identify single copy Orthologs, and annotate those Orthologs for statistical analysis in R.  
 
 > [!TIP]
