@@ -1,9 +1,12 @@
-# 4Species_SCTLD_RNA_Bioinformatics
-Metatranscriptomics Processing from Sequencer to count data
+# 4Species SCTLD RNA Bioinformatics Pipeline
+
+> [!TIP]
+> Click the arrows to expand each section
 
 <details>
 
-<summary># Downloading Software</summary>
+<summary>Downloading Software</summary>
+# Downloading Software
 
 > Notes for myself: I am installing this software on a server which required me to install basic software into my user folder because it was a blank slate. I did find a parent folder that had a lot of software, but there were inconsistencies on whether I could execute using those pre-installed software tools and certainly could not write new software into that parent folder. Also, some software, I believe Trinity and Samtools were successfully compiled either by ethernet connection in the aoml building like how I mentioned below, and/or by being in a conda environment and then performing the compiling or running the code.
 
@@ -316,7 +319,8 @@ busco -i [SEQUENCE_FILE] -m [MODE] [OTHER OPTIONS]
 <details>
 <summary># Downloading Data to Server</summary>
 
-**Be aware:** Moving Sequence data from the sequencer to your server/local computer is going to be project specific. My first recommendation is to have a discussion with your sequencer on how to make the necessary transfer of data. Hopefully they have a tutorial with clear instructions. In the past I have used filezilla. For this project they uploaded the data on box but the amount of data was too large for box to be able to download to my computer or server. So, following my own advice I reached out to the sequencer and they transferred the data to an amazon host server and gave me instrucitons on how to transfer the data to my local computer, where I redundantly saved it to a local external hard drive and then moved it to my server. 
+> [!Note] 
+> Moving Sequence data from the sequencer to your server/local computer is going to be project specific. My first recommendation is to have a discussion with your sequencer on how to make the necessary transfer of data. Hopefully they have a tutorial with clear instructions. In the past I have used filezilla. For this project they uploaded the data on box but the amount of data was too large for box to be able to download to my computer or server. So, following my own advice I reached out to the sequencer and they transferred the data to an amazon host server and gave me instrucitons on how to transfer the data to my local computer, where I redundantly saved it to a local external hard drive and then moved it to my server. 
 
 Took 12 hours to download all 1232 files. 
 To Confirm all 1232 files were downloaded, use this command:
@@ -327,7 +331,8 @@ It will tell you how many unique files are in the folder sRosales_OfavSCTLD/
 </details>
 
 <details>
-<summary># Fastp - PreProcessing</summary>
+<summary>Fastp - PreProcessing</summary>
+# Fastp - PreProcessing
 > The purpose of Fastp is to remove adapters and low quality reads. 
 
 export PATH=/home/cns.local/nicholas.macknight/software:$PATH; for file1 in ./RNARawData/sRosales_OfavSCTLD/*_R1_*.fastq.gz; do base=$(basename "$file1" _R1_001.fastq.gz); file2="./RNARawData/sRosales_OfavSCTLD/${base}_R2_001.fastq.gz"; fastp --verbose -i "$file1" -I "$file2" -o "./Fastp_ProcessedData/${base}_clean_R1.fastq.gz" -O "./Fastp_ProcessedData/${base}_clean_R2.fastq.gz"; done
@@ -367,7 +372,10 @@ cat Ofav17-7Disease-9_S23_L00?_clean_R1.fastq.gz > ../MergedFastpProcessedData/O
 You can either modify a for lopp to do this or run it manually. 
 </details>
 
-# Trinity
+<details>
+
+<summary>Trinity </summary>
+#Trinity
 > Assembles Transcript sequences into de novo Transcriptomes
 
 The most fundamental EXAMPLE of the code:
@@ -692,10 +700,12 @@ nohup /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Disease-1_S31_R2_clean_merged.fastq.gz \
 --CPU 64 --max_memory 400G --output Ofav_trinity_output
  ```
+ </details.
  
- 
- 
-# BBSplit 
+<details>
+
+<summary>BBSplit</summary>
+# BBSplit
 > Aligns metatranscriptomes to multiple references simultaneously.
 
 > REFERENCE Transcriptomes: (From Kelsey Beavers) The publicly available data used in this study include the transcriptomes for Symbiodinium CassKB8 (transcriptome assembly: http://medinalab.org/zoox/, accession number PRJNA80085), Breviolum minutum (transcriptome assembly: http://zoox.reefgenomics.org/download/, accession number PRJNA274852), Cladocopium goreaui (transcriptome assembly: http://ssid.reefgenomics.org/download/, accession number PRJNA307543) and Durusdinium trenchii (transcriptome assembly: https://datadryad.org/stash/dataset/doi:10.5061/dryad.12j173m, accession number PRJNA508937), as well as the genomes for M. cavernosa (genome assembly: https://matzlab.weebly.com/data-code.html, accession number PRJNA679067) and O. faveolata (genome assembly: https://www.ncbi.nlm.nih.gov/genome/13173?genome_assembly_id=311351, accession number PRJNA381078). The Master Coral database used in this study is available in a public Zenodo repository https://doi.org/10.5281/zenodo.783898080.
@@ -789,9 +799,8 @@ Ideally this can be used to blast our metatranscriptomes against to identify bac
 # A concise [article](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3965038/) on the different available categories of bacteria genomes on NCBI: 
 # [Overview of DIAMOND and MEGAN](https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpz1.59)
 
-https://www.ncbi.nlm.nih.gov/assembly#
  
- wget ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/
 > Runtime: noon April 4th
 https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/
 Concatenate all the bacteria genomes into one multi-fasta. then use makeblastdb to make that multi-fasta a reference database.
@@ -812,8 +821,12 @@ To count the number of transcripts in a fasta file
 ```
 grep -c ">" filename.fasta
 ```
+</details>
 
-# Longest Isoform
+<details>
+
+<summary>Longest Isoform</summary>
+
 Create a database with blast and pull out coral only transcripts. 
 First identify the longest transcript isoform in the test trinity run "trinity_out_dir_OneSample_Lanes1-8"
 **Example:**
@@ -845,8 +858,13 @@ trinityrnaseq-Trinity-v2.5.1/util/misc/get_longest_isoform_seq_per_trinity_gene.
 ```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllMcavSamples_Lane1-8/trinity_out_dir_AllMcavSamples_Lane1-8.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllMcavSamples_Lane1-8/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta
 ```
+</details>
 
-# Make Coral Database
+<details>
+
+<summary> Make Coral Only Database </summary>
+# Make Coral Only Database
+
 Make the master coral fasta database:
 **Example**
 ```
@@ -871,6 +889,11 @@ Here is a good [visual](https://open.oregonstate.education/computationalbiology/
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_OneSample_Lanes1-8/trinity_out_dir.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_OneSample_Lanes1-8/trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt
 ```
+</details>
+
+<details>
+
+<summary>Blastn</summary>
 
 ### Acer
 **blastn - Coral Host**
@@ -911,47 +934,61 @@ Here is a good [visual](https://open.oregonstate.education/computationalbiology/
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/BacteriaOnly.Trinity.txt -num_threads 20
 ```
+</details>
 
-
-
+<details>
+<summary>Filter</summary>
 Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
 ###Acer - Coral Only
+```
 awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt > Acer_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Acer_contigs_percent_95.txt > Acer_contigs_percent_95_bp_150.txt
-
+```
 ###Acer - Bacteria Only
+```
 awk '{if ($3 > 95) print $1,$2,$4 }' BacteriaOnly.Trinity.txt > Acer_Bacteria_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Acer_Bacteria_contigs_percent_95.txt > Acer_Bacteria_contigs_percent_95_bp_150.txt
-
+```
 
 ###Past - Coral Only
+```
 awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt > Past_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Past_contigs_percent_95.txt > Past_contigs_percent_95_bp_150.txt
+```
 
 ###Past - Bacteria Only
+```
 awk '{if ($3 > 95) print $1,$2,$4 }' LongestIsoform.BacteriaOnly.Trinity.txt > Past_Bacteria_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Past_Bacteria_contigs_percent_95.txt > Past_Bacteria_contigs_percent_95_bp_150.txt
+```
 
 ###Mcav - Coral Only
+```
 awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt > Mcav_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Mcav_contigs_percent_95.txt > Mcav_contigs_percent_95_bp_150.txt
+```
 
 ###Mcav - Bacteria Only
+```
 awk '{if ($3 > 95) print $1,$2,$4 }' LongestIsoform.BacteriaOnly.Trinity.txt > Mcav_Bacteria_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Mcav_Bacteria_contigs_percent_95.txt > Mcav_Bacteria_contigs_percent_95_bp_150.txt
-
+```
 
 ###Ofav - Coral Only
+```
 awk '{if ($3 > 95) print $1,$2,$4 }' Ofav_trinity_output.LongestIsoform.CoralOnly.Trinity.txt > Ofav_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Ofav_contigs_percent_95.txt > Ofav_contigs_percent_95_bp_150.txt
+```
 
 ###Ofav - Bacteria Only
+```
 awk '{if ($3 > 95) print $1,$2,$4 }' Ofav_trinity_output.LongestIsoform.BacteriaOnly.Trinity.txt > Ofav_Bacteria_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Ofav_Bacteria_contigs_percent_95.txt > Ofav_Bacteria_contigs_percent_95_bp_150.txt
+```
+</details>
 
-
-
-# Transdecoder
+<details>
+<summary>Transdecoder</summary>
 
 # Acer - Coral Only
 ```
@@ -1015,12 +1052,13 @@ cat contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdby
 ```
 
 ### Transdecoder script repeated for each Coral. 
+</details>
 
 
 
 
-
- 
+<details>
+<summary>BBMAP</summary>
 # BBMAP
 > Reference genomes need to be indexed before bbsplit can be ran. 
 
@@ -1032,7 +1070,10 @@ cat contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdby
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta
  ```
+</details>
 
+<details>
+<summary>BBSplit</summary>
 # BBSplit
 
 ### Applied by For Loop. This doesnt work perfectly, it runs but doesnt apply to all samples and is inconsistent so I manually ran bbsplit which is referenced below. 
@@ -1061,21 +1102,25 @@ done
 ### Applied Manually:
 > Two samples as example, this will need to be scaled up for each sample, or get the for loop adapted to your project. 
 
-
+```
 nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-37_S86_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-37_S86_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACControl-37_S86_%.fq.gz" refstats="AcerACControl-37_S86_stats.txt" ambig=all ambig2=all outu1="AcerACControl-37_S86_bboutu_1.fq.gz" outu2="AcerACControl-37_S86_bboutu_2.fq.gz"
 mv AcerAC* Acer_output
 rm nohup.out
 rm -r ref/
 nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-14_S90_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-14_S90_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACDisease-14_S90_%.fq.gz" refstats="AcerACDisease-14_S90_stats.txt" ambig=all ambig2=all outu1="AcerACDisease-14_S90_bboutu_1.fq.gz" outu2="AcerACDisease-14_S90_bboutu_2.fq.gz"
+```
+
+</details>
 
 
 
 
 
 
-
-
-## Split bbsplit output into Forward and Reverse reads using BBmap
+<details>
+<summary> BBSplit - Seperate F and R Reads </summary>
+	
+> Split bbsplit output into Forward and Reverse reads using BBmap
 
 **Example:**
 ```
@@ -1165,9 +1210,12 @@ for FILE in ./$(ls *_durusdinium_PRJNA508937.fq.gz); do
 /home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
 Done
 ```
+</details>
 
+<details>
+<summary>Salmon Indexing</summary>
 # Salmon
-> Read Quantification
+> Index and then Read Quantification
 
 **Salmon Indexing** 
 First have to build a salmon index for your transcriptome. Assume that transcripts.fa contains the set of transcripts you wish to quantify. 
@@ -1234,8 +1282,12 @@ count number of transcripts with a count equal or greater to 1
 ```
 awk 'NR>1 && $5 >= 1 { count++ } END { print "Number of transcripts with NumReads >= 1: ", count }' quant.sf
 ```
+</details>
+<details>
+<summary>Salmon - Quantification</summary>
+# Salmon - Quantification
 
-
+ 
 ### Loop for Acer
 ```
 #!/bin/bash
@@ -1339,7 +1391,10 @@ done
 ```
 ### Repeat for other Coral
 
+</details>
 
+<details>
+<summary>Orthofinder</summary>
 # Orthofinder: Obtaining single-copy orthologs
 
 ### Need to make reference proteomes for the Algae.
@@ -1383,6 +1438,11 @@ python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinde
 ```
 > This will generate a directory called "OrthoFinder/Results\_[date]". Move the "Orthogroups" and the "Comparative_Genomics_Statistics" subdirectories onto your local machine.
 
+</details>
+
+<details>
+
+<summary> Annotating the Orthologs </summary>
 # Annotating the orthologs
 From the /Orthogroups directory, use "Orthogroups_SingleCopyOrthologues.txt" and "Orthogroups.tsv" to grab the sequence names of the single-copy orthologs from each species.
 ```{r}
@@ -1413,6 +1473,9 @@ cat mcav_SC_ortholog_sequence_names.txt | cdbfasta/cdbyank mcav_ref_proteome.fa.
 # Annotate with BLASTp
 ncbi-blast-2.2.27+/bin/blastp -query mcav_sc_orthologs.fa -db uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out mcav_sc_orthologs_annotated.txt
 ```
+</details>
+
+
 Save "mcav_sc_orthologs_annotated.txt" and "mcav_sc_orthologs.fa" to your computer. We will use these files in our Coral EVE analysis. 
 This process is analagous in the Symbiodinaiceae genera using the Durusdinium reference proteome as the reference for annotation.
 
