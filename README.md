@@ -1,7 +1,9 @@
 # 4Species_SCTLD_RNA_Bioinformatics
 Metatranscriptomics Processing from Sequencer to count data
 
-# Downloading Software
+<details>
+
+<summary># Downloading Software</summary>
 
 > Notes for myself: I am installing this software on a server which required me to install basic software into my user folder because it was a blank slate. I did find a parent folder that had a lot of software, but there were inconsistencies on whether I could execute using those pre-installed software tools and certainly could not write new software into that parent folder. Also, some software, I believe Trinity and Samtools were successfully compiled either by ethernet connection in the aoml building like how I mentioned below, and/or by being in a conda environment and then performing the compiling or running the code.
 
@@ -308,11 +310,11 @@ busco -i [SEQUENCE_FILE] -m [MODE] [OTHER OPTIONS]
 ~/.local/bin/busco -i /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -m transcriptome
 ~/.local/bin/busco -i /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/final_coral_reference_transcriptome.fa -m transcriptome
 ```
+</details>
 
 
-
-
-# Downloading Data to Server
+<details>
+<summary># Downloading Data to Server</summary>
 
 **Be aware:** Moving Sequence data from the sequencer to your server/local computer is going to be project specific. My first recommendation is to have a discussion with your sequencer on how to make the necessary transfer of data. Hopefully they have a tutorial with clear instructions. In the past I have used filezilla. For this project they uploaded the data on box but the amount of data was too large for box to be able to download to my computer or server. So, following my own advice I reached out to the sequencer and they transferred the data to an amazon host server and gave me instrucitons on how to transfer the data to my local computer, where I redundantly saved it to a local external hard drive and then moved it to my server. 
 
@@ -322,10 +324,10 @@ To Confirm all 1232 files were downloaded, use this command:
 find ./sRosales_OfavSCTLD/ -maxdepth 1 -type f | wc -l
 ```
 It will tell you how many unique files are in the folder sRosales_OfavSCTLD/
+</details>
 
-
-
-# Fastp - PreProcessing
+<details>
+<summary># Fastp - PreProcessing</summary>
 > The purpose of Fastp is to remove adapters and low quality reads. 
 
 export PATH=/home/cns.local/nicholas.macknight/software:$PATH; for file1 in ./RNARawData/sRosales_OfavSCTLD/*_R1_*.fastq.gz; do base=$(basename "$file1" _R1_001.fastq.gz); file2="./RNARawData/sRosales_OfavSCTLD/${base}_R2_001.fastq.gz"; fastp --verbose -i "$file1" -I "$file2" -o "./Fastp_ProcessedData/${base}_clean_R1.fastq.gz" -O "./Fastp_ProcessedData/${base}_clean_R2.fastq.gz"; done
@@ -363,7 +365,7 @@ cat Ofav17-7Control-40_S18_L00?_clean_R1.fastq.gz > ../MergedFastpProcessedData/
 cat Ofav17-7Disease-9_S23_L00?_clean_R1.fastq.gz > ../MergedFastpProcessedData/Ofav17-7Disease-9_S23_R1_clean_merged.fastq.gz
 ```
 You can either modify a for lopp to do this or run it manually. 
-
+</details>
 
 # Trinity
 > Assembles Transcript sequences into de novo Transcriptomes
