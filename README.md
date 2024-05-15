@@ -625,7 +625,7 @@ du -ch Ofav*R1* # 94G
 du -ch Ofav*R2* # 93G
 ```
 > Removing these samples from the trinity assembly because the server was running out of ram. These samples were selected for removal because they were a third replicate of a genotype. 
-# R1
+**R1**
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav17-7Control-40_S18_R1_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav17-7Disease-9_S23_R1_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofavf15Control-31_S35_R1_clean_merged.fastq.gz \
@@ -639,7 +639,7 @@ du -ch Ofav*R2* # 93G
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Disease-18_S34_R1_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Disease-3_S39_R1_clean_merged.fastq.gz \
 
-# R2
+**R2**
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav17-7Control-40_S18_R2_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav17-7Disease-9_S23_R2_clean_merged.fastq.gz \
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofavf15Control-31_S35_R2_clean_merged.fastq.gz \
@@ -693,7 +693,7 @@ nohup /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/
  
  
  
- # BBSplit 
+# BBSplit 
 > Aligns metatranscriptomes to multiple references simultaneously.
 
 > REFERENCE Transcriptomes: (From Kelsey Beavers) The publicly available data used in this study include the transcriptomes for Symbiodinium CassKB8 (transcriptome assembly: http://medinalab.org/zoox/, accession number PRJNA80085), Breviolum minutum (transcriptome assembly: http://zoox.reefgenomics.org/download/, accession number PRJNA274852), Cladocopium goreaui (transcriptome assembly: http://ssid.reefgenomics.org/download/, accession number PRJNA307543) and Durusdinium trenchii (transcriptome assembly: https://datadryad.org/stash/dataset/doi:10.5061/dryad.12j173m, accession number PRJNA508937), as well as the genomes for M. cavernosa (genome assembly: https://matzlab.weebly.com/data-code.html, accession number PRJNA679067) and O. faveolata (genome assembly: https://www.ncbi.nlm.nih.gov/genome/13173?genome_assembly_id=311351, accession number PRJNA381078). The Master Coral database used in this study is available in a public Zenodo repository https://doi.org/10.5281/zenodo.783898080.
@@ -792,138 +792,169 @@ https://www.ncbi.nlm.nih.gov/assembly#
  wget ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/
 > Runtime: noon April 4th
 https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/
-Concatenate all the bacteria genomes into one multi-fasta. then use makeblastdb to make that multi-fasta a reference database. 
+Concatenate all the bacteria genomes into one multi-fasta. then use makeblastdb to make that multi-fasta a reference database.
+```
 scp ./genome_assemblies_genome_fasta.tar nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/bacteria_reference/
+```
 > Runtime: 40 min. 
 # decompress and concatenate with zcat
+```
 zcat *.fna.gz > concatenated_bacteria_genomes.fna
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in concatenated_bacteria_genomes.fna -parse_seqids -dbtype nucl -out MasterBacteria_db
 
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/BacteriaOnly.Trinity.txt -num_threads 20
+```
 
 
-##
-# To count the number of transcripts in a fasta file
+To count the number of transcripts in a fasta file
+```
 grep -c ">" filename.fasta
-##
+```
 
-LONGEST ISOFORM
-# Lets test creating a database with blast and pulling out coral only transcripts. 
-# First we will identify the longest transcript isoform in the test trinity run "trinity_out_dir_OneSample_Lanes1-8"
-# Example: trinityrnaseq-Trinity-v2.5.1/util/misc/get_longest_isoform_seq_per_trinity_gene.pl raw_transctipome.fa > processed_transcriptome.fa
-# Modified with our data: /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_OneSample_Lanes1-8/trinity_out_dir.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_OneSample_Lanes1-8/trinity_out_dir.LongestIsoform.Trinity.fasta
+# Longest Isoform
+Create a database with blast and pull out coral only transcripts. 
+First identify the longest transcript isoform in the test trinity run "trinity_out_dir_OneSample_Lanes1-8"
+**Example:**
+```
+trinityrnaseq-Trinity-v2.5.1/util/misc/get_longest_isoform_seq_per_trinity_gene.pl raw_transctipome.fa > processed_transcriptome.fa
+```
+**Modified with our data:**
+```
+/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_OneSample_Lanes1-8/trinity_out_dir.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_OneSample_Lanes1-8/trinity_out_dir.LongestIsoform.Trinity.fasta
+```
 > Runtime ~2 min. 
 
-# Acer
+### Acer
+```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllAcerSamples_Lane1-8/trinity_out_dir_AllAcerSamples_Lane1-8.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllAcerSamples_Lane1-8/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
+```
 > Runtime: 2 min
-# Past
+### Past
+```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllPastSamples_Lane1-8/trinity_out_dir_AllPastSamples_Lane1-8.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllPastSamples_Lane1-8/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta
+```
 
-# Ofav
+### Ofav
+```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta
+```
 
-# Mcav
+### Mcav
+```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllMcavSamples_Lane1-8/trinity_out_dir_AllMcavSamples_Lane1-8.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllMcavSamples_Lane1-8/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta
+```
 
-MAKE CORAL MASTER DASTABASE
-#Make the master coral fasta a database:
-# Example;
+# Make Coral Database
+Make the master coral fasta database:
+**Example**
+```
 ncbi-blast-2.2.27+/bin/makeblastdb -in MasterCoral.fasta -parse_seqids -dbtype prot -out MasterCoral_db
-#Modified with our data;
+```
+**Modified with our data**
+```
 gunzip MasterCoral.fasta.gz 
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in MasterCoral.fasta -parse_seqids -dbtype prot -out MasterCoral_db
+```
 
-# I am also going to make a nulceotide MasterCoral_db because the protein one takes more time for blastx. 
+I am also going to make a nulceotide MasterCoral_db because the protein one takes more time for blastx. 
+```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in MasterCoral.fasta -parse_seqids -dbtype nucl -out MasterCoral__nucl_db
+```
 > Runtime ~2 min. 
 
 **Note** my dbtype is prot for protein. This means it is producing a protein master coral database. so when I do my blast below, I have a nucleotide query (trinity_out_dir.LongestIsoform.Trinity.fasta) mapping to a protein database so I need to use blastx. If I made the master coral db a dbtype "nucl" for nucleotide than I could use a blastn blast. 
-# Here is a good visual on blast types: https://open.oregonstate.education/computationalbiology/chapter/command-line-blast/
-Start time: 11:40am April 3rd. 
+
+Here is a good [visual](https://open.oregonstate.education/computationalbiology/chapter/command-line-blast/) on blast types.
+
+```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_OneSample_Lanes1-8/trinity_out_dir.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_OneSample_Lanes1-8/trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt
+```
 
-# Acer - Start time: noon April 4th. 
+### Acer
+**blastn - Coral Host**
+```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllAcerSamples_Lane1-8/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllAcerSamples_Lane1-8/trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt
-#blastn
+```
+**blastn - Bacteria Only**
+```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt -num_threads 20
+```
 
-# Past - Start time: noon April 4th. 
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllPastSamples_Lane1-8/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllPastSamples_Lane1-8/trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt
-#blastn
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/MasterCoral__nucl_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fastatrinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt -num_threads 20
-#blastn - New MasterCoral_db
+### Past 
+**blastn - Coral Host**
+```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt -num_threads 20
-#blastn - Bacteria Only
+```
+**blastn - Bacteria Only**
+```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/LongestIsoform.BacteriaOnly.Trinity.txt -num_threads 20
+```
 
-
-# Ofav
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.CoralOnly.Trinity.txt
-#blastn - Coral Host Only
+### Ofav
+**blastn - Coral Host**
+```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.CoralOnly.Trinity.txt -num_threads 20
-#blastn - bacteria Only
+```
+**blastn - Bacteria Only**
+```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.BacteriaOnly.Trinity.txt -num_threads 20
+```
 
-
-# Mcav - Start time: noon April 4th. 
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllMcavSamples_Lane1-8/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllMcavSamples_Lane1-8/trinity_out_dir.LongestIsoform.CoralOnly.Trinity2.txt -num_threads 20
-#blastn - Coral host database
+### Mcav
+**blastn - Coral Host**
+```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt -num_threads 20
-#blastn - Bacteria database
+```
+**blastn - Bacteria Only**
+```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/BacteriaOnly.Trinity.txt -num_threads 20
-
+```
 
 
 
 Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
-#Acer - Coral Only
+###Acer - Coral Only
 awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt > Acer_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Acer_contigs_percent_95.txt > Acer_contigs_percent_95_bp_150.txt
 
-#Acer - Bacteria Only
+###Acer - Bacteria Only
 awk '{if ($3 > 95) print $1,$2,$4 }' BacteriaOnly.Trinity.txt > Acer_Bacteria_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Acer_Bacteria_contigs_percent_95.txt > Acer_Bacteria_contigs_percent_95_bp_150.txt
 
 
-#Past
+###Past - Coral Only
 awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt > Past_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Past_contigs_percent_95.txt > Past_contigs_percent_95_bp_150.txt
 
-#Past - Bacteria Only
+###Past - Bacteria Only
 awk '{if ($3 > 95) print $1,$2,$4 }' LongestIsoform.BacteriaOnly.Trinity.txt > Past_Bacteria_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Past_Bacteria_contigs_percent_95.txt > Past_Bacteria_contigs_percent_95_bp_150.txt
 
-#Mcav - Coral Only
+###Mcav - Coral Only
 awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt > Mcav_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Mcav_contigs_percent_95.txt > Mcav_contigs_percent_95_bp_150.txt
 
-#Mcav - Bacteria Only
+###Mcav - Bacteria Only
 awk '{if ($3 > 95) print $1,$2,$4 }' LongestIsoform.BacteriaOnly.Trinity.txt > Mcav_Bacteria_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Mcav_Bacteria_contigs_percent_95.txt > Mcav_Bacteria_contigs_percent_95_bp_150.txt
 
 
-#Ofav - Coral Only
+###Ofav - Coral Only
 awk '{if ($3 > 95) print $1,$2,$4 }' Ofav_trinity_output.LongestIsoform.CoralOnly.Trinity.txt > Ofav_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Ofav_contigs_percent_95.txt > Ofav_contigs_percent_95_bp_150.txt
 
-#Ofav - Bacteria Only
+###Ofav - Bacteria Only
 awk '{if ($3 > 95) print $1,$2,$4 }' Ofav_trinity_output.LongestIsoform.BacteriaOnly.Trinity.txt > Ofav_Bacteria_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Ofav_Bacteria_contigs_percent_95.txt > Ofav_Bacteria_contigs_percent_95_bp_150.txt
 
 
 
-# BUSCO
-# EXAMPLE of busco command:
-busco -i [SEQUENCE_FILE] -m [MODE] [OTHER OPTIONS]
-
-# Modified for our test data:
-~/.conda/envs/busco_env/bin/busco -i /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/final_coral_reference_transcriptome -m transcriptome
+# Transdecoder
 
 # Acer - Coral Only
+```
  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
  cat Acer_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Acer_coral_only_transcriptome.fa
- > Run time: <1 min. 
  
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t Acer_coral_only_transcriptome.fa
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t Acer_coral_only_transcriptome.fa
@@ -949,11 +980,11 @@ cat contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdby
  
  # Keep only annotations with an e-value less than e-5. 
  awk '{if ($3 < 1e-05) print $1,$2,$3}' annotated_Acer_coral_reference_transcriptome.txt > annotated_Acer_coral_reference_transcriptome_e-5.txt
-
+```
 # Acer - Bacteria Only
+```
  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
  cat Acer_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Acer_Bacteria_only_transcriptome.fa
- > Run time: <1 min. 
  
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t Acer_Bacteria_only_transcriptome.fa
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t Acer_Bacteria_only_transcriptome.fa
@@ -979,208 +1010,9 @@ cat contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdby
  
  # Keep only annotations with an e-value less than e-5. 
  awk '{if ($3 < 1e-05) print $1,$2,$3}' annotated_Acer_Bacteria_reference_transcriptome.txt > annotated_Acer_Bacteria_reference_transcriptome_e-5.txt
+```
 
- 
- 
- 
- # Mcav - Host Only
- /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta
- cat Mcav_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Mcav_coral_only_transcriptome.fa
- > Run time: <1 min. 
- 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t Mcav_coral_only_transcriptome.fa
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t Mcav_coral_only_transcriptome.fa
-mv Mcav_coral_only_transcriptome.fa.transdecoder.pep ./Mcav_coral_only_transcriptome_transdecoder.fa #change .pep to .fa for cd-hit
-
-# cd-hit
-#example
- cd-hit -i coral_only_transcriptome_transdecoder.fa -o reference_proteome.fa
- 
- #modified with our data
- /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i  Mcav_coral_only_transcriptome_transdecoder.fa -o Mcav_reference_proteome.fa
- 
-### Step 4: Make an alignable transcriptome
-Use the reference proteome to create an alignable transcriptome:
-
-grep ">" Mcav_reference_proteome.fa > proteome_names.txt
-sed 's/.p/\t/' proteome_names.txt > proteome_names_format.txt
-awk '{print $1}'  proteome_names_format.txt > contigs_to_extract.txt
-sed 's/^.//g' contigs_to_extract.txt > contigs_list.txt
-
-cat contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > final_coral_reference_transcriptome.fa
-
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in uniprot_sprot.fasta -parse_seqids -dbtype prot -out uniprot_db
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/final_coral_reference_transcriptome.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out annotated_Mcav_coral_reference_transcriptome.txt -num_threads 30
- 
- # Keep only annotations with an e-value less than e-5. 
- awk '{if ($3 < 1e-05) print $1,$2,$3}' annotated_Mcav_coral_reference_transcriptome.txt > annotated_Mcav_coral_reference_transcriptome_e-5.txt
-
-
-# Mcav - Bacteria Only
- /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta
- cat Mcav_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Mcav_Bacteria_only_transcriptome.fa
- > Run time: <1 min. 
- 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t Mcav_Bacteria_only_transcriptome.fa
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t Mcav_Bacteria_only_transcriptome.fa
-mv Mcav_Bacteria_only_transcriptome.fa.transdecoder.pep ./Mcav_Bacteria_only_transcriptome_transdecoder.fa #change .pep to .fa for cd-hit
-
- 
- /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i  Mcav_Bacteria_only_transcriptome_transdecoder.fa -o Mcav_Bacteria_reference_proteome.fa
- 
-### Step 4: Make an alignable transcriptome
-Use the reference proteome to create an alignable transcriptome:
-
-grep ">" Mcav_Bacteria_reference_proteome.fa > Bac_proteome_names.txt
-sed 's/.p/\t/' Bac_proteome_names.txt > Bac_proteome_names_format.txt
-awk '{print $1}'  Bac_proteome_names_format.txt > Bac_contigs_to_extract.txt
-sed 's/^.//g' Bac_contigs_to_extract.txt > Bac_contigs_list.txt
-
-cat Bac_contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > final_Mcav_Bacteria_reference_transcriptome.fa
-
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in uniprot_sprot.fasta -parse_seqids -dbtype prot -out uniprot_db
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/final_Mcav_Bacteria_reference_transcriptome.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out annotated_Mcav_Bacteria_reference_transcriptome.txt -num_threads 10
- 
- # Keep only annotations with an e-value less than e-5. 
- awk '{if ($3 < 1e-05) print $1,$2,$3}' annotated_Mcav_Bacteria_reference_transcriptome.txt > annotated_Mcav_Bacteria_reference_transcriptome_e-5.txt
-
-
-
-
-
- # Past - Coral Host Only
- /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta
- cat Past_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Past_coral_only_transcriptome.fa
- > Run time: <1 min. 
- 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t Past_coral_only_transcriptome.fa
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t Past_coral_only_transcriptome.fa
-mv Past_coral_only_transcriptome.fa.transdecoder.pep ./Past_coral_only_transcriptome_transdecoder.fa #change .pep to .fa for cd-hit
-
- cd-hit -i coral_only_transcriptome_transdecoder.fa -o reference_proteome.fa
- /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i  Past_coral_only_transcriptome_transdecoder.fa -o Past_reference_proteome.fa
- 
-### Step 4: Make an alignable transcriptome
-Use the reference proteome to create an alignable transcriptome:
-
-grep ">" Past_reference_proteome.fa > proteome_names.txt
-sed 's/.p/\t/' proteome_names.txt > proteome_names_format.txt
-awk '{print $1}'  proteome_names_format.txt > contigs_to_extract.txt
-sed 's/^.//g' contigs_to_extract.txt > contigs_list.txt
-
-cat contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > final_coral_reference_transcriptome.fa
-
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in uniprot_sprot.fasta -parse_seqids -dbtype prot -out uniprot_db
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/final_coral_reference_transcriptome.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out annotated_Past_coral_reference_transcriptome.txt -num_threads 20
- 
- # Keep only annotations with an e-value less than e-5. 
- awk '{if ($3 < 1e-05) print $1,$2,$3}' annotated_Past_coral_reference_transcriptome.txt > annotated_Past_coral_reference_transcriptome_e-5.txt
-
-# Past - Bacteria Only
- /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta
- cat Past_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Past_Bacteria_only_transcriptome.fa
- > Run time: <1 min. 
- 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t Past_Bacteria_only_transcriptome.fa
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t Past_Bacteria_only_transcriptome.fa
-mv Past_Bacteria_only_transcriptome.fa.transdecoder.pep ./Past_Bacteria_only_transcriptome_transdecoder.fa #change .pep to .fa for cd-hit
-
- 
- /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i  Past_Bacteria_only_transcriptome_transdecoder.fa -o Past_Bacteria_reference_proteome.fa
- 
-### Step 4: Make an alignable transcriptome
-Use the reference proteome to create an alignable transcriptome:
-
-grep ">" Past_Bacteria_reference_proteome.fa > Bac_proteome_names.txt
-sed 's/.p/\t/' Bac_proteome_names.txt > Bac_proteome_names_format.txt
-awk '{print $1}'  Bac_proteome_names_format.txt > Bac_contigs_to_extract.txt
-sed 's/^.//g' Bac_contigs_to_extract.txt > Bac_contigs_list.txt
-
-cat Bac_contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > final_Bacteria_reference_transcriptome.fa
-
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in uniprot_sprot.fasta -parse_seqids -dbtype prot -out uniprot_db
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/final_Bacteria_reference_transcriptome.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out annotated_Past_Bacteria_reference_transcriptome.txt -num_threads 20
- 
- # Keep only annotations with an e-value less than e-5. 
- awk '{if ($3 < 1e-05) print $1,$2,$3}' annotated_Past_Bacteria_reference_transcriptome.txt > annotated_Past_Bacteria_reference_transcriptome_e-5.txt
-
-
-
-
- # Ofav - Host Only
- /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta Ofav_trinity_output.LongestIsoform.Trinity.fasta
- cat Ofav_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank Ofav_trinity_output.LongestIsoform.Trinity.fasta.cidx > Ofav_coral_only_transcriptome.fa
- > Run time: <1 min. 
- 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t Ofav_coral_only_transcriptome.fa
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t Ofav_coral_only_transcriptome.fa
-mv Ofav_coral_only_transcriptome.fa.transdecoder.pep ./Ofav_coral_only_transcriptome_transdecoder.fa #change .pep to .fa for cd-hit
-
-# cd-hit
-#example
- cd-hit -i coral_only_transcriptome_transdecoder.fa -o reference_proteome.fa
- 
- #modified with our data
- /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i  Ofav_coral_only_transcriptome_transdecoder.fa -o Ofav_reference_proteome.fa
- 
-### Step 4: Make an alignable transcriptome
-Use the reference proteome to create an alignable transcriptome:
-
-grep ">" Ofav_reference_proteome.fa > proteome_names.txt
-sed 's/.p/\t/' proteome_names.txt > proteome_names_format.txt
-awk '{print $1}'  proteome_names_format.txt > contigs_to_extract.txt
-sed 's/^.//g' contigs_to_extract.txt > contigs_list.txt
-
-cat contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank Ofav_trinity_output.LongestIsoform.Trinity.fasta.cidx > final_coral_reference_transcriptome.fa
-
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in uniprot_sprot.fasta -parse_seqids -dbtype prot -out uniprot_db
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/final_coral_reference_transcriptome.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out annotated_Ofav_coral_reference_transcriptome.txt -num_threads 30
- 
- # Keep only annotations with an e-value less than e-5. 
- awk '{if ($3 < 1e-05) print $1,$2,$3}' annotated_Ofav_coral_reference_transcriptome.txt > annotated_Ofav_coral_reference_transcriptome_e-5.txt
-
-
-# Ofav - Bacteria Only
- /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta Ofav_trinity_output.LongestIsoform.Trinity.fasta
- cat Ofav_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank Ofav_trinity_output.LongestIsoform.Trinity.fasta.cidx > Ofav_Bacteria_only_transcriptome.fa
- > Run time: <1 min. 
- 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t Ofav_Bacteria_only_transcriptome.fa
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t Ofav_Bacteria_only_transcriptome.fa
-mv Ofav_Bacteria_only_transcriptome.fa.transdecoder.pep ./Ofav_Bacteria_only_transcriptome_transdecoder.fa #change .pep to .fa for cd-hit
-
- 
- /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i  Ofav_Bacteria_only_transcriptome_transdecoder.fa -o Ofav_Bacteria_reference_proteome.fa
- 
-### Step 4: Make an alignable transcriptome
-Use the reference proteome to create an alignable transcriptome:
-
-grep ">" Ofav_Bacteria_reference_proteome.fa > Bac_proteome_names.txt
-sed 's/.p/\t/' Bac_proteome_names.txt > Bac_proteome_names_format.txt
-awk '{print $1}'  Bac_proteome_names_format.txt > Bac_contigs_to_extract.txt
-sed 's/^.//g' Bac_contigs_to_extract.txt > Bac_contigs_list.txt
-
-cat Bac_contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank Ofav_trinity_output.LongestIsoform.Trinity.fasta.cidx > final_Ofav_Bacteria_reference_transcriptome.fa
-
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in uniprot_sprot.fasta -parse_seqids -dbtype prot -out uniprot_db
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/final_Ofav_Bacteria_reference_transcriptome.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out annotated_Ofav_Bacteria_reference_transcriptome.txt -num_threads 20
- 
- # Keep only annotations with an e-value less than e-5. 
- awk '{if ($3 < 1e-05) print $1,$2,$3}' annotated_Ofav_Bacteria_reference_transcriptome.txt > annotated_Ofav_Bacteria_reference_transcriptome_e-5.txt
-
-
+### Transdecoder script repeated for each Coral. 
 
 
 
@@ -1188,17 +1020,21 @@ cat Bac_contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/
 
  
 # BBMAP
-# Reference genomes need to be indexed before bbsplit can be ran. 
+> Reference genomes need to be indexed before bbsplit can be ran. 
 
+```
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa build=1
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa build=2
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.1.fna build=
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta
- 
-##BBSplit
- 
+ ```
+
+# BBSplit
+
+### Applied by For Loop. This doesnt work perfectly, it runs but doesnt apply to all samples and is inconsistent so I manually ran bbsplit which is referenced below. 
+ ```
 #!/bin/bash
 
 # Add directories to the PATH
@@ -1219,30 +1055,9 @@ nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="${SDIR}/
 basename="${SAMP}_%.fq.gz" refstats="${SAMP}_stats.txt" ambig=all ambig2=all
 outu1="${SAMP}_bboutu_1.fq.gz" outu2="${SAMP}_bboutu_2.fq.gz" &
 done
-
-#!/bin/bash
-
-# Add directories to the PATH
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
-PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
-
-# Define the reference directory
-DIR=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references
-HDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer
-SDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer
-
-# Process each FASTQ file
-find ${SDIR} -name "*_R1_clean_merged.fastq.gz" | while read FILE; do
-    echo ${FILE}
-    SAMP=$(basename ${FILE} _R1_clean_merged.fastq.gz)
-    echo ${SAMP}
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="${SDIR}/${SAMP}_R1_clean_merged.fastq.gz" in2="${SDIR}/${SAMP}_R2_clean_merged.fastq.gz" ref="${HDIR}/Acer_coral_only_transcriptome.fa,${HDIR}/Acer_Bacteria_only_transcriptome.fa,${DIR}/symbiodinium_GCA_001939145.fa,${DIR}/breviolum_PRJNA274852.fa,${DIR}/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,${DIR}/durusdinium_PRJNA508937.fasta" basename=/space/home/cns.local/nicholas.macknight/SCTLDR$
-
-done
-
-
-
-
+```
+### Applied Manually:
+> Two samples as example, this will need to be scaled up for each sample, or get the for loop adapted to your project. 
 
 
 nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-37_S86_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-37_S86_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACControl-37_S86_%.fq.gz" refstats="AcerACControl-37_S86_stats.txt" ambig=all ambig2=all outu1="AcerACControl-37_S86_bboutu_1.fq.gz" outu2="AcerACControl-37_S86_bboutu_2.fq.gz"
@@ -1250,371 +1065,6 @@ mv AcerAC* Acer_output
 rm nohup.out
 rm -r ref/
 nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-14_S90_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-14_S90_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACDisease-14_S90_%.fq.gz" refstats="AcerACDisease-14_S90_stats.txt" ambig=all ambig2=all outu1="AcerACDisease-14_S90_bboutu_1.fq.gz" outu2="AcerACDisease-14_S90_bboutu_2.fq.gz"
-mv AcerAC* Acer_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-7_S80_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-7_S80_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACDisease-7_S80_%.fq.gz" refstats="AcerACDisease-7_S80_stats.txt" ambig=all ambig2=all outu1="AcerACDisease-7_S80_bboutu_1.fq.gz" outu2="AcerACDisease-7_S80_bboutu_2.fq.gz"
-mv AcerAC* Acer_output
-rm nohup.out
-rm -rf ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-39_S87_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-39_S87_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACControl-39_S87_%.fq.gz" refstats="AcerACControl-39_S87_stats.txt" ambig=all ambig2=all outu1="AcerACControl-39_S87_bboutu_1.fq.gz" outu2="AcerACControl-39_S87_bboutu_2.fq.gz"
-
-#completed manually
-#AcerACControl-35_S85_R1_clean_merged.fastq.gz
-#AcerACDisease-12_S81_R1_clean_merged.fastq.gz
-#AcerACDisease-6_S79_R1_clean_merged.fastq.gz
-
-# Re run Manually
-#AcerACControl-39_S87_R1_clean_merged.fastq.gz *
-# AcerACControl-37_S86_R1_clean_merged.fastq.gz *
-# AcerACDisease-14_S90_R1_clean_merged.fastq.gz *
-# AcerACDisease-7_S80_R1_clean_merged.fastq.gz *
-
-# Completed by For loop
-# AcerACControl-38_S89_R1_clean_merged.fastq.gz
-# AcerACControl-40_S88_R1_clean_merged.fastq.gz
-# AcerACDisease-17_S82_R1_clean_merged.fastq.gz
-# AcerACDisease-19_S83_R1_clean_merged.fastq.gz
-# AcerACDisease-4_S78_R1_clean_merged.fastq.gz
-# AcerACControl-31_S84_R1_clean_merged.fastq.gz
-
-
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-38_S89_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-38_S89_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACControl-38_S89_%.fq.gz" refstats="AcerACControl-38_S89_stats.txt" ambig=all ambig2=all outu1="AcerACControl-38_S89_bboutu_1.fq.gz" outu2="AcerACControl-38_S89_bboutu_2.fq.gz"
-mv AcerAC* Acer_output
-rm nohup.out
-rm -rf ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-40_S88_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-40_S88_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACControl-40_S88_%.fq.gz" refstats="AcerACControl-40_S88_stats.txt" ambig=all ambig2=all outu1="AcerACControl-40_S88_bboutu_1.fq.gz" outu2="AcerACControl-40_S88_bboutu_2.fq.gz"
-mv AcerAC* Acer_output
-rm nohup.out
-rm -rf ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-17_S82_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-17_S82_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACDisease-17_S82_%.fq.gz" refstats="AcerACDisease-17_S82_stats.txt" ambig=all ambig2=all outu1="AcerACDisease-17_S82_bboutu_1.fq.gz" outu2="AcerACDisease-17_S82_bboutu_2.fq.gz"
-mv AcerAC* Acer_output
-rm nohup.out
-rm -rf ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-19_S83_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-19_S83_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACDisease-19_S83_%.fq.gz" refstats="AcerACDisease-19_S83_stats.txt" ambig=all ambig2=all outu1="AcerACDisease-19_S83_bboutu_1.fq.gz" outu2="AcerACDisease-19_S83_bboutu_2.fq.gz"
-mv AcerAC* Acer_output
-rm nohup.out
-rm -rf ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-4_S78_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-4_S78_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACDisease-4_S78_%.fq.gz" refstats="AcerACDisease-4_S78_stats.txt" ambig=all ambig2=all outu1="AcerACDisease-4_S78_bboutu_1.fq.gz" outu2="AcerACDisease-4_S78_bboutu_2.fq.gz"
-mv AcerAC* Acer_output
-rm nohup.out
-rm -rf ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-31_S84_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-31_S84_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACControl-31_S84_%.fq.gz" refstats="AcerACControl-31_S84_stats.txt" ambig=all ambig2=all outu1="AcerACControl-31_S84_bboutu_1.fq.gz" outu2="AcerACControl-31_S84_bboutu_2.fq.gz"
-
-
-
-
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Control-24_S54_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Control-24_S54_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC11Control-24_S54_%.fq.gz" refstats="McavMC11Control-24_S54_stats.txt" ambig=all ambig2=all outu1="McavMC11Control-24_S54_bboutu_1.fq.gz" outu2="McavMC11Control-24_S54_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Disease-1_S52_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Disease-1_S52_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC11Disease-1_S52_%.fq.gz" refstats="McavMC11Disease-1_S52_stats.txt" ambig=all ambig2=all outu1="McavMC11Disease-1_S52_bboutu_1.fq.gz" outu2="McavMC11Disease-1_S52_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Control-33_S58_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Control-33_S58_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC1Control-33_S58_%.fq.gz" refstats="McavMC1Control-33_S58_stats.txt" ambig=all ambig2=all outu1="McavMC1Control-33_S58_bboutu_1.fq.gz" outu2="McavMC1Control-33_S58_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Control-26_S46_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Control-26_S46_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC36Control-26_S46_%.fq.gz" refstats="McavMC36Control-26_S46_stats.txt" ambig=all ambig2=all outu1="McavMC36Control-26_S46_bboutu_1.fq.gz" outu2="McavMC36Control-26_S46_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Disease-18_S44_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Disease-18_S44_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC36Disease-18_S44_%.fq.gz" refstats="McavMC36Disease-18_S44_stats.txt" ambig=all ambig2=all outu1="McavMC36Disease-18_S44_bboutu_1.fq.gz" outu2="McavMC36Disease-18_S44_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Control-30_S56_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Control-30_S56_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC11Control-30_S56_%.fq.gz" refstats="McavMC11Control-30_S56_stats.txt" ambig=all ambig2=all outu1="McavMC11Control-30_S56_bboutu_1.fq.gz" outu2="McavMC11Control-30_S56_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Disease-3_S50_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Disease-3_S50_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC11Disease-3_S50_%.fq.gz" refstats="McavMC11Disease-3_S50_stats.txt" ambig=all ambig2=all outu1="McavMC11Disease-3_S50_bboutu_1.fq.gz" outu2="McavMC11Disease-3_S50_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Disease-16_S48_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Disease-16_S48_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC1Disease-16_S48_%.fq.gz" refstats="McavMC1Disease-16_S48_stats.txt" ambig=all ambig2=all outu1="McavMC1Disease-16_S48_bboutu_1.fq.gz" outu2="McavMC1Disease-16_S48_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Control-32_S57_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Control-32_S57_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC36Control-32_S57_%.fq.gz" refstats="McavMC36Control-32_S57_stats.txt" ambig=all ambig2=all outu1="McavMC36Control-32_S57_bboutu_1.fq.gz" outu2="McavMC36Control-32_S57_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Disease-6_S47_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Disease-6_S47_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC36Disease-6_S47_%.fq.gz" refstats="McavMC36Disease-6_S47_stats.txt" ambig=all ambig2=all outu1="McavMC36Disease-6_S47_bboutu_1.fq.gz" outu2="McavMC36Disease-6_S47_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Control-38_S60_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Control-38_S60_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC11Control-38_S60_%.fq.gz" refstats="McavMC11Control-38_S60_stats.txt" ambig=all ambig2=all outu1="McavMC11Control-38_S60_bboutu_1.fq.gz" outu2="McavMC11Control-38_S60_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Control-21_S45_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Control-21_S45_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC1Control-21_S45_%.fq.gz" refstats="McavMC1Control-21_S45_stats.txt" ambig=all ambig2=all outu1="McavMC1Control-21_S45_bboutu_1.fq.gz" outu2="McavMC1Control-21_S45_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Disease-3_S49_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Disease-3_S49_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC1Disease-3_S49_%.fq.gz" refstats="McavMC1Disease-3_S49_stats.txt" ambig=all ambig2=all outu1="McavMC1Disease-3_S49_bboutu_1.fq.gz" outu2="McavMC1Disease-3_S49_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Control-36_S59_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Control-36_S59_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC36Control-36_S59_%.fq.gz" refstats="McavMC36Control-36_S59_stats.txt" ambig=all ambig2=all outu1="McavMC36Control-36_S59_bboutu_1.fq.gz" outu2="McavMC36Control-36_S59_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Disease-12_S51_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC11Disease-12_S51_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC11Disease-12_S51_%.fq.gz" refstats="McavMC11Disease-12_S51_stats.txt" ambig=all ambig2=all outu1="McavMC11Disease-12_S51_bboutu_1.fq.gz" outu2="McavMC11Disease-12_S51_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Control-28_S55_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Control-28_S55_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC1Control-28_S55_%.fq.gz" refstats="McavMC1Control-28_S55_stats.txt" ambig=all ambig2=all outu1="McavMC1Control-28_S55_bboutu_1.fq.gz" outu2="McavMC1Control28_S55_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Disease-9_S43_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC1Disease-9_S43_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC1Disease-9_S43_%.fq.gz" refstats="McavMC1Disease-9_S43_stats.txt" ambig=all ambig2=all outu1="McavMC1Disease-9_S43_bboutu_1.fq.gz" outu2="McavMC1Disease-9_S43_bboutu_2.fq.gz"
-mv McavMC* Mcav_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Disease-17_S53_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav/McavMC36Disease-17_S53_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="McavMC36Disease-17_S53_%.fq.gz" refstats="McavMC36Disease-17_S53_stats.txt" ambig=all ambig2=all outu1="McavMC36Disease-17_S53_bboutu_1.fq.gz" outu2="McavMC36Disease-17_S53_bboutu_2.fq.gz"
-
-
-McavMC11Control-24_S54_R1 #
-McavMC11Disease-1_S52_R1 # 
-McavMC1Control-33_S58_R1 #
-McavMC36Control-26_S46_R1 #
-McavMC36Disease-18_S44_R1 #
-McavMC11Control-30_S56_R1 #
-McavMC11Disease-3_S50_R1 #
-McavMC1Disease-16_S48_R1 #
-McavMC36Control-32_S57_R1 #
-McavMC36Disease-6_S47_R1 #
-McavMC11Control-38_S60_R1 #
-McavMC1Control-21_S45_R1 #
-McavMC1Disease-3_S49_R1 #
-McavMC36Control-36_S59_R1 #
-McavMC11Disease-12_S51_R1 #
-McavMC1Control-28_S55_R1 #
-McavMC1Disease-9_S43_R1  #
-McavMC36Disease-17_S53_R1 
-
-
-# Past
-
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Disease-5_S62_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Disease-5_S62_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA3Disease-5_S62_%.fq.gz" refstats="PastPA3Disease-5_S62_stats.txt" ambig=all ambig2=all outu1="PastPA3Disease-5_S62_bboutu_1.fq.gz" outu2="PastPA3Disease-5_S62_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Disease-5-2_S72_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Disease-5-2_S72_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA3Disease-5-2_S72_%.fq.gz" refstats="PastPA3Disease-5-2_S72_stats.txt" ambig=all ambig2=all outu1="PastPA3Disease-5-2_S72_bboutu_1.fq.gz" outu2="PastPA3Disease-5-2_S72_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Disease-15_S73_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Disease-15_S73_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA3Disease-15_S73_%.fq.gz" refstats="PastPA3Disease-15_S73_stats.txt" ambig=all ambig2=all outu1="PastPA3Disease-15_S73_bboutu_1.fq.gz" outu2="PastPA3Disease-15_S73_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Control-29_S75_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Control-29_S75_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA3Control-29_S75_%.fq.gz" refstats="PastPA3Control-29_S75_stats.txt" ambig=all ambig2=all outu1="PastPA3Control-29_S75_bboutu_1.fq.gz" outu2="PastPA3Control-29_S75_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Disease-8_S63_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Disease-8_S63_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA2Disease-8_S63_%.fq.gz" refstats="PastPA2Disease-8_S63_stats.txt" ambig=all ambig2=all outu1="PastPA2Disease-8_S63_bboutu_1.fq.gz" outu2="PastPA2Disease-8_S63_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Disease-2_S61_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Disease-2_S61_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA2Disease-2_S61_%.fq.gz" refstats="PastPA2Disease-2_S61_stats.txt" ambig=all ambig2=all outu1="PastPA2Disease-2_S61_bboutu_1.fq.gz" outu2="PastPA2Disease-2_S61_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Disease-12_S70_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Disease-12_S70_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/PastPA2Disease-12_S70_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA2Disease-12_S70_%.fq.gz" refstats="PastPA2Disease-12_S70_stats.txt" ambig=all ambig2=all outu1="PastPA2Disease-12_S70_bboutu_1.fq.gz" outu2="PastPA2Disease-12_S70_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Control-39_S77_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Control-39_S77_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA2Control-39_S77_%.fq.gz" refstats="PastPA2Control-39_S77_stats.txt" ambig=all ambig2=all outu1="PastPA2Control-39_S77_bboutu_1.fq.gz" outu2="PastPA2Control-39_S77_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Control-34_S68_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Control-34_S68_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/PastPA2Control-34_S68_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA2Control-34_S68_%.fq.gz" refstats="PastPA2Control-34_S68_stats.txt" ambig=all ambig2=all outu1="PastPA2Control-34_S68_bboutu_1.fq.gz" outu2="PastPA2Control-34_S68_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Control-28_S67_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Control-28_S67_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA2Control-28_S67_%.fq.gz" refstats="PastPA2Control-28_S67_stats.txt" ambig=all ambig2=all outu1="PastPA2Control-28_S67_bboutu_1.fq.gz" outu2="PastPA2Control-28_S67_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Disease-4_S71_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Disease-4_S71_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA1Disease-4_S71_%.fq.gz" refstats="PastPA1Disease-4_S71_stats.txt" ambig=all ambig2=all outu1="PastPA1Disease-4_S71_bboutu_1.fq.gz" outu2="PastPA1Disease-4_S71_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Disease-16_S69_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Disease-16_S69_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA1Disease-16_S69_%.fq.gz" refstats="PastPA1Disease-16_S69_stats.txt" ambig=all ambig2=all outu1="PastPA1Disease-16_S69_bboutu_1.fq.gz" outu2="PastPA1Disease-16_S69_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Control-31_S76_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Control-31_S76_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA1Control-31_S76_%.fq.gz" refstats="PastPA1Control-31_S76_stats.txt" ambig=all ambig2=all outu1="PastPA1Control-31_S76_bboutu_1.fq.gz" outu2="PastPA1Control-31_S76_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Control-21_S66_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Control-21_S66_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA1Control-21_S66_%.fq.gz" refstats="PastPA1Control-21_S66_stats.txt" ambig=all ambig2=all outu1="PastPA1Control-21_S66_bboutu_1.fq.gz" outu2="PastPA1Control-21_S66_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Control-22_S74_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Control-22_S74_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA3Control-22_S74_%.fq.gz" refstats="PastPA3Control-22_S74_stats.txt" ambig=all ambig2=all outu1="PastPA3Control-22_S74_bboutu_1.fq.gz" outu2="PastPA3Control-22_S74_bboutu_2.fq.gz"
-
-
-
-PastPA3Disease-5_S62 #
-PastPA3Control-29_S75 #
-PastPA3Disease-5-2_S72 #
-PastPA3Disease-15_S73 #
-PastPA3Control-29_S75 #
-Pastpa3Control-24_S65 #
-PastPA3Control-22_S74 
-PastPA2Disease-8_S63 #
-PastPA2Disease-2_S61 #
-PastPA2Disease-12_S70 #
-PastPA2Control-39_S77 #
-PastPA2Control-34_S68 #
-PastPA2Control-28_S67 #
-PastPA1Disease-4_S71 #
-PastPA1Disease-16_S69 #
-PastPA1Disease-10_S64 #
-PastPA1Control-31_S76 #
-PastPA1Control-21_S66 #
-
-
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Disease-4_S71_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Disease-4_S71_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA1Disease-4_S71_%.fq.gz" refstats="PastPA1Disease-4_S71_stats.txt" ambig=all ambig2=all outu1="PastPA1Disease-4_S71_bboutu_1.fq.gz" outu2="PastPA1Disease-4_S71_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Disease-10_S64_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA1Disease-10_S64_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA1Disease-10_S64_%.fq.gz" refstats="PastPA1Disease-10_S64_stats.txt" ambig=all ambig2=all outu1="PastPA1Disease-10_S64_bboutu_1.fq.gz" outu2="PastPA1Disease-10_S64_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Control-29_S75_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Control-29_S75_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA3Control-29_S75_%.fq.gz" refstats="PastPA3Control-29_S75_stats.txt" ambig=all ambig2=all outu1="PastPA3Control-29_S75_bboutu_1.fq.gz" outu2="PastPA3Control-29_S75_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/Pastpa3Control-24_S65_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/Pastpa3Control-24_S65_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="Pastpa3Control-24_S65_%.fq.gz" refstats="Pastpa3Control-24_S65_stats.txt" ambig=all ambig2=all outu1="Pastpa3Control-24_S65_bboutu_1.fq.gz" outu2="Pastpa3Control-24_S65_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Control-22_S74_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA3Control-22_S74_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA3Control-22_S74_%.fq.gz" refstats="PastPA3Control-22_S74_stats.txt" ambig=all ambig2=all outu1="PastPA3Control-22_S74_bboutu_1.fq.gz" outu2="PastPA3Control-22_S74_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Disease-12_S70_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Disease-12_S70_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA2Disease-12_S70_%.fq.gz" refstats="PastPA2Disease-12_S70_stats.txt" ambig=all ambig2=all outu1="PastPA2Disease-12_S70_bboutu_1.fq.gz" outu2="PastPA2Disease-12_S70_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Control-39_S77_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Control-39_S77_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA2Control-39_S77_%.fq.gz" refstats="PastPA2Control-39_S77_stats.txt" ambig=all ambig2=all outu1="PastPA2Control-39_S77_bboutu_1.fq.gz" outu2="PastPA2Control-39_S77_bboutu_2.fq.gz"
-mv PastPA* Past_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Control-34_S68_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past/PastPA2Control-34_S68_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="PastPA2Control-34_S68_%.fq.gz" refstats="PastPA2Control-34_S68_stats.txt" ambig=all ambig2=all outu1="PastPA2Control-34_S68_bboutu_1.fq.gz" outu2="PastPA2Control-34_S68_bboutu_2.fq.gz"
-
-
-PastPA3Control-29_S75 -
-Pastpa3Control-24_S65 - 
-PastPA3Control-22_S74 -
-PastPA2Disease-12_S70 -
-PastPA2Control-39_S77 -
-PastPA2Control-34_S68 -
-
-# Ofav
-
-
-# R1
-
-
-
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Control-40_S18_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Control-40_S18_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="Ofav17-7Control-40_S18_%.fq.gz" refstats="Ofav17-7Control-40_S18_stats.txt" ambig=all ambig2=all outu1="Ofav17-7Control-40_S18_bboutu_1.fq.gz" outu2="Ofav17-7Control-40_S18_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Disease-9_S23_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Disease-9_S23_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="Ofav17-7Disease-9_S23_%.fq.gz" refstats="Ofav17-7Disease-9_S23_stats.txt" ambig=all ambig2=all outu1="Ofav17-7Disease-9_S23_bboutu_1.fq.gz" outu2="Ofav17-7Disease-9_S23_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Control-35_S36_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Control-35_S36_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS313Control-35_S36_%.fq.gz" refstats="OfavS313Control-35_S36_stats.txt" ambig=all ambig2=all outu1="OfavS313Control-35_S36_bboutu_1.fq.gz" outu2="OfavS313Control-35_S36_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Disease-7_S32_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Disease-7_S32_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS313Disease-7_S32_%.fq.gz" refstats="OfavS313Disease-7_S32_stats.txt" ambig=all ambig2=all outu1="OfavS313Disease-7_S32_bboutu_1.fq.gz" outu2="OfavS313Disease-7_S32_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Control-39_S40_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Control-39_S40_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS326Control-39_S40_%.fq.gz" refstats="OfavS326Control-39_S40_stats.txt" ambig=all ambig2=all outu1="OfavS326Control-39_S40_bboutu_1.fq.gz" outu2="OfavS326Control-39_S40_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Disease-5_S38_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Disease-5_S38_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS326Disease-5_S38_%.fq.gz" refstats="OfavS326Disease-5_S38_stats.txt" ambig=all ambig2=all outu1="OfavS326Disease-5_S38_bboutu_1.fq.gz" outu2="OfavS326Disease-5_S38_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Control-25_S41_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Control-25_S41_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS326Control-25_S41_%.fq.gz" refstats="OfavS326Control-25_S41_stats.txt" ambig=all ambig2=all outu1="OfavS326Control-25_S41_bboutu_1.fq.gz" outu2="OfavS326Control-25_S41_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Control-34_S37_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Control-34_S37_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS326Control-34_S37_%.fq.gz" refstats="OfavS326Control-34_S37_stats.txt" ambig=all ambig2=all outu1="OfavS326Control-34_S37_bboutu_1.fq.gz" outu2="OfavS326Control-34_S37_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Disease-18_S34_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Disease-18_S34_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS326Disease-18_S34_%.fq.gz" refstats="OfavS326Disease-18_S34_stats.txt" ambig=all ambig2=all outu1="OfavS326Disease-18_S34_bboutu_1.fq.gz" outu2="OfavS326Disease-18_S34_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Disease-3_S39_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS326Disease-3_S39_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS326Disease-3_S39_%.fq.gz" refstats="OfavS326Disease-3_S39_stats.txt" ambig=all ambig2=all outu1="OfavS326Disease-3_S39_bboutu_1.fq.gz" outu2="OfavS326Disease-3_S39_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Control-37_S16_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Control-37_S16_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="Ofav17-7Control-37_S16_%.fq.gz" refstats="Ofav17-7Control-37_S16_stats.txt" ambig=all ambig2=all outu1="Ofav17-7Control-37_S16_bboutu_1.fq.gz" outu2="Ofav17-7Control-37_S16_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Control-38_S17_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Control-38_S17_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="Ofav17-7Control-38_S17_%.fq.gz" refstats="Ofav17-7Control-38_S17_stats.txt" ambig=all ambig2=all outu1="Ofav17-7Control-38_S17_bboutu_1.fq.gz" outu2="Ofav17-7Control-38_S17_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Disease-19_S24_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Disease-19_S24_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="Ofav17-7Disease-19_S24_%.fq.gz" refstats="Ofav17-7Disease-19_S24_stats.txt" ambig=all ambig2=all outu1="Ofav17-7Disease-19_S24_bboutu_1.fq.gz" outu2="Ofav17-7Disease-19_S24_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Disease-1_S22_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofav17-7Disease-1_S22_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="Ofav17-7Disease-1_S22_%.fq.gz" refstats="Ofav17-7Disease-1_S22_stats.txt" ambig=all ambig2=all outu1="Ofav17-7Disease-1_S22_bboutu_1.fq.gz" outu2="Ofav17-7Disease-1_S22_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF15Control-22_S19_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF15Control-22_S19_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavF15Control-22_S19_%.fq.gz" refstats="OfavF15Control-22_S19_stats.txt" ambig=all ambig2=all outu1="OfavF15Control-22_S19_bboutu_1.fq.gz" outu2="OfavF15Control-22_S19_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF15Control-26_S92_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF15Control-26_S92_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavF15Control-26_S92_%.fq.gz" refstats="OfavF15Control-26_S92_stats.txt" ambig=all ambig2=all outu1="OfavF15Control-26_S92_bboutu_1.fq.gz" outu2="OfavF15Control-26_S92_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF15Disease-14_S27_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF15Disease-14_S27_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavF15Disease-14_S27_%.fq.gz" refstats="OfavF15Disease-14_S27_stats.txt" ambig=all ambig2=all outu1="OfavF15Disease-14_S27_bboutu_1.fq.gz" outu2="OfavF15Disease-14_S27_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF15Disease-2_S25_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF15Disease-2_S25_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavF15Disease-2_S25_%.fq.gz" refstats="OfavF15Disease-2_S25_stats.txt" ambig=all ambig2=all outu1="OfavF15Disease-2_S25_bboutu_1.fq.gz" outu2="OfavF15Disease-2_S25_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF59Control-28_S20_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF59Control-28_S20_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavF59Control-28_S20_%.fq.gz" refstats="OfavF59Control-28_S20_stats.txt" ambig=all ambig2=all outu1="OfavF59Control-28_S20_bboutu_1.fq.gz" outu2="OfavF59Control-28_S20_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF59Control-34_S42_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF59Control-34_S42_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavF59Control-34_S42_%.fq.gz" refstats="OfavF59Control-34_S42_stats.txt" ambig=all ambig2=all outu1="OfavF59Control-34_S42_bboutu_1.fq.gz" outu2="OfavF59Control-34_S42_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF59Disease-12_S29_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF59Disease-12_S29_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavF59Disease-12_S29_%.fq.gz" refstats="OfavF59Disease-12_S29_stats.txt" ambig=all ambig2=all outu1="OfavF59Disease-12_S29_bboutu_1.fq.gz" outu2="OfavF59Disease-12_S29_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF59Disease-16_S30_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF59Disease-16_S30_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavF59Disease-16_S30_%.fq.gz" refstats="OfavF59Disease-16_S30_stats.txt" ambig=all ambig2=all outu1="OfavF59Disease-16_S30_bboutu_1.fq.gz" outu2="OfavF59Disease-16_S30_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Control-23_S21_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Control-23_S21_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS313Control-23_S21_%.fq.gz" refstats="OfavS313Control-23_S21_stats.txt" ambig=all ambig2=all outu1="OfavS313Control-23_S21_bboutu_1.fq.gz" outu2="OfavS313Control-23_S21_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Control-29_S91_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Control-29_S91_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS313Control-29_S91_%.fq.gz" refstats="OfavS313Control-29_S91_stats.txt" ambig=all ambig2=all outu1="OfavS313Control-29_S91_bboutu_1.fq.gz" outu2="OfavS313Control-29_S91_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Disease-16_S33_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Disease-16_S33_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS313Disease-16_S33_%.fq.gz" refstats="OfavS313Disease-16_S33_stats.txt" ambig=all ambig2=all outu1="OfavS313Disease-16_S33_bboutu_1.fq.gz" outu2="OfavS313Disease-16_S33_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Disease-1_S31_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Disease-1_S31_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavS313Disease-1_S31_%.fq.gz" refstats="OfavS313Disease-1_S31_stats.txt" ambig=all ambig2=all outu1="OfavS313Disease-1_S31_bboutu_1.fq.gz" outu2="OfavS313Disease-1_S31_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofavf15Control-31_S35_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/Ofavf15Control-31_S35_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="Ofavf15Control-31_S35_%.fq.gz" refstats="Ofavf15Control-31_S35_stats.txt" ambig=all ambig2=all outu1="Ofavf15Control-31_S35_bboutu_1.fq.gz" outu2="Ofavf15Control-31_S35_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF15Disease-7_S26_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF15Disease-7_S26_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavF15Disease-7_S26_%.fq.gz" refstats="OfavF15Disease-7_S26_stats.txt" ambig=all ambig2=all outu1="OfavF15Disease-7_S26_bboutu_1.fq.gz" outu2="OfavF15Disease-7_S26_bboutu_2.fq.gz"
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF59Disease-19_S28_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavF59Disease-19_S28_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="OfavF59Disease-19_S28_%.fq.gz" refstats="OfavF59Disease-19_S28_stats.txt" ambig=all ambig2=all outu1="OfavF59Disease-19_S28_bboutu_1.fq.gz" outu2="OfavF59Disease-19_S28_bboutu_2.fq.gz"
-
-_R1_clean_merged.fastq.gz
-OfavF15Disease-7_S26_R1_clean_merged.fastq.gz
-OfavF59Disease-19_S28_R1_clean_merged.fastq.gz
-
 
 
 
@@ -1624,8 +1074,9 @@ OfavF59Disease-19_S28_R1_clean_merged.fastq.gz
 
 
 ## Split bbsplit output into Forward and Reverse reads using BBmap
-#Example:
 
+**Example:**
+```
 #!/bin/bash
 PATH=$PATH:/opt/storage/opt_programs/bbmap/
 PATH=$PATH:/opt/storage/anaconda3/bin/java
@@ -1635,9 +1086,10 @@ for FILE in *_host.fq.gz; do
         echo $SAMP
 nohup /opt/storage/anaconda3/bin/java -ea -Xmx10g  -cp  /opt/storage/opt_programs/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=${SAMP}_1.fq out2=${SAMP}_2.fq
 done
+```
 
-# Modified - host
-
+**Modified - host**
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
 PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
@@ -1647,9 +1099,9 @@ for FILE in ./$(ls *_Acer_coral_only_transcriptome.fq.gz); do
         echo $SAMP
 /home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
 done
-
-# Modified - bacteria
-
+```
+**Modified - bacteria**
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
 PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
@@ -1659,9 +1111,9 @@ for FILE in ./$(ls *_Acer_Bacteria_only_transcriptome.fq.gz); do
         echo $SAMP
 /home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
 done
-
-# Modified - symbiodinium_GCA_001939145
-
+```
+**Modified - symbiodinium_GCA_001939145**
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
 PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
@@ -1671,9 +1123,10 @@ for FILE in ./$(ls *_symbiodinium_GCA_001939145.fq.gz); do
         echo $SAMP
 /home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
 done
+```
 
-# Modified - breviolum_PRJNA274852
-
+**Modified - breviolum_PRJNA274852**
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
 PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
@@ -1683,9 +1136,10 @@ for FILE in ./$(ls *_breviolum_PRJNA274852.fq.gz); do
         echo $SAMP
 /home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
 done
+```
 
-# Modified - davies_cladeC_feb
-
+**Modified - davies_cladeC_feb**
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
 PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
@@ -1695,9 +1149,10 @@ for FILE in ./$(ls *_davies_cladeC_feb.fq.gz); do
         echo $SAMP
 /home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
 done
+```
 
-# Modified - durusdinium_PRJNA508937
-
+**Modified - durusdinium_PRJNA508937**
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
 PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
@@ -1707,61 +1162,80 @@ for FILE in ./$(ls *_durusdinium_PRJNA508937.fq.gz); do
         echo $SAMP
 /home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
 Done
+```
 
-# Salmon: Read Quantification
+# Salmon
+> Read Quantification
 
-# Salmon Indexing 
-# If you want to use Salmon in mapping-based mode, then you first have to build a salmon index for your transcriptome. Assume that transcripts.fa contains the set of transcripts you wish to quantify. 
+**Salmon Indexing** 
+First have to build a salmon index for your transcriptome. Assume that transcripts.fa contains the set of transcripts you wish to quantify. 
 
-# Acer
+### Acer
+```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Acer/Acer_index
-# Mcav
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Mcav/Mcav_index
-# Past
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Past/Past_index
-# Ofav
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Ofav_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Ofav/Ofav_index
+```
 
+### Mcav
+```
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Mcav/Mcav_index
+```
+
+### Past
+```
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Past/Past_index
+```
+
+### Ofav
+```
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Ofav_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Ofav/Ofav_index
+```
 
 ## Index Building for Symbiont Transcriptomes 
-For the symbiont indexes, we can drop kmer values at a standard in order to get the best quality of reads.  
 
-#	working directory: /opt/storage/storage/symbiont_salmon_indices_and_loops/indexes_k23
-# k value dropped from 31 standard to 23 because of quality of fasta index file 
-PATH=$PATH/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/
-
-# Symbiodinium index - with reference genome
+### Symbiodinium index - with reference genome
+```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_A_index -k 23
+```
 
-# Symbiodinium index - with bbsplit output transcriptome
+### Symbiodinium index - with bbsplit output transcriptome
+```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_A_index -k 23
+```
 
-# Breviolium index
+### Breviolium index
+```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_B_index -k 23
+```
 
-# Cladicopium index
+### Cladicopium index
+```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_C_index -k 23
+```
 
-# Durusdinium index
+### Durusdinium index
+```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_D_index -k 23
+```
 
 
-
-## Index Building for Bacteria Transcriptomes
+### Index Building for Bacteria Transcriptomes
+```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/bacteria_reference/concatenated_bacteria_genomes.fna -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Bacteria_index -k 23
+```
 
-
-
+#### Salmon Example:
+```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_A_index -l A -1 /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Acer/Acer_output_FR/AcerACDisease-7_S80_symbiodinium_GCA_001939145_1.fq -2 /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Acer/Acer_output_FR/AcerACDisease-7_S80_symbiodinium_GCA_001939145_2.fq -p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/AcerACDisease-7_S80_symbiodinium_quant
+```
 
-
-#count number of transcripts with a count equal or greater to 1
+count number of transcripts with a count equal or greater to 1
+```
 awk 'NR>1 && $5 >= 1 { count++ } END { print "Number of transcripts with NumReads >= 1: ", count }' quant.sf
+```
 
 
-
-# Loop for Acer
-
+### Loop for Acer
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
 for FILE in ./$(ls *_Acer_coral_only_transcriptome_1.fq); do
@@ -1775,9 +1249,10 @@ for FILE in ./$(ls *_Acer_coral_only_transcriptome_1.fq); do
 				-2 ${SAMP}_Acer_coral_only_transcriptome_2.fq \
 				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_host_quant
 done
+```
 
-# Loop for Symbiodinium
-
+### Loop for Symbiodinium
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
 for FILE in ./$(ls *_symbiodinium_GCA_001939145_1.fq); do
@@ -1791,8 +1266,10 @@ for FILE in ./$(ls *_symbiodinium_GCA_001939145_1.fq); do
 				-2 ${SAMP}_symbiodinium_GCA_001939145_2.fq \
 				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_Clade_A_quant
 done
-# Loop for Breviolium
+```
 
+### Loop for Breviolium
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
 for FILE in ./$(ls *_breviolum_PRJNA274852_1.fq); do
@@ -1806,8 +1283,10 @@ for FILE in ./$(ls *_breviolum_PRJNA274852_1.fq); do
 				-2 ${SAMP}_breviolum_PRJNA274852_2.fq \
 				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_Clade_B_quant
 done
-# Loop for Cladicopium
+```
 
+### Loop for Cladicopium
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
 for FILE in ./$(ls *_davies_cladeC_feb_1.fq); do
@@ -1821,8 +1300,10 @@ for FILE in ./$(ls *_davies_cladeC_feb_1.fq); do
 				-2 ${SAMP}_davies_cladeC_feb_2.fq \
 				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_Clade_C_quant
 done
-# Loop for Durusdinium
+```
 
+### Loop for Durusdinium
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
 for FILE in ./$(ls *_durusdinium_PRJNA508937_1.fq); do
@@ -1836,8 +1317,10 @@ for FILE in ./$(ls *_durusdinium_PRJNA508937_1.fq); do
 				-2 ${SAMP}_durusdinium_PRJNA508937_2.fq \
 				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_Clade_D_quant
 done
-# Loop for Bacteria
+```
 
+### Loop for Bacteria
+```
 #!/bin/bash
 PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
 for FILE in ./$(ls *_Acer_Bacteria_only_transcriptome_1.fq); do
@@ -1851,140 +1334,54 @@ for FILE in ./$(ls *_Acer_Bacteria_only_transcriptome_1.fq); do
 				-2 ${SAMP}_Acer_Bacteria_only_transcriptome_2.fq \
 				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_Bacteria_quant
 done
-
-
-
-
-
-
-
-
-
-#Mcav
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
-for FILE in ./$(ls *_Mcav_coral_only_transcriptome_1.fq); do
-        echo ${FILE}
-        SAMP=$(basename -s _Mcav_coral_only_transcriptome_1.fq $FILE)
-        echo $SAMP
-        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
-
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Mcav_index -l A \
-				-1 ${SAMP}_Mcav_coral_only_transcriptome_1.fq \
-				-2 ${SAMP}_Mcav_coral_only_transcriptome_2.fq \
-				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_host_quant
-done
-# Loop for Symbiodinium
-
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
-for FILE in ./$(ls *_symbiodinium_GCA_001939145_1.fq); do
-        echo ${FILE}
-        SAMP=$(basename -s _symbiodinium_GCA_001939145_1.fq $FILE)
-        echo $SAMP
-        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
-
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Clade_A_index -l A \
-				-1 ${SAMP}_symbiodinium_GCA_001939145_1.fq \
-				-2 ${SAMP}_symbiodinium_GCA_001939145_2.fq \
-				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_Clade_A_quant
-done
-# Loop for Breviolium
-
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
-for FILE in ./$(ls *_breviolum_PRJNA274852_1.fq); do
-        echo ${FILE}
-        SAMP=$(basename -s _breviolum_PRJNA274852_1.fq $FILE)
-        echo $SAMP
-        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
-
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Clade_B_index -l A \
-				-1 ${SAMP}_breviolum_PRJNA274852_1.fq \
-				-2 ${SAMP}_breviolum_PRJNA274852_2.fq \
-				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_Clade_B_quant
-done
-# Loop for Cladicopium
-
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
-for FILE in ./$(ls *_davies_cladeC_feb_1.fq); do
-        echo ${FILE}
-        SAMP=$(basename -s _davies_cladeC_feb_1.fq $FILE)
-        echo $SAMP
-        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
-
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Clade_C_index -l A \
-				-1 ${SAMP}_davies_cladeC_feb_1.fq \
-				-2 ${SAMP}_davies_cladeC_feb_2.fq \
-				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_Clade_C_quant
-done
-# Loop for Durusdinium
-
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
-for FILE in ./$(ls *_durusdinium_PRJNA508937_1.fq); do
-        echo ${FILE}
-        SAMP=$(basename -s _durusdinium_PRJNA508937_1.fq $FILE)
-        echo $SAMP
-        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
-
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Clade_D_index -l A \
-				-1 ${SAMP}_durusdinium_PRJNA508937_1.fq \
-				-2 ${SAMP}_durusdinium_PRJNA508937_2.fq \
-				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_Clade_D_quant
-done
-# Loop for Bacteria
-
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
-for FILE in ./$(ls *_Mcav_Bacteria_only_transcriptome_1.fq); do
-        echo ${FILE}
-        SAMP=$(basename -s _Mcav_Bacteria_only_transcriptome_1.fq $FILE)
-        echo $SAMP
-        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
-
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Bacteria_index -l A \
-				-1 ${SAMP}_Mcav_Bacteria_only_transcriptome_1.fq \
-				-2 ${SAMP}_Mcav_Bacteria_only_transcriptome_2.fq \
-				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/${SAMP}_Bacteria_quant
-done
-
-
+```
+### Repeat for other Coral
 
 
 # Orthofinder: Obtaining single-copy orthologs
 
-# Need to make reference proteomes for the Algae.
+### Need to make reference proteomes for the Algae.
+
+## Clade A
+```
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t symbiodinium_GCA_001939145.fa
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t symbiodinium_GCA_001939145.fa
 mv symbiodinium_GCA_001939145.fa.transdecoder.pep symbiodinium_GCA_001939145_transdecoder.fa
 /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i symbiodinium_GCA_001939145_transdecoder.fa -o Clade_A_reference_proteome.fa
+```
 
+## Clade B
+```
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t breviolum_PRJNA274852.fa
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t breviolum_PRJNA274852.fa
 Mv breviolum_PRJNA274852.fa.transdecoder.pep Clade_B_transdecoder.fa
 /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Clade_B_transdecoder.fa -o Clade_B_reference_proteome.fa
+```
 
+## Clade C
+```
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta
 mv davies_cladeC_feb.fasta.transdecoder.pep Clade_C_transdecoder.fa
 /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Clade_C_transdecoder.fa -o Clade_C_reference_proteome.fa
+```
 
+## Clade D
+```
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t durusdinium_PRJNA508937.fasta
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t durusdinium_PRJNA508937.fasta
 mv durusdinium_PRJNA508937.fasta.transdecoder.pep Clade_D_transdecoder.fa
 /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Clade_D_transdecoder.fa -o Clade_D_reference_proteome.fa
+```
 
+### Move all proteome files to proteome folder. Then run Orthofinder as follows:
 
-# Move all proteome files to proteome folder. Then run Orthofinder as follows:
-
-
+```
 python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinder.py -f . -t 20
+```
+> This will generate a directory called "OrthoFinder/Results\_[date]". Move the "Orthogroups" and the "Comparative_Genomics_Statistics" subdirectories onto your local machine.
 
-This will generate a directory called "OrthoFinder/Results\_[date]". Move the "Orthogroups" and the "Comparative_Genomics_Statistics" subdirectories onto your local machine.
-
-## Annotating the orthologs
+# Annotating the orthologs
 From the /Orthogroups directory, use "Orthogroups_SingleCopyOrthologues.txt" and "Orthogroups.tsv" to grab the sequence names of the single-copy orthologs from each species.
 ```{r}
 setwd("~/OneDrive - University of Texas at Arlington/Dissertation/SCTLD/Files_for_R/January_2022/SCTLD/host/all/Orthofinder_cdhit/Orthogroups/")
@@ -2000,7 +1397,9 @@ mcav_orthologs <- Orthogroup_Sequences[c(1,3)]
 names(mcav_orthologs)
 write.csv(mcav_orthologs, file="mcav_SC_ortholog_sequences.csv",quote = FALSE,row.names = FALSE)
 ```
-Make a new directory in "OrthoFinder/" called "Annotating_Orthogroups" and move "mcav_SC_ortholog_sequences.csv" here along with the M.cavernosa proteome from the previous step. We will use [cdbfasta](https://github.com/gpertea/cdbfasta) to pull the single-copy ortholog sequences out of the M.cavernosa reference proteome. 
+
+Make a new directory in "OrthoFinder/" called "Annotating_Orthogroups" and move "mcav_SC_ortholog_sequences.csv" here along with the M.cavernosa proteome from the previous step. We will use [cdbfasta](https://github.com/gpertea/cdbfasta) to pull the single-copy ortholog sequences out of the M.cavernosa reference proteome.
+
 ```{linux, eval=FALSE}
 DIR=/opt/storage/storage/SCTLD/host_orthofinder/OrthoFinder/OrthoFinder/Annotating_Orthogroups
 
