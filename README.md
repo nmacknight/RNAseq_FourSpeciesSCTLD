@@ -374,7 +374,7 @@ You can either modify a for lopp to do this or run it manually.
 
 <details>
 
-<summary>Trinity </summary>
+<summary>Trinity</summary>
 #Trinity
 > Assembles Transcript sequences into de novo Transcriptomes
 
@@ -862,7 +862,7 @@ trinityrnaseq-Trinity-v2.5.1/util/misc/get_longest_isoform_seq_per_trinity_gene.
 
 <details>
 
-<summary> Make Coral Only Database </summary>
+<summary> Make Coral Only Database</summary>
 # Make Coral Only Database
 
 Make the master coral fasta database:
@@ -1118,7 +1118,7 @@ nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cn
 
 
 <details>
-<summary> BBSplit - Seperate F and R Reads </summary>
+<summary> BBSplit - Seperate F and R Reads</summary>
 	
 > Split bbsplit output into Forward and Reverse reads using BBmap
 
@@ -1442,7 +1442,7 @@ python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinde
 
 <details>
 
-<summary> Annotating the Orthologs </summary>
+<summary> Annotating the Orthologs</summary>
 # Annotating the orthologs
 From the /Orthogroups directory, use "Orthogroups_SingleCopyOrthologues.txt" and "Orthogroups.tsv" to grab the sequence names of the single-copy orthologs from each species.
 ```{r}
