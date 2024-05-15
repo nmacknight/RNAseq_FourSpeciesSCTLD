@@ -1475,10 +1475,10 @@ cat mcav_SC_ortholog_sequence_names.txt | cdbfasta/cdbyank mcav_ref_proteome.fa.
 # Annotate with BLASTp
 ncbi-blast-2.2.27+/bin/blastp -query mcav_sc_orthologs.fa -db uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out mcav_sc_orthologs_annotated.txt
 ```
-</details>
+
 
 
 Save "mcav_sc_orthologs_annotated.txt" and "mcav_sc_orthologs.fa" to your computer. We will use these files in our Coral EVE analysis. 
 This process is analagous in the Symbiodinaiceae genera using the Durusdinium reference proteome as the reference for annotation.
 
-
+</details>
