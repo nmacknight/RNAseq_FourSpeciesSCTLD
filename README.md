@@ -324,7 +324,6 @@ busco -i [SEQUENCE_FILE] -m [MODE] [OTHER OPTIONS]
 <summary>Downloading Data to Server</summary>
 # Downloading Data to Server
 
-
 > [!NOTE]
 > Moving Sequence data from the sequencer to your server/local computer is going to be project specific. My first recommendation is to have a discussion with your sequencer on how to make the necessary transfer of data. Hopefully they have a tutorial with clear instructions. In the past I have used filezilla. For this project they uploaded the data on box but the amount of data was too large for box to be able to download to my computer or server. So, following my own advice I reached out to the sequencer and they transferred the data to an amazon host server and gave me instrucitons on how to transfer the data to my local computer, where I redundantly saved it to a local external hard drive and then moved it to my server. 
 
