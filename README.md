@@ -1000,7 +1000,7 @@ awk '{if ($3 > 150) print $1}' Ofav_Bacteria_contigs_percent_95.txt > Ofav_Bacte
 
 > Transdecoder first appeared as a straight-forward "convert nucleotides to protein prediction" intermediate step. I quickly realized a significant overlooked issue with this that I have addressed in my methods below.
 
-> The Problem: Orthofinder relies on the predicted proteins from Transdecoder. To predict proteins, transdecoder identifies Open Reading Frames "ORFs". These are the nucleotides that create the start codon, so a logical way to predict the start of a protein. The problem is that there can be multiple, possibly hundreds of ORFs per gene. So, Orthofinder then using these multiple ORFs per gene to identify orthogroups, single copy orthologs, etc. These multiple ORF predicted orthogroups become a problem when its time to merge that information with count data produced from Salmon. Salmon uses the reference transcriptome that we used from BBsplit to count the frequency of those genes. So these are gene-level counts, NOT multiple ORF within a gene-level counts. So what do you do when you have lets say 750 ORFs, with unique functions, molecular evolution and need to assign a count at the gene-level? The answer is it doesnt work cleanly and creates a technical issue. There are various ways people address this and I played with most of them. You can pick the first ORF, the longest ORF, the ORF with the most homology. When I picked the first ORF, the problem is you have to just delete the other ORFs and that feels so messy and arbitrary. When I picked the longest ORF, I observed very strong species bias. This is probably because across mutliple species, some may evolutionarily have duplication events in their genes that will make them longer, or their references are higher quality leading to better alignment because its a better studied speices or their genome happened to be produced more recently with better equipment, or something about that species does better during the benchwork stage and extracts better than the others. All of these are technical artificats and not a bioliogical factor that justifies the longest ORF species bias approach. The final approach is a ORF homology-based approach. During the Transdecoder.Predict function, you can specify "single_best_only". This function will select only one representative ORF per transcript based on homology. During the prediction process, TransDecoder evaluates ORFs based on coding potential, length, and homology to known protein domains or sequences.
+> The Problem: Orthofinder relies on the predicted proteins from Transdecoder. To predict proteins, transdecoder identifies Open Reading Frames "ORFs". These are the nucleotides that create the start codon, so a logical way to predict the start of a protein. The problem is that there can be multiple, possibly hundreds of ORFs per gene. So, Orthofinder then using these multiple ORFs per gene to identify orthogroups, single copy orthologs, etc. These multiple ORF predicted orthogroups become a problem when its time to merge that information with count data produced from Salmon. Salmon uses the reference transcriptome that we used from BBsplit to count the frequency of those genes. So these are gene-level counts, NOT multiple ORF within a gene-level counts. So what do you do when you have lets say 750 ORFs, with unique functions, molecular evolution and need to assign a count at the gene-level? The answer is it doesnt work cleanly and creates a technical issue. There are various ways people address this and I played with most of them. You can pick the first ORF, the longest ORF, the ORF with the most homology. When I picked the first ORF, the problem is you have to just delete the other ORFs and that feels so messy and arbitrary. When I picked the longest ORF, I observed very strong species bias. This is probably because across mutliple species, some may evolutionarily have duplication events in their genes that will make them longer, or their references are higher quality leading to better alignment because its a better studied speices or their genome happened to be produced more recently with better equipment, or something about that species does better during the benchwork stage and extracts better than the others. The first function of transdecoder: transdecoder.LonOrfs, states it selects the longest ORF, but when you read the details of this function, it does not actually ONLY retain the longest ORFs and has exceptions that will have it keep multiple ORFs. I wrote a python script to force it to retain the longest ORF by identifying the transcript/gene names that were the same, and then keeping the one that was the longest length. These details can be found in the transcript titles. Once I did this it gave me the species bias I described and was not purusued. I do not include the script to force the retention of longest ORF. All of these are technical artificats and not a bioliogical factor that justifies the longest ORF species bias approach. The final approach is a ORF homology-based approach. During the Transdecoder.Predict function, you can specify "single_best_only". This function will select only one representative ORF per transcript based on homology. During the prediction process, TransDecoder evaluates ORFs based on coding potential, length, and homology to known protein domains or sequences.
 ORFs are ranked by these scores, with higher scores indicating a stronger likelihood of representing true protein-coding sequences as the "single-best" ORF. I found this homolgy based approach to represent the biological nature of the data while the others introduced a technical bias. 
 
 > When not to select one ORF: Selecting one ORF is ideal for those who are interested in gene or transcript-level analysis and do not care about isoform or ORF level analysis. Much of multi-species comparisons is a tradeoff between complexity and comparability. If you want to do gene-level comparisons, there is likely to be more conservation of those genes and they are less species-specific and comparable. If you want to do ORF-level comparisons, you will retain the complexity of each species, but that complexity may be species-specific and less evolutionarity conserved. Because we are comparing four species in this study that expand potentially 100+ Million years of evolutionary divergence, I am leaning into comparability. But if I was compariing Orbicella faveolata to Orbicella franksi or even Orbicella faveolata to Montastraea cavernosa (15 million year divergence), I may lean into retaining that complexity to explore the molecular evolution of these relatively closely related species. 
@@ -1065,26 +1065,42 @@ else:
     print("Verification passed: Each transcript has only a single ORF.")
 ```
 
-Update "fasta.file" to be your output file from transdecoder. So for the Acer-Bacteria example below, I would replace "file.fasta" with "Acer_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa"
 
 ```
 chmod +x check_single_orf.py
-./check_single_orf.py file.fasta
 ```
 
-### Acer - Bacteria 
+## Acer - Bacteria 
 ```
 mkdir Bacteria_transdecoder_AllORFs
 cd Bacteria_transdecoder_AllORFs
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Acer_Bacteria_only_transcriptome.fa
-/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
+```
+Pfam using Hmmer
+```
+/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz
+```
+Blastp
+```
+/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
     -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -max_target_seqs 1 \
     -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Bacteria_transdecoder_AllORFsAcer_Bacteria_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
-
+```
+Transdecoder.Predict with Transdecoder.LongORFs, Pfam, and blastp results and retaining --single_best_only ORF per transcript.
+```
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../../Acer_Bacteria_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
+```
+Combine similar transcripts into one using CD-HIT
+```
 mv Acer_Bacteria_only_transcriptome.fa.transdecoder.pep Acer_Bacteria_only_transcriptome_transdecoder.fa
 /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Acer_Bacteria_only_transcriptome_transdecoder.fa -o Acer_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa
+```
+
+*Verify single ORF per transcript:*
+> Update "fasta.file" to be your output file from transdecoder. So for the Acer-Bacteria example below, I would replace "file.fasta" with "Acer_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa"
+```
+./check_single_orf.py file.fasta
 ```
 
 # Acer - Coral Only
