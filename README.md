@@ -1407,69 +1407,40 @@ mv Past_Algae_only_transcriptome.fa.transdecoder.pep Past_Algae_only_transcripto
 ./check_single_orf.py Past_Algae_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
+# OrthoFinder
 
-# Acer - Coral Only
+### Move all the reference_proteome.fa into a new folder specific for each holobiont compartment (Host, Algae, Bacteria, so three folders total)
+Example of moving all reference_proteome.fa files into their respective newly created folder:
 ```
- /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
- cat Acer_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Acer_coral_only_transcriptome.fa
- 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t Acer_coral_only_transcriptome.fa
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t Acer_coral_only_transcriptome.fa
-mv Acer_coral_only_transcriptome.fa.transdecoder.pep ./Acer_coral_only_transcriptome_transdecoder.fa #change .pep to .fa for cd-hit
+# Host
+mkdir /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF
+mv *_Host_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF/
 
- cd-hit -i coral_only_transcriptome_transdecoder.fa -o reference_proteome.fa
- /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i  Acer_coral_only_transcriptome_transdecoder.fa -o Acer_reference_proteome.fa
- 
-### Step 4: Make an alignable transcriptome
-Use the reference proteome to create an alignable transcriptome:
+# Algae
+mkdir /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF
+mv *_Algae_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/
 
-grep ">" Acer_reference_proteome.fa > proteome_names.txt
-sed 's/.p/\t/' proteome_names.txt > proteome_names_format.txt
-awk '{print $1}'  proteome_names_format.txt > contigs_to_extract.txt
-sed 's/^.//g' contigs_to_extract.txt > contigs_list.txt
-
-cat contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > final_coral_reference_transcriptome.fa
-
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in uniprot_sprot.fasta -parse_seqids -dbtype prot -out uniprot_db
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/final_coral_reference_transcriptome.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out annotated_Acer_coral_reference_transcriptome.txt -num_threads 30
- 
- # Keep only annotations with an e-value less than e-5. 
- awk '{if ($3 < 1e-05) print $1,$2,$3}' annotated_Acer_coral_reference_transcriptome.txt > annotated_Acer_coral_reference_transcriptome_e-5.txt
-```
-# Acer - Bacteria Only
-```
- /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
- cat Acer_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Acer_Bacteria_only_transcriptome.fa
- 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t Acer_Bacteria_only_transcriptome.fa
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t Acer_Bacteria_only_transcriptome.fa
-mv Acer_Bacteria_only_transcriptome.fa.transdecoder.pep ./Acer_Bacteria_only_transcriptome_transdecoder.fa #change .pep to .fa for cd-hit
-
- cd-hit -i coral_only_transcriptome_transdecoder.fa -o reference_proteome.fa
- /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i  Acer_Bacteria_only_transcriptome_transdecoder.fa -o Acer_Bacteria_reference_proteome.fa
- 
-### Step 4: Make an alignable transcriptome
-Use the reference proteome to create an alignable transcriptome:
-
-grep ">" Acer_reference_proteome.fa > proteome_names.txt
-sed 's/.p/\t/' proteome_names.txt > proteome_names_format.txt
-awk '{print $1}'  proteome_names_format.txt > contigs_to_extract.txt
-sed 's/^.//g' contigs_to_extract.txt > contigs_list.txt
-
-cat contigs_list.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > final_Acer_Bacteria_reference_transcriptome.fa
-
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in uniprot_sprot.fasta -parse_seqids -dbtype prot -out uniprot_db
- 
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/final_Acer_Bacteria_reference_transcriptome.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out annotated_Acer_Bacteria_reference_transcriptome.txt -num_threads 10
- 
- # Keep only annotations with an e-value less than e-5. 
- awk '{if ($3 < 1e-05) print $1,$2,$3}' annotated_Acer_Bacteria_reference_transcriptome.txt > annotated_Acer_Bacteria_reference_transcriptome_e-5.txt
+# Bacteria
+mkdir /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF
+mv *_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/
 ```
 
-### Transdecoder script repeated for each Coral. 
+Then within each folder as the active directory perform the Orthofinder Command:
+> This command performs OrthoFinder, comparing the predicted proteins among the reference_proteome.fa files
+```
+# Host
+cd /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF/
+python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinder.py -f . -t 50
+
+# Algae
+cd /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/
+python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinder.py -f . -t 50
+
+# Bacteria
+cd /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/
+python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinder.py -f . -t 50
+```
+
 </details>
 
 
