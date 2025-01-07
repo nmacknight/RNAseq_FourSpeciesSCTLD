@@ -1186,7 +1186,7 @@ mv Past_Bacteria_only_transcriptome.fa.transdecoder.pep Past_Bacteria_only_trans
 ./check_single_orf.py Past_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
-# Host :House:
+# Host :house:
 
 ## Acer - Host
 ```
