@@ -1232,8 +1232,11 @@ cd Host_transdecoder_AllORFs
     -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -max_target_seqs 1 \
     -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Host_transdecoder_AllORFs/Mcav_Host_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
 
+# Rename
+mv Mcav_Host_only_transcriptome.fa.transdecoder_dir/ Mcav_coral_only_transcriptome.fa.transdecoder_dir
+
 # Transdecoder.Predict 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Mcav_Host_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Mcav_coral_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
 
 # CD-HIT
 mv Mcav_Host_only_transcriptome.fa.transdecoder.pep Mcav_Host_only_transcriptome_transdecoder.fa
