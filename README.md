@@ -714,6 +714,18 @@ nohup /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/
 
 <summary>BBSplit</summary>
 # BBSplit
+
+1/8/24: After digging into bbsplit methods (which involved a lot of optimization) here is what was performed. 
+
+Reliable Algal symbiont references were concatendated. 
+Algal symbiont databases were made based on concatenated clade specific references.
+Trinity metatranscriptomes were blastn against symbiont databases.
+mapped transcripts were quality filtered.
+the sequences of QC passed transcripts were extracted via cdbyank from the metatranscritpomes to make clade only references. 
+These clade only references were input for bbsplit. 
+
+# End 1/8/24 Notes to self.
+
 > Aligns metatranscriptomes to multiple references simultaneously.
 
 > REFERENCE Transcriptomes: (From Kelsey Beavers) The publicly available data used in this study include the transcriptomes for Symbiodinium CassKB8 (transcriptome assembly: http://medinalab.org/zoox/, accession number PRJNA80085), Breviolum minutum (transcriptome assembly: http://zoox.reefgenomics.org/download/, accession number PRJNA274852), Cladocopium goreaui (transcriptome assembly: http://ssid.reefgenomics.org/download/, accession number PRJNA307543) and Durusdinium trenchii (transcriptome assembly: https://datadryad.org/stash/dataset/doi:10.5061/dryad.12j173m, accession number PRJNA508937), as well as the genomes for M. cavernosa (genome assembly: https://matzlab.weebly.com/data-code.html, accession number PRJNA679067) and O. faveolata (genome assembly: https://www.ncbi.nlm.nih.gov/genome/13173?genome_assembly_id=311351, accession number PRJNA381078). The Master Coral database used in this study is available in a public Zenodo repository https://doi.org/10.5281/zenodo.783898080.
@@ -1205,11 +1217,14 @@ cd Host_transdecoder_AllORFs
     -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -max_target_seqs 1 \
     -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Host_transdecoder_AllORFs/Acer_coral_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
 
+mv blastp.outfmt6 ../
+
+
 # Transdecoder.Predict 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Acer_Host_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Acer_coral_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
 
 # CD-HIT
-mv Acer_Host_only_transcriptome.fa.transdecoder.pep Acer_Host_only_transcriptome_transdecoder.fa
+mv Acer_coral_only_transcriptome.fa.transdecoder.pep Acer_coral_only_transcriptome_transdecoder.fa
 /home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Acer_coral_only_transcriptome_transdecoder.fa -o Acer_Host_reference_proteome_AllORF_SingleBestOnly.fa
 
 # Verify Single ORF
@@ -1222,28 +1237,29 @@ mkdir Host_transdecoder_AllORFs
 cd Host_transdecoder_AllORFs
 
 # TransDecoder.LongOrfs (Protein-Coding ORF Prediciton)
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Mcav_Host_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Mcav_coral_only_transcriptome.fa
 
 # Pfam
-/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Host_transdecoder_AllORFs/Mcav_Host_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
+/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Host_transdecoder_AllORFs/Mcav_coral_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
 
 # Blasp
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Host_transdecoder_AllORFs/Mcav_Host_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Host_transdecoder_AllORFs/Mcav_coral_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
     -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -max_target_seqs 1 \
-    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Host_transdecoder_AllORFs/Mcav_Host_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
+    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Host_transdecoder_AllORFs/Mcav_coral_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
 
+mv blastp.outfmt6 ../
 # Rename
-mv Mcav_Host_only_transcriptome.fa.transdecoder_dir/ Mcav_coral_only_transcriptome.fa.transdecoder_dir
+mv Mcav_coral_only_transcriptome.fa.transdecoder_dir/ Mcav_coral_only_transcriptome.fa.transdecoder_dir
 
 # Transdecoder.Predict 
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Mcav_coral_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
 
 # CD-HIT
-mv Mcav_Host_only_transcriptome.fa.transdecoder.pep Mcav_Host_only_transcriptome_transdecoder.fa
-/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Mcav_Host_only_transcriptome_transdecoder.fa -o Mcav_Host_reference_proteome_AllORF_SingleBestOnly.fa
+mv Mcav_coral_only_transcriptome.fa.transdecoder.pep Mcav_coral_only_transcriptome_transdecoder.fa
+/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Mcav_coral_only_transcriptome_transdecoder.fa -o Mcav_coral_reference_proteome_AllORF_SingleBestOnly.fa
 
 # Verify Single ORF
-./check_single_orf.py Mcav_Host_reference_proteome_AllORF_SingleBestOnly.fa
+./check_single_orf.py Mcav_coral_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
 ## Ofav - Host
@@ -1255,19 +1271,19 @@ cd Host_transdecoder_AllORFs
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Ofav_coral_only_transcriptome.fa
 
 # Pfam
-/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Host_transdecoder_AllORFs/Ofav_Host_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
+/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Host_transdecoder_AllORFs/Ofav_coral_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
 
 # Blasp
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Host_transdecoder_AllORFs/Ofav_Host_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Host_transdecoder_AllORFs/Ofav_coral_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
     -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -max_target_seqs 1 \
-    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Host_transdecoder_AllORFs/Ofav_Host_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
+    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Host_transdecoder_AllORFs/Ofav_coral_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
 
 # Transdecoder.Predict 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Ofav_Host_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Ofav_coral_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
 
 # CD-HIT
-mv Ofav_Host_only_transcriptome.fa.transdecoder.pep Ofav_Host_only_transcriptome_transdecoder.fa
-/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Ofav_Host_only_transcriptome_transdecoder.fa -o Ofav_Host_reference_proteome_AllORF_SingleBestOnly.fa
+mv Ofav_coral_only_transcriptome.fa.transdecoder.pep Ofav_coral_only_transcriptome_transdecoder.fa
+/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Ofav_coral_only_transcriptome_transdecoder.fa -o Ofav_Host_reference_proteome_AllORF_SingleBestOnly.fa
 
 # Verify Single ORF
 ./check_single_orf.py Ofav_Host_reference_proteome_AllORF_SingleBestOnly.fa
@@ -1282,19 +1298,19 @@ cd Host_transdecoder_AllORFs
 /home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Past_coral_only_transcriptome.fa
 
 # Pfam
-/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Host_transdecoder_AllORFs/Past_Host_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
+/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Host_transdecoder_AllORFs/Past_coral_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
 
 # Blasp
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Host_transdecoder_AllORFs/Past_Host_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Host_transdecoder_AllORFs/Past_coral_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
     -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -max_target_seqs 1 \
-    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Host_transdecoder_AllORFs/Past_Host_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
+    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Host_transdecoder_AllORFs/Past_coral_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
 
 # Transdecoder.Predict 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Past_Host_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Past_coral_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
 
 # CD-HIT
-mv Past_Host_only_transcriptome.fa.transdecoder.pep Past_Host_only_transcriptome_transdecoder.fa
-/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Past_Host_only_transcriptome_transdecoder.fa -o Past_Host_reference_proteome_AllORF_SingleBestOnly.fa
+mv Past_coral_only_transcriptome.fa.transdecoder.pep Past_coral_only_transcriptome_transdecoder.fa
+/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Past_coral_only_transcriptome_transdecoder.fa -o Past_Host_reference_proteome_AllORF_SingleBestOnly.fa
 
 # Verify Single ORF
 ./check_single_orf.py Past_Host_reference_proteome_AllORF_SingleBestOnly.fa
