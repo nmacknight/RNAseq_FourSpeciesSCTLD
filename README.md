@@ -913,6 +913,65 @@ Here is a good [visual](https://open.oregonstate.education/computationalbiology/
 
 <details>
 
+<summary> Make Algal Symbiont Only Database</summary>
+
+> Decompress references for accurate concatenation.
+
+Concatenate genomes
+```
+ # Clade A - Symbiodinium
+ cat Symbiodinium_Aranda2012.fa \
+ 	Symbiodinium_Shoguchi2018.fasta \
+    > concatenated_Clade_A_genomes.fasta
+    
+# Clade B - Breviolum
+ cat Breviolum_Shoguchi2013.fa \
+ 	Breviolum_AvilaMagana2021.fna \
+    > concatenated_Clade_B_genomes.fasta
+
+# Clade C - Cladicopium
+ cat Cladocopium_sp_C92/Cladocopium_sp_C92.genome.fa \
+ 	Cladocopium_goreaui/Cladocopium_goreaui.genome.fa \
+    > concatenated_Clade_C_genomes.fasta
+    
+# Clade D - Durusdinium
+ cat Durusdinium_Shoguchi2021.fa \
+ 	durusdinium_PRJNA508937.fasta \
+    > concatenated_Clade_D_genomes.fasta
+```
+# Make Clade Database
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb \
+    -in concatenated_Clade_A_genomes.fasta \
+    -parse_seqids -dbtype nucl -out Clade_A_db
+
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb \
+    -in concatenated_Clade_B_genomes.fasta \
+    -parse_seqids -dbtype nucl -out Clade_B_db
+    
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb \
+    -in concatenated_Clade_C_genomes.fasta \
+    -parse_seqids -dbtype nucl -out Clade_C_db
+    
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb \
+    -in concatenated_Clade_D_genomes_unique.fasta \
+    -parse_seqids -dbtype nucl -out Clade_D_db
+
+```
+Confirm accurate concatentation by counting the number of transcripts in the individual files add up to the new concatenated reference with:
+```
+grep -c "^>" Symbiodinium_Shoguchi2018.fasta
+# 164631
+grep -c "^>" Symbiodinium_Aranda2012.fa
+# 58592
+grep -c "^>" concatenated_Clade_A_genomes.fasta
+# 223223 # Concatenated transcript count equals sum of individual references.
+```
+
+</details>
+
+<details>
+
 <summary>Blastn</summary>
 
 ### Acer
@@ -954,12 +1013,332 @@ Here is a good [visual](https://open.oregonstate.education/computationalbiology/
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/BacteriaOnly.Trinity.txt -num_threads 20
 ```
+
+# Blastn - Algal Symbionts
+
+
+# Acer - A
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_db/Clade_A_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_A_blastn_Acer_results.txt \
+    -num_threads 20
+```
+# Acer - B
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_B_db/Clade_B_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_B_blastn_Acer_results.txt \
+    -num_threads 20
+```
+# Acer - C
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_C_db/Clade_C_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_C_blastn_Acer_results.txt \
+    -num_threads 20
+```
+# Acer - D
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_D_db/Clade_D_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_D_blastn_Acer_results.txt \
+    -num_threads 20
+```
+# Mcav - A
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_db/Clade_A_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_A_blastn_Mcav_results.txt \
+    -num_threads 20
+```
+# Mcav - B
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_B_db/Clade_B_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_B_blastn_Mcav_results.txt \
+    -num_threads 20
+```
+# Mcav - C
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_C_db/Clade_C_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_C_blastn_Mcav_results.txt \
+    -num_threads 20
+```
+# Mcav - D
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_D_db/Clade_D_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_D_blastn_Mcav_results.txt \
+    -num_threads 20
+```
+# Ofav - A
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_db/Clade_A_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_A_blastn_Ofav_results.txt \
+    -num_threads 20
+```
+# Ofav - B
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_B_db/Clade_B_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_B_blastn_Ofav_results.txt \
+    -num_threads 20
+```
+# Ofav - C
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_C_db/Clade_C_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_C_blastn_Ofav_results.txt \
+    -num_threads 20
+```
+# Ofav - D
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_D_db/Clade_D_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_D_blastn_Ofav_results.txt \
+    -num_threads 20
+
+```
+# Past - A
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_db/Clade_A_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_A_blastn_Past_results.txt \
+    -num_threads 20
+```
+# Past - B
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_B_db/Clade_B_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_B_blastn_Past_results.txt \
+    -num_threads 20
+```
+# Past - C
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_C_db/Clade_C_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_C_blastn_Past_results.txt \
+    -num_threads 20
+```
+# Past - D
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_D_db/Clade_D_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out Clade_D_blastn_Past_results.txt \
+    -num_threads 20
+```
+### Threshold Filter contig blast quality - Loop "contig_evalue_filter.sh"
+
+```
+nano
+```
+copy and paiste (update file names to match yours and save as "contig_evalue_filter.sh"):
+```
+#!/bin/bash
+
+# Define an array of clade names and coral hosts (modify as needed)
+clades=("A" "B" "C" "D")
+hosts=("Acer" "Mcav" "Ofav" "Past")
+
+# Loop through each clade and host combination
+for clade in "${clades[@]}"; do
+    for host in "${hosts[@]}"; do
+        # Construct the input and output filenames dynamically
+        blastn_file="Clade_${clade}_blastn_${host}_results.txt"
+        contigs_percent_95="Clade_${clade}_contigs_percent_95_${host}.txt"
+        contigs_percent_95_bp_150="Clade_${clade}_contigs_percent_95_bp_150_${host}.txt"
+
+        # Check if the blastn result file exists
+        if [[ -f "$blastn_file" ]]; then
+            echo "Processing $blastn_file..."
+
+            # Extract contigs with percent identity > 95
+            awk '{if ($3 > 95) print $1, $2, $4}' "$blastn_file" > "$contigs_percent_95"
+
+            # Extract contigs with length > 150 bp
+            awk '{if ($3 > 150) print $1}' "$contigs_percent_95" > "$contigs_percent_95_bp_150"
+        else
+            echo "Warning: $blastn_file not found. Skipping..."
+        fi
+    done
+done
+
+echo "Processing complete!"
+
+# Create .cidx version with cdbfasta for contig extraction
+
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta \
+    /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
+
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta \
+    trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta
+
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta \
+    trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta
+
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta \
+    /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta
+```
+
+### Extract Contigs that pass Threshold - "extract_contigs.sh"
+
+
+```
+nano
+```
+copy and paiste (update file names to match yours and save as "contig_evalue_filter.sh"):
+```
+#!/bin/bash
+
+# Define arrays of clades and hosts
+clades=("A" "B" "C" "D")
+hosts=("Acer" "Mcav" "Past" "Ofav")
+
+# Loop through clade and host combinations
+for clade in "${clades[@]}"; do
+    for host in "${hosts[@]}"; do
+
+        # Set transcriptome paths and filenames based on the host
+        if [[ "$host" == "Acer" ]]; then
+            transcriptome_path="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer"
+            transcriptome_file="trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta"
+        elif [[ "$host" == "Mcav" ]]; then
+            transcriptome_path="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav"
+            transcriptome_file="trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta"
+        elif [[ "$host" == "Past" ]]; then
+            transcriptome_path="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past"
+            transcriptome_file="trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta"
+        elif [[ "$host" == "Ofav" ]]; then
+            transcriptome_path="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output"
+            transcriptome_file="Ofav_trinity_output.LongestIsoform.Trinity.fasta"
+        fi
+
+        # Construct full paths for the transcriptome and .cidx file
+        transcriptome="${transcriptome_path}/${transcriptome_file}"
+        cidx_file="${transcriptome}.cidx"
+
+        # Construct filenames for filtered contigs and output fasta
+        filtered_contigs="Clade_${clade}_contigs_percent_95_bp_150_${host}.txt"
+        output_fasta="Clade_${clade}_${host}_algae_only_transcriptome.fa"
+
+        # Check if both the filtered contigs and .cidx file exist
+        if [[ -f "$filtered_contigs" && -f "$cidx_file" ]]; then
+            echo "Extracting contigs for Clade $clade - $host..."
+
+            # Extract contigs using cdbyank
+            cat "$filtered_contigs" | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank "$cidx_file" > "$output_fasta"
+        else
+            echo "Warning: Missing $filtered_contigs or $cidx_file. Skipping..."
+        fi
+    done
+done
+
+echo "Contig extraction complete!"
+```
+
+### Concatenate Clade-Specific Transcripts Across Host
+```
+# Clade A
+cat Clade_A_Acer_algae_only_transcriptome.fa \
+    Clade_A_Mcav_algae_only_transcriptome.fa \
+    Clade_A_Past_algae_only_transcriptome.fa \
+    Clade_A_Ofav_algae_only_transcriptome.fa \
+    > Master_Clade_A_transcriptome.fa
+
+# Clade B
+cat Clade_B_Acer_algae_only_transcriptome.fa \
+    Clade_B_Mcav_algae_only_transcriptome.fa \
+    Clade_B_Past_algae_only_transcriptome.fa \
+    Clade_B_Ofav_algae_only_transcriptome.fa \
+    > Master_Clade_B_transcriptome.fa
+
+# Clade C
+cat Clade_C_Acer_algae_only_transcriptome.fa \
+    Clade_C_Mcav_algae_only_transcriptome.fa \
+    Clade_C_Past_algae_only_transcriptome.fa \
+    Clade_C_Ofav_algae_only_transcriptome.fa \
+    > Master_Clade_C_transcriptome.fa
+
+# Clade D
+cat Clade_D_Acer_algae_only_transcriptome.fa \
+    Clade_D_Mcav_algae_only_transcriptome.fa \
+    Clade_D_Past_algae_only_transcriptome.fa \
+    Clade_D_Ofav_algae_only_transcriptome.fa \
+    > Master_Clade_D_transcriptome.fa
+```
+
+### Collapse to Longest Isoform: 
+```
+/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl \
+    Master_Clade_A_transcriptome.fa > Master_Clade_A_longest_isoform.fa
+
+/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl \
+    Master_Clade_B_transcriptome.fa > Master_Clade_B_longest_isoform.fa
+
+/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl \
+    Master_Clade_C_transcriptome.fa > Master_Clade_C_longest_isoform.fa
+
+/home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl \
+    Master_Clade_D_transcriptome.fa > Master_Clade_D_longest_isoform.fa
+```
 </details>
 
 <details>
 <summary>Filter</summary>
 Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
 ###Acer - Coral Only
+	
 ```
 awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt > Acer_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Acer_contigs_percent_95.txt > Acer_contigs_percent_95_bp_150.txt
