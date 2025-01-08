@@ -1324,25 +1324,25 @@ mkdir Algae_transdecoder_AllORFs
 cd Algae_transdecoder_AllORFs
 
 # TransDecoder.LongOrfs (Protein-Coding ORF Prediciton)
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Acer_coral_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Clade_A_Acer_algae_only_transcriptome.fa
 
 # Pfam
-/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Algae_transdecoder_AllORFs/Acer_coral_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
+/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Algae_transdecoder_AllORFs/Clade_A_Acer_algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
 
-# Blasp
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Algae_transdecoder_AllORFs/Acer_coral_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
+# Blastp
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Algae_transdecoder_AllORFs/Clade_A_Acer_algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
     -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -max_target_seqs 1 \
-    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Algae_transdecoder_AllORFs/Acer_coral_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
+    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Algae_transdecoder_AllORFs/Clade_A_Acer_algae_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
 
 # Transdecoder.Predict 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Acer_Algae_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Clade_A_Acer_algae_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
 
 # CD-HIT
-mv Acer_Algae_only_transcriptome.fa.transdecoder.pep Acer_Algae_only_transcriptome_transdecoder.fa
-/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Acer_coral_only_transcriptome_transdecoder.fa -o Acer_Algae_reference_proteome_AllORF_SingleBestOnly.fa
+mv Clade_A_Acer_algae_only_transcriptome.fa.transdecoder.pep Clade_A_Acer_algae_only_transcriptome_transdecoder.fa
+/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Clade_A_Acer_algae_only_transcriptome.fa -o Clade_A_Acer_reference_proteome_AllORF_SingleBestOnly.fa
 
 # Verify Single ORF
-./check_single_orf.py Acer_Algae_reference_proteome_AllORF_SingleBestOnly.fa
+./check_single_orf.py Clade_A_Acer_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
 ## Mcav - Algae
@@ -1351,25 +1351,25 @@ mkdir Algae_transdecoder_AllORFs
 cd Algae_transdecoder_AllORFs
 
 # TransDecoder.LongOrfs (Protein-Coding ORF Prediciton)
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Mcav_Algae_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Clade_C_Mcav_algae_only_transcriptome.fa
 
 # Pfam
-/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Algae_transdecoder_AllORFs/Mcav_Algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
+/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Algae_transdecoder_AllORFs/Clade_C_Mcav_algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
 
 # Blasp
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Algae_transdecoder_AllORFs/Mcav_Algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Algae_transdecoder_AllORFs/Clade_C_Mcav_algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
     -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -max_target_seqs 1 \
-    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Algae_transdecoder_AllORFs/Mcav_Algae_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
+    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Algae_transdecoder_AllORFs/Clade_C_Mcav_algae_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
 
 # Transdecoder.Predict 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Mcav_Algae_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Clade_C_Mcav_algae_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
 
 # CD-HIT
-mv Mcav_Algae_only_transcriptome.fa.transdecoder.pep Mcav_Algae_only_transcriptome_transdecoder.fa
-/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Mcav_Algae_only_transcriptome_transdecoder.fa -o Mcav_Algae_reference_proteome_AllORF_SingleBestOnly.fa
+mv Clade_C_Mcav_algae_only_transcriptome.fa.transdecoder.pep Clade_C_Mcav_algae_only_transcriptome_transdecoder.fa
+/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Clade_C_Mcav_algae_only_transcriptome_transdecoder.fa -o Clade_C_Mcav_reference_proteome_AllORF_SingleBestOnly.fa
 
 # Verify Single ORF
-./check_single_orf.py Mcav_Algae_reference_proteome_AllORF_SingleBestOnly.fa
+./check_single_orf.py Clade_C_Mcav_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
 ## Ofav - Algae
@@ -1378,25 +1378,25 @@ mkdir Algae_transdecoder_AllORFs
 cd Algae_transdecoder_AllORFs
 
 # TransDecoder.LongOrfs (Protein-Coding ORF Prediciton)
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Ofav_coral_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Clade_D_Ofav_algae_only_transcriptome.fa
 
 # Pfam
-/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Algae_transdecoder_AllORFs/Ofav_Algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
+/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Algae_transdecoder_AllORFs/Clade_D_Ofav_algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
 
 # Blasp
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Algae_transdecoder_AllORFs/Ofav_Algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Algae_transdecoder_AllORFs/Clade_D_Ofav_algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
     -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -max_target_seqs 1 \
-    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Algae_transdecoder_AllORFs/Ofav_Algae_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
+    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Algae_transdecoder_AllORFs/Clade_D_Ofav_algae_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
 
 # Transdecoder.Predict 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Ofav_Algae_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Clade_D_Ofav_algae_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
 
 # CD-HIT
-mv Ofav_Algae_only_transcriptome.fa.transdecoder.pep Ofav_Algae_only_transcriptome_transdecoder.fa
-/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Ofav_Algae_only_transcriptome_transdecoder.fa -o Ofav_Algae_reference_proteome_AllORF_SingleBestOnly.fa
+mv Clade_D_Ofav_algae_only_transcriptome.fa.transdecoder.pep Clade_D_Ofav_algae_only_transcriptome_transdecoder.fa
+/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Clade_D_Ofav_algae_only_transcriptome_transdecoder.fa -o Clade_D_Ofav_reference_proteome_AllORF_SingleBestOnly.fa
 
 # Verify Single ORF
-./check_single_orf.py Ofav_Algae_reference_proteome_AllORF_SingleBestOnly.fa
+./check_single_orf.py Clade_D_Ofav_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
 ## Past - Algae
@@ -1405,25 +1405,25 @@ mkdir Algae_transdecoder_AllORFs
 cd Algae_transdecoder_AllORFs
 
 # TransDecoder.LongOrfs (Protein-Coding ORF Prediciton)
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Past_coral_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.LongOrfs -t ../Clade_A_Past_algae_only_transcriptome.fa
 
 # Pfam
-/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Algae_transdecoder_AllORFs/Past_Algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
+/home/cns.local/nicholas.macknight/software/hmmer-3.4/src/hmmsearch --cpu 50 -E 1e-10 --domtblout pfam.domtblout /home/cns.local/nicholas.macknight/software/Pfam-A.hmm.gz /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Algae_transdecoder_AllORFs/Clade_A_Past_algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep
 
 # Blasp
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Algae_transdecoder_AllORFs/Past_Algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Algae_transdecoder_AllORFs/Clade_A_Past_algae_only_transcriptome.fa.transdecoder_dir/longest_orfs.pep  \
     -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -max_target_seqs 1 \
-    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Algae_transdecoder_AllORFs/Past_Algae_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
+    -outfmt 6 -evalue 1e-5 -num_threads 50 > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Algae_transdecoder_AllORFs/Clade_A_Past_algae_only_transcriptome.fa.transdecoder_dir/blastp.outfmt6
 
 # Transdecoder.Predict 
-/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Past_Algae_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
+/home/cns.local/nicholas.macknight/software/TransDecoder-TransDecoder-v5.7.1/TransDecoder.Predict -t ../Clade_A_Past_algae_only_transcriptome.fa --retain_pfam_hits pfam.domtblout --retain_blastp_hits blastp.outfmt6 --single_best_only
 
 # CD-HIT
-mv Past_Algae_only_transcriptome.fa.transdecoder.pep Past_Algae_only_transcriptome_transdecoder.fa
-/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Past_Algae_only_transcriptome_transdecoder.fa -o Past_Algae_reference_proteome_AllORF_SingleBestOnly.fa
+mv Clade_A_Past_algae_only_transcriptome.fa.transdecoder.pep Clade_A_Past_algae_only_transcriptome_transdecoder.fa
+/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Clade_A_Past_algae_only_transcriptome_transdecoder.fa -o Clade_A_Past_reference_proteome_AllORF_SingleBestOnly.fa
 
 # Verify Single ORF
-./check_single_orf.py Past_Algae_reference_proteome_AllORF_SingleBestOnly.fa
+./check_single_orf.py Clade_A_Past_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
 # OrthoFinder
