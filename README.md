@@ -1718,7 +1718,7 @@ cd Algae_transdecoder_AllORFs
 
 # CD-HIT
 mv Clade_A_Acer_algae_only_transcriptome.fa.transdecoder.pep Clade_A_Acer_algae_only_transcriptome_transdecoder.fa
-/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i Clade_A_Acer_algae_only_transcriptome.fa -o Clade_A_Acer_reference_proteome_AllORF_SingleBestOnly.fa
+/home/cns.local/nicholas.macknight/software/cd-hit-v4.8.1-2019-0228/cd-hit -i ../Clade_A_Acer_algae_only_transcriptome.fa -o Clade_A_Acer_reference_proteome_AllORF_SingleBestOnly.fa
 
 # Verify Single ORF
 ./check_single_orf.py Clade_A_Acer_reference_proteome_AllORF_SingleBestOnly.fa
