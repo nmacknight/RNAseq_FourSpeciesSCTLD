@@ -1878,10 +1878,10 @@ Move these files from the server to your local computer.
 ```
 # On my local computer (not in the server):
 cd /Users/nicholas.macknight/Desktop/Microbial Metatranscriptomics/OrthoFinder/Bacteria/
-scp ./ nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/OrthoFinder/Results_Dec21/Orthogroups/Orthogroups.tsv
-scp ./ nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/OrthoFinder/Results_Dec21/Orthogroups/Orthogroups_SingleCopyOrthologues.txt
-scp -r ./ nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/OrthoFinder/Results_Dec21/Orthogroups/Comparative_Genomics_Statistics
-scp -r ./ nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/OrthoFinder/Results_Dec21/Orthogroups/Species_Tree
+scp nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/OrthoFinder/Results_Dec21/Orthogroups/Orthogroups.tsv ./
+scp nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/OrthoFinder/Results_Dec21/Orthogroups/Orthogroups_SingleCopyOrthologues.txt ./
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/OrthoFinder/Results_Dec21/Orthogroups/Comparative_Genomics_Statistics ./
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/OrthoFinder/Results_Dec21/Orthogroups/Species_Tree ./
 ```
 Organize Orthogroups.tsv to make "_bac_Orthogroup_Transcripts.txt" in R
 
@@ -2080,6 +2080,32 @@ Past_orthogroups_annot <- merge(Past_orthogroups,Past_annot_transcripts, by="Tra
 write.csv(Past_orthogroups_annot,file="~/Desktop/Microbial Metatranscriptomics/OrthoFinder/Bacteria/SingleBestORF/PastBac_orthogroup_tx2gene_annot.csv",row.names = FALSE)
 
 
+```
+
+## Annotating Algae Orthogroups :seedling:
+First we need to create a file of the orthogroup transcripts. "_algae_Orthogroup_Transcripts.txt" from the Orthofinder results.
+Move these files from the server to your local computer.
+```
+# On my local computer (not in the server):
+cd /Users/nicholas.macknight/Desktop/Microbial Metatranscriptomics/OrthoFinder/Algae/
+mkdir Results_Jan13
+scp nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/OrthoFinder/Results_Jan13/Orthogroups/Orthogroups.tsv ./
+scp nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/OrthoFinder/Results_Jan13/Orthogroups/Orthogroups_SingleCopyOrthologues.txt ./
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/OrthoFinder/Results_Jan13/Comparative_Genomics_Statistics ./
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/OrthoFinder/Results_Jan13/Species_Tree ./
+```
+
+## Annotating Host Orthogroups :House:
+First we need to create a file of the orthogroup transcripts. "_host_Orthogroup_Transcripts.txt" from the Orthofinder results.
+Move these files from the server to your local computer.
+```
+# On my local computer (not in the server):
+cd /Users/nicholas.macknight/Desktop/Microbial Metatranscriptomics/OrthoFinder/Host/
+mkdir Results_Jan13
+scp nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF/OrthoFinder/Results_Jan10/Orthogroups/Orthogroups.tsv ./
+scp nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF/OrthoFinder/Results_Jan10/Orthogroups/Orthogroups_SingleCopyOrthologues.txt ./
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF/OrthoFinder/Results_Jan10/Comparative_Genomics_Statistics ./
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF/OrthoFinder/Results_Jan10/Species_Tree ./
 ```
 
 </details>
