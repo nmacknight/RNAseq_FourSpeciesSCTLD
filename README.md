@@ -1858,6 +1858,24 @@ python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinde
 
 
 <details>
+<summary>Annotating OrthoGroups</summary>
+# Annotating OrthoGroups
+
+Orthogroups contain multiple transcripts. It is common for these transcripts to have unique gene annotations. So how do researchers decide how to annotate the Orthogroup when there are unique annotations to choose from? There are several approaches. I will begin with the approach I am applying and you can choose to read about the others if you'd like. 
+
+**Most Common Annotation ID Approach**: Simply put I choose the annotation that is the most common within that Orthogroup. So if there are ten transcripts within an Orthogroup and seven of them are the same, that that becomes the majority annotation and becomes the representative annotation for that Orthogroup. I chose this approach because to me it seems the most fair and does reduce reference bias in annotation. 
+
+**Highest Quality Transcriptome Approach**: If you are performing multi species comparison transcriptomics, you will have multiple transcriptomes and references used to annotate those transcriptomes. This approach selects the species with the highest quality transcriptome, annotates those transcripts, and uses those transcript annotations to annotate the Orthogroup. This is a logical idea as the sentiment is your transcript annoations will be highest possible accuracy. The caveat is your annotations could be considered organism-biased.
+
+**Quality Score Approach**: Each transcript annotation has a bit score (strength of alignment) and E-Value (which considered bit score plus signficance of alignment). Acceptable annotation cutoffs are field specific but for coral it is any annotation with an E-Value less than E-5 is acceptable. This annotation approach will select the E-Value with the lowest value as the representative annotation for that Orthgroup. This is also a sensible approach as you are picking the annotation that is the strongest. The caveat here is if we think of e values like p values, whats effectively the difference between a p value of lets say 0.00001 and 0.0000001. Both are incredibly signficant and basically the same, not mathematically, but in my interpretation. 
+
+
+</details>
+
+
+
+
+<details>
 <summary>BBMAP</summary>
 # BBMAP
 > Reference genomes need to be indexed before bbsplit can be ran. 
