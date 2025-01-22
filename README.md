@@ -717,14 +717,14 @@ nohup /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/
 
 1/8/24: After digging into bbsplit methods (which involved a lot of optimization) here is what was performed. 
 
-Reliable Algal symbiont references were concatendated. 
+Reliable Algal symbiont references were concatendated 
 Algal symbiont databases were made based on concatenated clade specific references.
 Trinity metatranscriptomes were blastn against symbiont databases.
 mapped transcripts were quality filtered.
 the sequences of QC passed transcripts were extracted via cdbyank from the metatranscritpomes to make clade only references. 
 These clade only references were input for bbsplit. 
 
-# End 1/8/24 Notes to self.
+### End 1/8/24 Notes to self.
 
 > Aligns metatranscriptomes to multiple references simultaneously.
 
@@ -2131,7 +2131,268 @@ scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLD
 <details>
 <summary>BBSplit</summary>
 # BBSplit
+### Jan 20th 2025 BBSPLIT
 
+#### BBSplit
+
+1/8/24: After digging into bbsplit methods (which involved a lot of optimization) here is what was performed. 
+
+Reliable Algal symbiont references were concatendated 
+Algal symbiont databases were made based on concatenated clade specific references.
+Trinity metatranscriptomes were blastn against symbiont databases.
+mapped transcripts were quality filtered.
+the sequences of QC passed transcripts were extracted via cdbyank from the metatranscritpomes to make clade only references. 
+These clade only references were input for bbsplit. 
+
+### End 1/8/24 Notes to self.
+
+### Acropora cervicornis
+
+> /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Acer
+> Acer_bbsplit_CladeARef.sh
+```
+#!/bin/bash
+
+# Add directories to the PATH
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
+PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
+
+# Define the reference directory
+DIR=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references
+HDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer
+SDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer
+
+# Number of threads to use
+threads=50
+
+# Process each FASTQ file
+find ${SDIR} -name "*_R1_clean_merged.fastq.gz" | while read FILE; do
+    echo "Processing: ${FILE}"
+    SAMP=$(basename ${FILE} _R1_clean_merged.fastq.gz)
+    echo "Sample: ${SAMP}"
+
+    # Run bbsplit for each sample with increased threads
+    /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh \
+    in1="${SDIR}/${SAMP}_R1_clean_merged.fastq.gz" \
+    in2="${SDIR}/${SAMP}_R2_clean_merged.fastq.gz" \
+    ref="${HDIR}/Acer_coral_only_transcriptome.fa,${HDIR}/Acer_Bacteria_only_transcriptome.fa,${DIR}/Clade_A_Acer_algae_only_transcriptome.fa"\
+    basename="${SAMP}_%.fq.gz" \
+    refstats="${SAMP}_stats.txt" \
+    ambig=best ambig2=best \
+    outu1="${SAMP}_bboutu_1.fq.gz" \
+    outu2="${SAMP}_bboutu_2.fq.gz" \
+    threads=${threads}
+
+    # Wait for the current process to finish before moving to the next sample
+    wait
+done
+```
+
+Split Mapped reads from BBsplit into Forward and Reverse reads
+> 1_2.sh
+```
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
+PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
+for FILE in *.fq.gz; do
+        echo ${FILE}
+        SAMP=$(basename -s .fq.gz $FILE)
+        echo $SAMP
+/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=Acer_output_FR/${SAMP}_1.fq out2=Acer_output_FR/${SAMP}_2.fq
+done
+```
+
+### Montastraea cavernosa
+
+> /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Mcav/
+> Mcav_bbsplit_CladeCRef.sh
+```
+#!/bin/bash
+
+# Add directories to the PATH
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
+PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
+
+# Define the reference directory
+DIR=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references
+HDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav
+SDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Mcav
+
+# Number of threads to use
+threads=50
+
+# Process each FASTQ file
+find ${SDIR} -name "*_R1_clean_merged.fastq.gz" | while read FILE; do
+    echo "Processing: ${FILE}"
+    SAMP=$(basename ${FILE} _R1_clean_merged.fastq.gz)
+    echo "Sample: ${SAMP}"
+
+    # Run bbsplit for each sample with increased threads
+    /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh \
+    in1="${SDIR}/${SAMP}_R1_clean_merged.fastq.gz" \
+    in2="${SDIR}/${SAMP}_R2_clean_merged.fastq.gz" \
+    ref="${HDIR}/Mcav_coral_only_transcriptome.fa,${HDIR}/Mcav_Bacteria_only_transcriptome.fa,${DIR}/Clade_C_Mcav_algae_only_transcriptome.fa"\
+    basename="${SAMP}_%.fq.gz" \
+    refstats="${SAMP}_stats.txt" \
+    ambig=best ambig2=best \
+    outu1="${SAMP}_bboutu_1.fq.gz" \
+    outu2="${SAMP}_bboutu_2.fq.gz" \
+    threads=${threads}
+
+    # Wait for the current process to finish before moving to the next sample
+    wait
+done
+
+```
+
+> /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Mcav/
+```
+mkdir Mcav_output_FR
+mv *.fq.gz Mcav_output_FR/
+mv stats.txt Mcav_output_FR/
+```
+
+Split Mapped reads from BBsplit into Forward and Reverse reads
+> 1_2.sh
+```
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
+PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
+for FILE in *.fq.gz; do
+        echo ${FILE}
+        SAMP=$(basename -s .fq.gz $FILE)
+        echo $SAMP
+/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=Mcav_output_FR/${SAMP}_1.fq out2=Mcav_output_FR/${SAMP}_2.fq
+done
+```
+
+### Orbicella faveolata
+
+> /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Ofav/
+> Ofav_bbsplit_CladeDOfavRef.sh
+```
+#!/bin/bash
+
+# Add directories to the PATH
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
+PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
+
+# Define the reference directory
+DIR=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references
+HDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output
+SDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav
+
+# Number of threads to use
+threads=50
+
+# Process each FASTQ file
+find ${SDIR} -name "*_R1_clean_merged.fastq.gz" | while read FILE; do
+    echo "Processing: ${FILE}"
+    SAMP=$(basename ${FILE} _R1_clean_merged.fastq.gz)
+    echo "Sample: ${SAMP}"
+
+    # Run bbsplit for each sample with increased threads
+    /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh \
+    in1="${SDIR}/${SAMP}_R1_clean_merged.fastq.gz" \
+    in2="${SDIR}/${SAMP}_R2_clean_merged.fastq.gz" \
+    ref="${HDIR}/Ofav_coral_only_transcriptome.fa,${HDIR}/Ofav_Bacteria_only_transcriptome.fa,${DIR}/Clade_D_Ofav_algae_only_transcriptome.fa" \
+    basename="${SAMP}_%.fq.gz" \
+    refstats="${SAMP}_stats.txt" \
+    ambig=best ambig2=best \
+    outu1="${SAMP}_bboutu_1.fq.gz" \
+    outu2="${SAMP}_bboutu_2.fq.gz" \
+    threads=${threads}
+
+    # Wait for the current process to finish before moving to the next sample
+    wait
+done
+
+```
+> /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Ofav/
+```
+mkdir Ofav_output_FR
+mv *.fq.gz Ofav_output_FR/
+mv stats.txt Ofav_output_FR/
+```
+
+Split Mapped reads from BBsplit into Forward and Reverse reads
+> 1_2.sh
+```
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
+PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
+for FILE in *.fq.gz; do
+        echo ${FILE}
+        SAMP=$(basename -s .fq.gz $FILE)
+        echo $SAMP
+/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=Ofav_output_FR/${SAMP}_1.fq out2=Ofav_output_FR/${SAMP}_2.fq
+done
+```
+
+### Porites astreoides
+
+> /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Past/
+> Past_bbsplit_CladeCPastRef.sh
+```
+#!/bin/bash
+
+# Add directories to the PATH
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
+PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
+
+# Define the reference directory
+DIR=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references
+HDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past
+SDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Past
+
+# Number of threads to use
+threads=50
+
+# Process each FASTQ file
+find ${SDIR} -name "*_R1_clean_merged.fastq.gz" | while read FILE; do
+    echo "Processing: ${FILE}"
+    SAMP=$(basename ${FILE} _R1_clean_merged.fastq.gz)
+    echo "Sample: ${SAMP}"
+
+    # Run bbsplit for each sample with increased threads
+    /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh \
+    in1="${SDIR}/${SAMP}_R1_clean_merged.fastq.gz" \
+    in2="${SDIR}/${SAMP}_R2_clean_merged.fastq.gz" \
+    ref="${HDIR}/Past_coral_only_transcriptome.fa,${HDIR}/Past_Bacteria_only_transcriptome.fa,${DIR}/Clade_A_Past_algae_only_transcriptome.fa"\
+    basename="${SAMP}_%.fq.gz" \
+    refstats="${SAMP}_stats.txt" \
+    ambig=best ambig2=best \
+    outu1="${SAMP}_bboutu_1.fq.gz" \
+    outu2="${SAMP}_bboutu_2.fq.gz" \
+    threads=${threads}
+
+    # Wait for the current process to finish before moving to the next sample
+    wait
+done
+```
+> /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Past/
+```
+mkdir Past_output_FR
+mv *.fq.gz Past_output_FR/
+mv stats.txt Past_output_FR/
+```
+
+Split Mapped reads from BBsplit into Forward and Reverse reads
+> 1_2.sh
+```
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
+PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
+for FILE in *.fq.gz; do
+        echo ${FILE}
+        SAMP=$(basename -s .fq.gz $FILE)
+        echo $SAMP
+/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=Past_output_FR/${SAMP}_1.fq out2=Past_output_FR/${SAMP}_2.fq
+done
+```
+
+
+### OLD BBSPLIT METHODS
 ### Applied by For Loop. This doesnt work perfectly, it runs but doesnt apply to all samples and is inconsistent so I manually ran bbsplit which is referenced below. 
  ```
 #!/bin/bash
