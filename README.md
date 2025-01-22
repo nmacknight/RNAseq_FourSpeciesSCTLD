@@ -1335,7 +1335,7 @@ cat Clade_D_Acer_algae_only_transcriptome.fa \
 </details>
 
 <details>
-<summary>Filter</summary>
+<summary>*Filter</summary>
 Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
 ###Acer - Coral Only
 	
@@ -2711,7 +2711,7 @@ done
 </details>
 
 <details>
-<summary>Orthofinder</summary>
+<summary>*Orthofinder</summary>
 # Orthofinder: Obtaining single-copy orthologs
 
 ### Need to make reference proteomes for the Algae.
@@ -2759,7 +2759,7 @@ python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinde
 
 <details>
 
-<summary> Annotating the Orthologs</summary>
+<summary>* Annotating the Orthologs</summary>
 # Annotating the orthologs
 From the /Orthogroups directory, use "Orthogroups_SingleCopyOrthologues.txt" and "Orthogroups.tsv" to grab the sequence names of the single-copy orthologs from each species.
 ```{r}
