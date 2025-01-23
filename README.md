@@ -712,7 +712,7 @@ nohup /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/
  
 <details>
 
-<summary>BBSplit</summary>
+<summary>*BBSplit</summary>
 # BBSplit
 
 1/8/24: After digging into bbsplit methods (which involved a lot of optimization) here is what was performed. 
@@ -812,35 +812,7 @@ Transfering references from local computer to server, I have added the NCBI acce
  scp MasterCoral.fasta.gz nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/MasterCoral.fasta.gz
 ```
 
-###BACTERIA References:###
-I Followed the instructions in step 2 [here](https://www.ncbi.nlm.nih.gov/genome/doc/ftpfaq/#:~:text=To%20use%20the%20download%20service,button%20to%20start%20the%20download)
-Essentially, this downloaded 38,177 bacteria genomes (47.5 gb) that fit this criteria Bacteria, RefSeq, Complete Genomes. 
-Ideally this can be used to blast our metatranscriptomes against to identify bacteria transcripts. 
-# A concise [article](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3965038/) on the different available categories of bacteria genomes on NCBI: 
-# [Overview of DIAMOND and MEGAN](https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpz1.59)
 
- 
-wget ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/
-> Runtime: noon April 4th
-https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/
-Concatenate all the bacteria genomes into one multi-fasta. then use makeblastdb to make that multi-fasta a reference database.
-```
-scp ./genome_assemblies_genome_fasta.tar nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/bacteria_reference/
-```
-> Runtime: 40 min. 
-# decompress and concatenate with zcat
-```
-zcat *.fna.gz > concatenated_bacteria_genomes.fna
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in concatenated_bacteria_genomes.fna -parse_seqids -dbtype nucl -out MasterBacteria_db
-
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/BacteriaOnly.Trinity.txt -num_threads 20
-```
-
-
-To count the number of transcripts in a fasta file
-```
-grep -c ">" filename.fasta
-```
 </details>
 
 <details>
@@ -882,7 +854,7 @@ trinityrnaseq-Trinity-v2.5.1/util/misc/get_longest_isoform_seq_per_trinity_gene.
 
 <details>
 
-<summary> Make Coral Only Database</summary>
+<summary> Make Coral Host Database</summary>
 # Make Coral Only Database
 
 Make the master coral fasta database:
@@ -913,7 +885,7 @@ Here is a good [visual](https://open.oregonstate.education/computationalbiology/
 
 <details>
 
-<summary> Make Algal Symbiont Only Database</summary>
+<summary> Make Algal Symbiont Database</summary>
 
 > Decompress references for accurate concatenation.
 
@@ -968,6 +940,102 @@ grep -c "^>" concatenated_Clade_A_genomes.fasta
 # 223223 # Concatenated transcript count equals sum of individual references.
 ```
 
+</details>
+
+<details>
+
+<summary>Make Bacteria Database</summary>
+
+### Bacteria References:
+I Followed the instructions in step 2 [here](https://www.ncbi.nlm.nih.gov/genome/doc/ftpfaq/#:~:text=To%20use%20the%20download%20service,button%20to%20start%20the%20download)
+Essentially, this downloaded 38,177 bacteria genomes (47.5 gb) that fit this criteria Bacteria, RefSeq, Complete Genomes. 
+Ideally this can be used to blast our metatranscriptomes against to identify bacteria transcripts. 
+A concise [article](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3965038/) on the different available categories of bacteria genomes on NCBI: 
+Not used: [Overview of DIAMOND and MEGAN](https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpz1.59)
+
+```
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/
+```
+https://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/
+Concatenate all the bacteria genomes into one multi-fasta. then use makeblastdb to make that multi-fasta a reference database.
+```
+scp ./genome_assemblies_genome_fasta.tar nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/bacteria_reference/
+```
+> Runtime: 40 min. 
+Decompress and concatenate with zcat
+> /home/cns.local/nicholas.macknight/references/bacteria_reference
+```
+zcat *.fna.gz > concatenated_bacteria_genomes.fna
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in concatenated_bacteria_genomes.fna -parse_seqids -dbtype nucl -out MasterBacteria_db
+
+### Acer
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/BacteriaOnly.Trinity.txt -num_threads 20
+
+# Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
+awk '{if ($3 > 95) print $1,$2,$4 }' BacteriaOnly.Trinity.txt > Acer_Bacteria_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Acer_Bacteria_contigs_percent_95.txt > Acer_Bacteria_contigs_percent_95_bp_150.txt
+
+### Mcav
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/BacteriaOnly.Trinity.txt -num_threads 20
+
+# Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
+awk '{if ($3 > 95) print $1,$2,$4 }' LongestIsoform.BacteriaOnly.Trinity.txt > Mcav_Bacteria_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Mcav_Bacteria_contigs_percent_95.txt > Mcav_Bacteria_contigs_percent_95_bp_150.txt
+
+### Ofav
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/trinity_out_dir.AllOfavSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/BacteriaOnly.Trinity.txt -num_threads 20
+
+# Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
+awk '{if ($3 > 95) print $1,$2,$4 }' Ofav_trinity_output.LongestIsoform.BacteriaOnly.Trinity.txt > Ofav_Bacteria_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Ofav_Bacteria_contigs_percent_95.txt > Ofav_Bacteria_contigs_percent_95_bp_150.txt
+
+### Past
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/BacteriaOnly.Trinity.txt -num_threads 20
+
+# Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
+awk '{if ($3 > 95) print $1,$2,$4 }' LongestIsoform.BacteriaOnly.Trinity.txt > Past_Bacteria_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Past_Bacteria_contigs_percent_95.txt > Past_Bacteria_contigs_percent_95_bp_150.txt
+
+```
+
+Now that we have a text file of the transcript names that pass our threshold for their alignment with the holobiont reference (example: Past_Bacteria_contigs_percent_95_bp_150.txt), we will extract the sequences from the metatranscriptomes (example: trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta) by first indexing the metatranscriptome with cdbfasta and then producing the .fa files (example: Past_Bacteria_only_transcriptome.fa).
+
+### Acer - Bacteria Only
+```
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
+
+cat Acer_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Acer_Bacteria_only_transcriptome.fa
+```
+> Run time: <1 min.
+
+### Mcav - Bacteria Only
+```
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta
+
+cat Mcav_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Mcav_Bacteria_only_transcriptome.fa
+```
+
+### Ofav - Bacteria Only
+```
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllOfavSamples_Lane1-8.LongestIsoform.Trinity.fasta
+
+cat Ofav_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllOfavSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Ofav_Bacteria_only_transcriptome.fa
+```
+
+### Past - Bacteria Only
+```
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta
+
+cat Past_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Past_Bacteria_only_transcriptome.fa
+```
+
+To count the number of transcripts in a fasta file
+```
+grep -c ">" filename.fa
+
+# Example:
+grep -c ">" Past_Bacteria_only_transcriptome.fa
+```
 </details>
 
 <details>
