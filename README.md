@@ -388,7 +388,7 @@ You can either modify a for lopp to do this or run it manually.
 
 <details>
 
-<summary>Trinity</summary>
+<summary>Trinity - Metatranscriptome Assembly</summary>
 #Trinity
 > Assembles Transcript sequences into de novo Transcriptomes
 
@@ -1166,7 +1166,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
 
 <details>
 
-<summary>Blastn</summary>
+<summary>Blastn - Assign metatranscriptome sequences to Host, Algal Symbiont, or Bacteria</summary>
 
 ### Acer
 **blastn - Coral Host**
@@ -1605,7 +1605,7 @@ In summary, expression does not equal abundance, as we already knew, but by addr
 </details>
 
 <details>
-<summary>Transdecoder</summary>
+<summary>Transdecoder - Convert nucleotides into predicted proteins for OrthoFinder</summary>
 
 > Transdecoder first appeared as a straight-forward "convert nucleotides to protein prediction" intermediate step. I quickly realized a significant overlooked issue with this that I have addressed in my methods below.
 
@@ -2332,7 +2332,7 @@ scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLD
 
 
 <details>
-<summary>BBMAP</summary>
+<summary>BBMAP - Index References for BBsplit</summary>
 # BBMAP
 > Reference genomes need to be indexed before bbsplit can be ran. 
 
@@ -2347,7 +2347,7 @@ scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLD
 </details>
 
 <details>
-<summary>BBSplit</summary>
+<summary>BBSplit - Assign Reads to Holobiont References</summary>
 # BBSplit
 ### Jan 20th 2025 BBSPLIT
 
@@ -2653,7 +2653,7 @@ nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cn
 
 
 <details>
-<summary> BBSplit - Seperate F and R Reads</summary>
+<summary> BBSplit - Seperate Forward and Reverse Reads</summary>
 	
 > Split bbsplit output into Forward and Reverse reads using BBmap
 
