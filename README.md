@@ -2601,7 +2601,230 @@ awk 'NR>1 && $5 >= 1 { count++ } END { print "Number of transcripts with NumRead
 ```
 </details>
 <details>
+
 <summary>Salmon - Quantification</summary>
+# Salmon - Quantification
+
+
+### Acropora cervicornis Salmon Loop
+>/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/scripts
+>Acer_salmon.sh
+```
+# Loop for Host
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Acer_coral_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Acer_coral_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Acer_index -l A \
+                                -1 ${SAMP}_Acer_coral_only_transcriptome_1.fq \
+                                -2 ${SAMP}_Acer_coral_only_transcriptome_2.fq \
+                                -p 50 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Acer/${SAMP}_Host_quant
+done
+
+# Loop for Algae
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Clade_A_Acer_algae_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Clade_A_Acer_algae_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Acer/Acer_Clade_A_index -l A \
+                                -1 ${SAMP}_Clade_A_Acer_algae_only_transcriptome_1.fq \
+                                -2 ${SAMP}_Clade_A_Acer_algae_only_transcriptome_2.fq \
+                                -p 50 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Acer/${SAMP}_Algae_quant
+done
+# Loop for Bacteria
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Acer_Bacteria_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Acer_Bacteria_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Bacteria_Acer_index -l A \
+                                -1 ${SAMP}_Acer_Bacteria_only_transcriptome_1.fq \
+                                -2 ${SAMP}_Acer_Bacteria_only_transcriptome_2.fq \
+                                -p 50 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Acer/${SAMP}_Bacteria_quant
+done
+```
+
+### Montastraea cavernosa Salmon Loop
+>/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/scripts
+>Mcav_salmon.sh
+```
+# Loop for Host
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Mcav_coral_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Mcav_coral_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Mcav_index -l A \
+				-1 ${SAMP}_Mcav_coral_only_transcriptome_1.fq \
+				-2 ${SAMP}_Mcav_coral_only_transcriptome_2.fq \
+				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Mcav/${SAMP}_Host_quant
+done
+
+# Loop for Algae
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Clade_C_Mcav_algae_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Clade_C_Mcav_algae_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Mcav/Mcav_Clade_C_index -l A \
+				-1 ${SAMP}_Clade_C_Mcav_algae_only_transcriptome_1.fq \
+				-2 ${SAMP}_Clade_C_Mcav_algae_only_transcriptome_2.fq \
+				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Mcav/${SAMP}_Algae_quant
+done
+# Loop for Bacteria
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Mcav_Bacteria_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Mcav_Bacteria_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Bacteria_Mcav_index -l A \
+				-1 ${SAMP}_Mcav_Bacteria_only_transcriptome_1.fq \
+				-2 ${SAMP}_Mcav_Bacteria_only_transcriptome_2.fq \
+				-p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Mcav/${SAMP}_Bacteria_quant
+done
+```
+
+### Orbicella faveolata Salmon Loop
+>/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/scripts
+>Ofav_salmon.sh
+```
+# Loop for Host
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Ofav_coral_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Ofav_coral_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Ofav_index -l A \
+                                -1 ${SAMP}_Ofav_coral_only_transcriptome_1.fq \
+                                -2 ${SAMP}_Ofav_coral_only_transcriptome_2.fq \
+                                -p 50 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Ofav/${SAMP}_Host_quant
+done
+
+# Loop for Algae
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Clade_D_Ofav_algae_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Clade_D_Ofav_algae_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Ofav/Ofav_Clade_D_index -l A \
+                                -1 ${SAMP}_Clade_D_Ofav_algae_only_transcriptome_1.fq \
+                                -2 ${SAMP}_Clade_D_Ofav_algae_only_transcriptome_2.fq \
+                                -p 50 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Ofav/${SAMP}_Algae_quant
+done
+# Loop for Bacteria
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Ofav_Bacteria_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Ofav_Bacteria_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Bacteria_Ofav_index -l A \
+                                -1 ${SAMP}_Ofav_Bacteria_only_transcriptome_1.fq \
+                                -2 ${SAMP}_Ofav_Bacteria_only_transcriptome_2.fq \
+                                -p 50 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Ofav/${SAMP}_Bacteria_quant
+done
+```
+
+### Porites astreoides Salmon Loop
+>/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/scripts
+>Past_salmon.sh
+```
+# Loop for Host
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Past_coral_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Past_coral_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Past_index -l A \
+                                -1 ${SAMP}_Past_coral_only_transcriptome_1.fq \
+                                -2 ${SAMP}_Past_coral_only_transcriptome_2.fq \
+                                -p 50 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Past/${SAMP}_Host_quant
+done
+
+# Loop for Algae
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Clade_A_Past_algae_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Clade_A_Past_algae_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Past/Past_Clade_A_index -l A \
+                                -1 ${SAMP}_Clade_A_Past_algae_only_transcriptome_1.fq \
+                                -2 ${SAMP}_Clade_A_Past_algae_only_transcriptome_2.fq \
+                                -p 50 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Past/${SAMP}_Algae_quant
+done
+# Loop for Bacteria
+
+#!/bin/bash
+PATH=$PATH:/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin
+for FILE in ./$(ls *_Past_Bacteria_only_transcriptome_1.fq); do
+        echo ${FILE}
+        SAMP=$(basename -s _Past_Bacteria_only_transcriptome_1.fq $FILE)
+        echo $SAMP
+        DIR=/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i ${DIR}/Bacteria_Past_index -l A \
+                                -1 ${SAMP}_Past_Bacteria_only_transcriptome_1.fq \
+                                -2 ${SAMP}_Past_Bacteria_only_transcriptome_2.fq \
+                                -p 50 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Past/${SAMP}_Bacteria_quant
+done
+```
+
+
+
+
+
+
+
+
+
+</details>
+<details>
+<summary>* OLD Salmon - Quantification</summary>
 # Salmon - Quantification
 
  
