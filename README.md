@@ -3020,3 +3020,65 @@ Save "mcav_sc_orthologs_annotated.txt" and "mcav_sc_orthologs.fa" to your comput
 This process is analagous in the Symbiodinaiceae genera using the Durusdinium reference proteome as the reference for annotation.
 
 </details>
+
+<details>
+
+<summary>Export</summary>
+
+The primary datasets of interest for exporting are the **salmon quantification results**, **OrthoFinder Results**, and **Annotations**. 
+While all the previous code has been conducted within the server, these commands are happening on my local computer to extract these datasets from the server to my lcoal computer.
+
+## Salmon
+
+### Host
+```
+# Acer
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Acer/*_Host_quant /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/host/Acer
+
+# Mcav
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Mcav/*_Host_quant /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/host/Mcav
+
+# Ofav
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Ofav/*_Host_quant /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/host/Ofav
+
+# Past
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Past/*_Host_quant /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/host/Past
+
+```
+
+
+### Algal Symbiont
+```
+# Clade_A_Acer
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Acer/*Algae_quant /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/algae/Clade_A_Acer
+
+# Clade_C_Mcav
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Mcav/*Algae_quant /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/algae/Clade_C_Mcav
+
+
+# Clade_D_Ofav
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Ofav/*Algae_quant /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/algae/Clade_D_Ofav
+
+
+# Clade_A_Past
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Past/*Algae_quant /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/algae/Clade_A_Past
+
+```
+### Bacteria
+```
+# Acer
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Acer/*Bacteria* /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/bacteria/Bacteria_Acer
+
+# Mcav
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Mcav/*Bacteria* /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/bacteria/Bacteria_Mcav
+
+# Ofav
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Ofav/*Bacteria* /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/bacteria/Bacteria_Ofav
+
+# Past
+scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/Past/*Bacteria* /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/salmon/bacteria/Bacteria_Past
+```
+
+
+
+</details>
