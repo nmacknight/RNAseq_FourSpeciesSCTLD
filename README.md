@@ -4,7 +4,7 @@
 
 **Project:** ***Acropora cervicornis***, ***Porites astreoides***, ***Montastraea cavernosa***, and ***Orbicella faveolata*** were exposed to Stony Coral Tissue Loss Disease. Tissue samples were collected to investigate the gene expression of each component of the coral holobiont with particular consideration of the Bacteria Gene expression as this focus has never been investigated and may lead to results that identify a bacteria disease causing agent and mechanistic etiology. 
 
-**Goal:** Process sequence reads to build Metatranscriptomes, isolate holobiont components (Host, Algal Symbiont, Bacteria), identify single copy Orthologs, and annotate those Orthologs for statistical analysis in R.
+**Goal:** Process sequence reads to build Metatranscriptomes, isolate holobiont components (Host 🪸, Algal Symbiont :seedling:, Bacteria :microbe:), identify homologous transcripts, and annotate those orthogroups for statistical analysis in R.
 
 
 > [!TIP]
