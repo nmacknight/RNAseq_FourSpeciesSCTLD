@@ -933,7 +933,7 @@ gzip Orbicella_faveolata_gen_17.scaffolds.fa
 
 > Runtime ~2 min. 
 
-**Note** my dbtype is prot for protein. This means it is producing a protein master coral database. so when I do my blast below, I have a nucleotide query (trinity_out_dir.LongestIsoform.Trinity.fasta) mapping to a protein database so I need to use blastx. If I made the master coral db a dbtype "nucl" for nucleotide than I could use a blastn blast. 
+> **Note** my dbtype is prot for protein. This means it is producing a protein master coral database. so when I do my blast below, I have a nucleotide query (trinity_out_dir.LongestIsoform.Trinity.fasta) mapping to a protein database so I need to use blastx. If I made the master coral db a dbtype "nucl" for nucleotide than I could use a blastn blast. 
 
 Here is a good [visual](https://open.oregonstate.education/computationalbiology/chapter/command-line-blast/) on blast types.
 
@@ -946,9 +946,11 @@ Acer
 awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt > Acer_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Acer_contigs_percent_95.txt > Acer_contigs_percent_95_bp_150.txt
 
-#cdbyank
+#Index Metatranscriptome
 /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
- cat Acer_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Acer_coral_only_transcriptome.fa
+
+#cdbyank - Extract filtered sequences
+cat Acer_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Acer_coral_only_transcriptome.fa
 ```
 
 Mcav
@@ -1570,6 +1572,30 @@ awk '{if ($3 > 150) print $1}' Ofav_contigs_percent_95.txt > Ofav_contigs_percen
 awk '{if ($3 > 95) print $1,$2,$4 }' Ofav_trinity_output.LongestIsoform.BacteriaOnly.Trinity.txt > Ofav_Bacteria_contigs_percent_95.txt
 awk '{if ($3 > 150) print $1}' Ofav_Bacteria_contigs_percent_95.txt > Ofav_Bacteria_contigs_percent_95_bp_150.txt
 ```
+
+</details>
+
+<details>
+<summary>Inferring Algal Composition</summary>
+
+When starting this project, I intended to infer algal composition among samples by using bbsplit and using mapping percentage to algal references as a way to infer algal composition. After much troubleshooting and improvement with that approach I switched methods and inferred algal composition through blastn results by counting the number of contigs. Let me explain why this decision was made.
+
+
+Originally, the idea was to have the four most common algal genera as references in bbsplit. I chose algal references others had recently published with and the results were that each species had a mixed algal composition, with no symbiont genera representing nearly all reads. Biologically, we know these coral hosts are typically dominated (+90%) with a single symbiont genera, however they can symbiont switch, but the likely-hood that was occuring in all my corals was unlikely. So began the journey to scrutinize this initial approach to ensure that my results were biological and not a technical artificat introduced somewhere. The first thing I did was question the references. New algal references are created with improved sequencing and bioinformatics tools. So there is the quality of the references, but also what if a algal reference came from one of the same coral hosts I was using, in a more similar geographic location as my project's samples and other algal references were from distantly related coral hosts from the Pacific? I would expect biological explained lower mapping rates. I tested for this, by taking nearly all known algal references on NCBI and having them as references in bbsplit, where I allowed bbsplit to map ambiguous reads multiple times and the results are a spectrum of mapping percentages. This is due to the technical and biological biases I mentioned. Here is a google excel that summarizes the quality of many available algal references. Anecdotally I was looking at the N50 (the higher the better) and the number of genes (Algal symbionts have a striking 120,000 genes due to evolutionary duplication events (typical plants), this is compared to the expected 20,000 in eukaryotic coral host genomes). To tackle the possible technical and biological bias I mentioned, I decided to lean towards the highest quality algal references rather than those that simply had the highest mapping rate which was my original plan. Collectively this led to a noticeable improvement in inferred algal composition. However I was still not content and after much troubleshooting with bbsplit parameters and ways to organize the references I trialed out a new method because of this thought: Expression does not equal abundance, a low abundance organism may appear overly abundant if its highly expressive and we still may be experiencing some technical bias factors I mentioned. So I decided to try to infer algal composition based on the number of unique contigs to remove the influence of expression over inflating inferred composition. The idea being that originally in bbsplit, if there were multiple reads of a contig, then that increases the mapping rate even though its the same contig. In this new approach once a unique contig has been identified, additional expression of that contig has no effect. The methods for this approach are written out in detail in this pipeline, but an overview is that I would blast the metranscriptomes to the algal references producing a .txt file of the transcript names that mapped. Through cdbyank, those transcript names were identified in the metatranscriptome, so that the sequences of those transcript names were extracted into the .fa files such as "Clade_A_Acer_algae_only_transcriptome.fa" then I could simply grep -c "^>" Clade_A_Acer_algae_only_transcriptome.fa to get a transcript count (contig count). I could see how many transcripts wer in Clade_B_Acer... Clade_C_Acer... and Clade_D_Acer... I would note the contig count and here is a summary of that:
+
+<img width="1148" alt="image" src="https://github.com/user-attachments/assets/220b7ae0-921e-4391-81bf-57a2c73c56e8" />
+
+|Species| BBsplit - Historical References  | BBsplit - Highest Quality References | Blastn - Number of Contigs |
+| ------------- | ------------- | ------------- | ------------- |
+| Acer | 38% - A  | 95% - A  | 99% - A |
+| Mcav | 50% - B  | 68% - C  | 95% - C|
+| Ofav | 70% - D  | 85% - D  | 99% - D|
+| Past | 40% - A  | 93% - A  | 98% - A|
+
+
+In summary, expression does not equal abundance, as we already knew, but by addressing this, we now have methods to circumnavigate that and produce results that reflect the true composition of these algal symbionts.
+
+
 </details>
 
 <details>
