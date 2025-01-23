@@ -856,31 +856,149 @@ trinityrnaseq-Trinity-v2.5.1/util/misc/get_longest_isoform_seq_per_trinity_gene.
 
 <summary> Make Coral Host Database</summary>
 # Make Coral Only Database
+> The convenient part about the host reference is that visually we know what the coral was, so there isnt a necessity to have a species-specific reference be our only reference and instead we can combine coral species references to capture a greater diversity of coral host transcripts within our metatranscriptomes.
 
-Make the master coral fasta database:
-**Example**
+.zip files were not downloading properly from NCBI. So, in the NCBI link for each genome, click the three vertical dots next to: Submitted GenBank assembly
+GCA_958299805.1 and select FTP, then select the .fna.gz file to just download the genome. 
+
+Files moved to /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral on holocron server.
+
+Below are the locations and names of the curated coral host references. 
+ 
+Orbicella faveolata
 ```
-ncbi-blast-2.2.27+/bin/makeblastdb -in MasterCoral.fasta -parse_seqids -dbtype prot -out MasterCoral_db
+# Orbicella_faveolata_gen_17.scaffolds.fa 
+ https://zenodo.org/records/10151798
+
+ https://www.ncbi.nlm.nih.gov/datasets/genome/?taxon=1920453
 ```
-**Modified with our data**
+ 
+Montastrea cavernosa 
 ```
-gunzip MasterCoral.fasta.gz 
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in MasterCoral.fasta -parse_seqids -dbtype prot -out MasterCoral_db
+https://www.dropbox.com/s/yfqefzntt896xfz/Mcavernosa_genome.tgz?file_subpath=%2FMcav_genome%2FMcavernosa_July2018.fasta
 ```
 
-I am also going to make a nulceotide MasterCoral_db because the protein one takes more time for blastx. 
+Acropora cervicornis 
 ```
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in MasterCoral.fasta -parse_seqids -dbtype nucl -out MasterCoral__nucl_db
+https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_032359415.1/
+
+# GCA_032359415.1_NEU_Acer_K2_genomic.fna.gz
+https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/032/359/415/GCA_032359415.1_NEU_Acer_K2/
+
+# GCA_037043185.1_Acerv_M5_genomic.fna.gz
+https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/037/043/185/GCA_037043185.1_Acerv_M5/
 ```
+
+Porites astreoides 
+```
+Porites astreoides - https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browser&acc=SRR19144705&display=download - SRR19144705.fasta.gz
+Porites lutea - https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_958299805.1/
+Porites australiensis - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/022/179/025/GCA_022179025.1_Paus_1.0/ - GCA_022179025.1_Paus_1.0_genomic.fna.gz 
+Porites lobata - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/942/486/035/GCA_942486035.1_PLOB_v1/ - GCA_942486035.1_PLOB_v1_genomic.fna.gz  
+Porites evermanni - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/942/486/025/GCA_942486025.1_PEVE_v1/ - GCA_942486025.1_PEVE_v1_genomic.fna.gz   
+Porites rus - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/900/290/455/GCA_900290455.1_Prus/ - GCA_900290455.1_Prus_genomic.fna.gz  	
+```
+
+ 
+Concatenate genomes
+```
+ cat GCA_022179025.1_Paus_1.0_genomic.fna \
+    GCA_032359415.1_NEU_Acer_K2_genomic.fna \
+    GCA_037043185.1_Acerv_M5_genomic.fna \
+    GCA_900290455.1_Prus_genomic.fna \
+    GCA_942486025.1_PEVE_v1_genomic.fna \
+    GCA_942486035.1_PLOB_v1_genomic.fna \
+    GCA_958299805.1_jaPorLute2.1_alternate_haplotype_genomic.fna \
+    Mcavernosa_July2018.fasta \
+    Orbicella_faveolata_gen_17.scaffolds.fa \
+    > concatenated_genomes.fasta
+```
+
+
+```
+ /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in concatenated_genomes.fasta -parse_seqids -dbtype nucl -out MasterCoral_db
+```
+Gzipping them again to reduce space.
+```
+gzip GCA_022179025.1_Paus_1.0_genomic.fna
+gzip GCA_032359415.1_NEU_Acer_K2_genomic.fna
+gzip GCA_037043185.1_Acerv_M5_genomic.fna
+gzip GCA_900290455.1_Prus_genomic.fna
+gzip GCA_942486025.1_PEVE_v1_genomic.fna
+gzip GCA_942486035.1_PLOB_v1_genomic.fna
+gzip GCA_958299805.1_jaPorLute2.1_alternate_haplotype_genomic.fna
+gzip Mcavernosa_July2018.fasta
+gzip Orbicella_faveolata_gen_17.scaffolds.fa
+```
+
 > Runtime ~2 min. 
 
 **Note** my dbtype is prot for protein. This means it is producing a protein master coral database. so when I do my blast below, I have a nucleotide query (trinity_out_dir.LongestIsoform.Trinity.fasta) mapping to a protein database so I need to use blastx. If I made the master coral db a dbtype "nucl" for nucleotide than I could use a blastn blast. 
 
 Here is a good [visual](https://open.oregonstate.education/computationalbiology/chapter/command-line-blast/) on blast types.
 
+Acer
 ```
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_OneSample_Lanes1-8/trinity_out_dir.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_OneSample_Lanes1-8/trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt
+#blastn
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt -num_threads 20
+
+#Filter
+awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt > Acer_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Acer_contigs_percent_95.txt > Acer_contigs_percent_95_bp_150.txt
+
+#cdbyank
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
+ cat Acer_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Acer_coral_only_transcriptome.fa
 ```
+
+Mcav
+```
+#blastn
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt -num_threads 20
+
+#Filter
+awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt > Mcav_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Mcav_contigs_percent_95.txt > Mcav_contigs_percent_95_bp_150.txt
+
+#Index Metatranscriptome
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta
+
+#cdbyank - Extract filtered sequences
+cat Mcav_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Mcav_coral_only_transcriptome.fa
+```
+
+Ofav
+```
+#Blastn
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.CoralOnly.Trinity.txt -num_threads 20
+
+#Filter
+awk '{if ($3 > 95) print $1,$2,$4 }' Ofav_trinity_output.LongestIsoform.CoralOnly.Trinity.txt > Ofav_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Ofav_contigs_percent_95.txt > Ofav_contigs_percent_95_bp_150.txt
+
+#Index
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta Ofav_trinity_output.LongestIsoform.Trinity.fasta
+
+#cdbyank
+cat Ofav_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank Ofav_trinity_output.LongestIsoform.Trinity.fasta.cidx > Ofav_coral_only_transcriptome.fa
+```
+
+Past
+```
+#Blastn
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt -num_threads 20
+
+#Filter
+awk '{if ($3 > 95) print $1,$2,$4 }' trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt > Past_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Past_contigs_percent_95.txt > Past_contigs_percent_95_bp_150.txt
+
+#Index Metatranscriptome
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta
+
+#cdbyank
+cat Past_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Past_coral_only_transcriptome.fa
+```
+
 </details>
 
 <details>
