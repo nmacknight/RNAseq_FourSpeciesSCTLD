@@ -2220,38 +2220,33 @@ scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLD
 ```
 
 </details>
-
-
-
-
 <details>
 <summary>BBMAP - Index References for BBsplit</summary>
+
 # BBMAP
-> Reference genomes need to be indexed before bbsplit can be ran. 
 
+> References need to be indexed before bbsplit can be ran. 
 ```
-/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa build=1
-/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa build=2
-/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.1.fna build=
-/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa
-/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta
-/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta
-
-
-
 # Acer
-/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_Acer_algae_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa
 
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_Acer_reference_proteome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Acer/Acer_Clade_A_index
-# Mcav
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_C_Mcav_reference_proteome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Mcav/Mcav_Clade_C_index
-# Ofav
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_D_Ofav_algae_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Ofav/Ofav_Clade_D_index
-# Past
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_Past_algae_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Past/Past_Clade_A_index
+# Mcav 
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_C_Mcav_algae_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa
 
+# Ofav 
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Ofav_coral_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_D_Ofav_algae_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Ofav_Bacteria_only_transcriptome.fa
 
- ```
+# Past 
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_Past_algae_only_transcriptome.fa
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa
+```
 </details>
 
 <details>
