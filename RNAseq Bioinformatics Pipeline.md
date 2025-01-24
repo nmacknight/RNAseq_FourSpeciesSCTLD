@@ -731,22 +731,23 @@ trinityrnaseq-Trinity-v2.5.1/util/misc/get_longest_isoform_seq_per_trinity_gene.
 ```
 > Runtime ~2 min. 
 
-### Acer
+Acer
 ```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllAcerSamples_Lane1-8/trinity_out_dir_AllAcerSamples_Lane1-8.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllAcerSamples_Lane1-8/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
 ```
 > Runtime: 2 min
-### Past
+
+Past
 ```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllPastSamples_Lane1-8/trinity_out_dir_AllPastSamples_Lane1-8.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllPastSamples_Lane1-8/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta
 ```
 
-### Ofav
+Ofav
 ```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta
 ```
 
-### Mcav
+Mcav
 ```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllMcavSamples_Lane1-8/trinity_out_dir_AllMcavSamples_Lane1-8.Trinity.fasta > /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllMcavSamples_Lane1-8/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta
 ```
@@ -756,6 +757,7 @@ trinityrnaseq-Trinity-v2.5.1/util/misc/get_longest_isoform_seq_per_trinity_gene.
 
 <summary> Make Coral Host Database</summary>
 # Make Coral Only Database
+
 > The convenient part about the host reference is that visually we know what the coral was, so there isnt a necessity to have a species-specific reference be our only reference and instead we can combine coral species references to capture a greater diversity of coral host transcripts within our metatranscriptomes.
 
 .zip files were not downloading properly from NCBI. So, in the NCBI link for each genome, click the three vertical dots next to: Submitted GenBank assembly
@@ -967,6 +969,7 @@ grep -c "^>" concatenated_Clade_A_genomes.fasta
 <summary>Make Bacteria Database</summary>
 
 ### Bacteria References:
+
 I Followed the instructions in step 2 [here](https://www.ncbi.nlm.nih.gov/genome/doc/ftpfaq/#:~:text=To%20use%20the%20download%20service,button%20to%20start%20the%20download)
 Essentially, this downloaded 38,177 bacteria genomes (47.5 gb) that fit this criteria Bacteria, RefSeq, Complete Genomes. 
 Ideally this can be used to blast our metatranscriptomes against to identify bacteria transcripts. 
@@ -1020,7 +1023,7 @@ awk '{if ($3 > 150) print $1}' Past_Bacteria_contigs_percent_95.txt > Past_Bacte
 
 Now that we have a text file of the transcript names that pass our threshold for their alignment with the holobiont reference (example: Past_Bacteria_contigs_percent_95_bp_150.txt), we will extract the sequences from the metatranscriptomes (example: trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta) by first indexing the metatranscriptome with cdbfasta and then producing the .fa files (example: Past_Bacteria_only_transcriptome.fa).
 
-### Acer - Bacteria Only
+:Microbe: Acer Bacteria
 ```
 /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta
 
@@ -1028,21 +1031,21 @@ cat Acer_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.mack
 ```
 > Run time: <1 min.
 
-### Mcav - Bacteria Only
+:microbe: Mcav Bacteria
 ```
 /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta
 
 cat Mcav_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Mcav_Bacteria_only_transcriptome.fa
 ```
 
-### Ofav - Bacteria Only
+:microbe: Ofav Bacteria
 ```
 /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllOfavSamples_Lane1-8.LongestIsoform.Trinity.fasta
 
 cat Ofav_Bacteria_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank trinity_out_dir.AllOfavSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Ofav_Bacteria_only_transcriptome.fa
 ```
 
-### Past - Bacteria Only
+:microbe: Past Bacteria
 ```
 /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta
 
@@ -1062,50 +1065,56 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
 
 <summary>Blastn - Assign metatranscriptome sequences to Host, Algal Symbiont, or Bacteria</summary>
 
-### Acer
+🪸 Acer
 **blastn - Coral Host**
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastx -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllAcerSamples_Lane1-8/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/trinity_out_dir_AllAcerSamples_Lane1-8/trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt
 ```
+:microbe: Acer
 **blastn - Bacteria Only**
 ```
-/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.LongestIsoform.CoralOnly.Trinity.txt -num_threads 20
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.LongestIsoform.BacteriaOnly.Trinity.txt -num_threads 20
 ```
 
-### Past 
+🪸 Past 
 **blastn - Coral Host**
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt -num_threads 20
 ```
+
+:microbe: Past
 **blastn - Bacteria Only**
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/LongestIsoform.BacteriaOnly.Trinity.txt -num_threads 20
 ```
 
-### Ofav
+🪸 Ofav
 **blastn - Coral Host**
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.CoralOnly.Trinity.txt -num_threads 20
 ```
+
+:microbe: Ofav
 **blastn - Bacteria Only**
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.BacteriaOnly.Trinity.txt -num_threads 20
 ```
 
-### Mcav
+🪸 Mcav
 **blastn - Coral Host**
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral/MasterCoral_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.LongestIsoform.NewCoralOnly.Trinity.txt -num_threads 20
 ```
+
+:microbe: Mcav
 **blastn - Bacteria Only**
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta -db /home/cns.local/nicholas.macknight/references/bacteria_reference/MasterBacteria_db -outfmt "6 qseqid evalue pident length" -max_target_seqs 1 -out /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/BacteriaOnly.Trinity.txt -num_threads 20
 ```
 
-# Blastn - Algal Symbionts
+### Blastn - Algal Symbionts
 
-
-# Acer - A
+🌱 Acer - A
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1115,7 +1124,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_A_blastn_Acer_results.txt \
     -num_threads 20
 ```
-# Acer - B
+🌱 Acer - B
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1125,7 +1134,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_B_blastn_Acer_results.txt \
     -num_threads 20
 ```
-# Acer - C
+🌱 Acer - C
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1135,7 +1144,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_C_blastn_Acer_results.txt \
     -num_threads 20
 ```
-# Acer - D
+🌱 Acer - D
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1145,7 +1154,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_D_blastn_Acer_results.txt \
     -num_threads 20
 ```
-# Mcav - A
+🌱 Mcav - A
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1155,7 +1164,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_A_blastn_Mcav_results.txt \
     -num_threads 20
 ```
-# Mcav - B
+🌱 Mcav - B
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1165,7 +1174,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_B_blastn_Mcav_results.txt \
     -num_threads 20
 ```
-# Mcav - C
+🌱 Mcav - C
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1175,7 +1184,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_C_blastn_Mcav_results.txt \
     -num_threads 20
 ```
-# Mcav - D
+🌱 Mcav - D
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1185,7 +1194,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_D_blastn_Mcav_results.txt \
     -num_threads 20
 ```
-# Ofav - A
+🌱 Ofav - A
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta \
@@ -1195,7 +1204,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_A_blastn_Ofav_results.txt \
     -num_threads 20
 ```
-# Ofav - B
+🌱 Ofav - B
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta \
@@ -1205,7 +1214,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_B_blastn_Ofav_results.txt \
     -num_threads 20
 ```
-# Ofav - C
+🌱 Ofav - C
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta \
@@ -1215,7 +1224,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_C_blastn_Ofav_results.txt \
     -num_threads 20
 ```
-# Ofav - D
+🌱 Ofav - D
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta \
@@ -1226,7 +1235,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -num_threads 20
 
 ```
-# Past - A
+🌱 Past - A
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1236,7 +1245,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_A_blastn_Past_results.txt \
     -num_threads 20
 ```
-# Past - B
+🌱 Past - B
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1246,7 +1255,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_B_blastn_Past_results.txt \
     -num_threads 20
 ```
-# Past - C
+🌱 Past - C
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1256,7 +1265,7 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_C_blastn_Past_results.txt \
     -num_threads 20
 ```
-# Past - D
+🌱 Past - D
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
     -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta \
@@ -1266,8 +1275,11 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -out Clade_D_blastn_Past_results.txt \
     -num_threads 20
 ```
-### Threshold Filter contig blast quality - Loop "contig_evalue_filter.sh"
+:seedling: :seedling: :seedling:
 
+Threshold Filter contig blast quality - Loop "contig_evalue_filter.sh"
+
+> What this script "contig_evalue_filter.sh" does is retain the contigs with percent identity > 95 AND contigs with length > 150 bp into a new .txt file. It then indexes the metranscriptome in preparation for the next script.
 ```
 nano
 ```
@@ -1318,14 +1330,15 @@ echo "Processing complete!"
 /home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta \
     /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_trinity_output.LongestIsoform.Trinity.fasta
 ```
+:seedling: :seedling: :seedling:
 
-### Extract Contigs that pass Threshold - "extract_contigs.sh"
+Extract Contigs that pass Threshold - "extract_contigs.sh"
 
-
+> This script takes the contig names from the previous script in the .txt file that passed the filtering thresholds and now this script extracts the sequences of those contig names into a new .fa file such as "Clade_A_Acer_algae_only_transcriptome.fa"
 ```
 nano
 ```
-copy and paiste (update file names to match yours and save as "contig_evalue_filter.sh"):
+Copy and paiste (update file names to match yours and save as "contig_evalue_filter.sh"):
 ```
 #!/bin/bash
 
@@ -1375,7 +1388,7 @@ done
 echo "Contig extraction complete!"
 ```
 
-### Concatenate Clade-Specific Transcripts Across Host
+:seedling: Concatenate Clade-Specific Transcripts Across Host
 ```
 # Clade A
 cat Clade_A_Acer_algae_only_transcriptome.fa \
@@ -1406,7 +1419,7 @@ cat Clade_D_Acer_algae_only_transcriptome.fa \
     > Master_Clade_D_transcriptome.fa
 ```
 
-### Collapse to Longest Isoform: 
+:seedling: Collapse to Longest Isoform: 
 ```
 /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/util/misc/get_longest_isoform_seq_per_trinity_gene.pl \
     Master_Clade_A_transcriptome.fa > Master_Clade_A_longest_isoform.fa
@@ -1423,6 +1436,8 @@ cat Clade_D_Acer_algae_only_transcriptome.fa \
 </details>
 <details>
 <summary>Inferring Algal Composition</summary>
+
+:seedling: :seedling: :seedling:
 
 >When starting this project, I intended to infer algal composition among samples by using bbsplit and using mapping percentage to algal references as a way to infer algal composition. After much troubleshooting and improvement with that approach I switched methods and inferred algal composition through blastn results by counting the number of contigs. Let me explain why this decision was made.
 
@@ -1519,8 +1534,9 @@ else:
 chmod +x check_single_orf.py
 ```
 
-# Bacteria :microbe:
-## Acer - Bacteria 
+### :microbe: Bacteria
+
+:microbe: Acer Bacteria 
 ```
 mkdir Bacteria_transdecoder_AllORFs
 cd Bacteria_transdecoder_AllORFs
@@ -1556,7 +1572,7 @@ mv Acer_Bacteria_only_transcriptome.fa.transdecoder.pep Acer_Bacteria_only_trans
 ```
 
 
-## Mcav - Bacteria
+:microbe: Mcav Bacteria
 ```
 mkdir Bacteria_transdecoder_AllORFs
 cd Bacteria_transdecoder_AllORFs
@@ -1582,7 +1598,8 @@ mv Mcav_Bacteria_only_transcriptome.fa.transdecoder.pep Mcav_Bacteria_only_trans
 # Verify Single ORF
 ./check_single_orf.py Mcav_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa
 ```
-## Ofav - Bacteria
+
+:microbe: Ofav Bacteria
 ```
 mkdir Bacteria_transdecoder_AllORFs
 cd Bacteria_transdecoder_AllORFs
@@ -1608,7 +1625,8 @@ mv Ofav_Bacteria_only_transcriptome.fa.transdecoder.pep Ofav_Bacteria_only_trans
 # Verify Single ORF
 ./check_single_orf.py Ofav_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa
 ```
-## Past - Bacteria
+
+:microbe: Past Bacteria
 ```
 mkdir Bacteria_transdecoder_AllORFs
 cd Bacteria_transdecoder_AllORFs
@@ -1635,9 +1653,9 @@ mv Past_Bacteria_only_transcriptome.fa.transdecoder.pep Past_Bacteria_only_trans
 ./check_single_orf.py Past_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
-# Host 🪸
+### Host 🪸
 
-## Acer - Host
+🪸 Acer Host
 ```
 /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer
 mkdir Host_transdecoder_AllORFs
@@ -1668,7 +1686,7 @@ mv Acer_coral_only_transcriptome.fa.transdecoder.pep Acer_coral_only_transcripto
 ./check_single_orf.py Acer_Host_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
-## Mcav - Host
+🪸 Mcav Host
 ```
 mkdir Host_transdecoder_AllORFs
 cd Host_transdecoder_AllORFs
@@ -1699,7 +1717,7 @@ mv Mcav_coral_only_transcriptome.fa.transdecoder.pep Mcav_coral_only_transcripto
 ./check_single_orf.py Mcav_coral_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
-## Ofav - Host
+🪸 Ofav Host
 ```
 mkdir Host_transdecoder_AllORFs
 cd Host_transdecoder_AllORFs
@@ -1726,7 +1744,7 @@ mv Ofav_coral_only_transcriptome.fa.transdecoder.pep Ofav_coral_only_transcripto
 ./check_single_orf.py Ofav_Host_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
-## Past - Host
+🪸 Past Host
 ```
 mkdir Host_transdecoder_AllORFs
 cd Host_transdecoder_AllORFs
@@ -1752,9 +1770,9 @@ mv Past_coral_only_transcriptome.fa.transdecoder.pep Past_coral_only_transcripto
 # Verify Single ORF
 ./check_single_orf.py Past_Host_reference_proteome_AllORF_SingleBestOnly.fa
 ```
-# Algae :seedling:
+### :seedling: Algae
 
-## Acer - Algae
+:seedling: Acer Algae
 ```
 /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer
 mkdir Algae_transdecoder_AllORFs
@@ -1782,7 +1800,7 @@ mv Clade_A_Acer_algae_only_transcriptome.fa.transdecoder.pep Clade_A_Acer_algae_
 ./check_single_orf.py Clade_A_Acer_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
-## Mcav - Algae
+:seedling: Mcav Algae
 ```
 mkdir Algae_transdecoder_AllORFs
 cd Algae_transdecoder_AllORFs
@@ -1809,7 +1827,7 @@ mv Clade_C_Mcav_algae_only_transcriptome.fa.transdecoder.pep Clade_C_Mcav_algae_
 ./check_single_orf.py Clade_C_Mcav_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
-## Ofav - Algae
+:seedling: Ofav Algae
 ```
 mkdir Algae_transdecoder_AllORFs
 cd Algae_transdecoder_AllORFs
@@ -1836,7 +1854,7 @@ mv Clade_D_Ofav_algae_only_transcriptome.fa.transdecoder.pep Clade_D_Ofav_algae_
 ./check_single_orf.py Clade_D_Ofav_reference_proteome_AllORF_SingleBestOnly.fa
 ```
 
-## Past - Algae
+:seedling: Past Algae
 ```
 mkdir Algae_transdecoder_AllORFs
 cd Algae_transdecoder_AllORFs
@@ -1870,9 +1888,9 @@ mv Clade_A_Past_algae_only_transcriptome.fa.transdecoder.pep Clade_A_Past_algae_
 
 Move all the reference_proteome.fa into a new folder specific for each holobiont compartment (Host, Algae, Bacteria, so three folders total)
 Example of moving all reference_proteome.fa files into their respective newly created folder:
-```
-# Host
 
+🪸 Host
+```
 # Acer
 mkdir /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF
 scp /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Host_transdecoder_AllORFs/Acer_Host_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF/
@@ -1887,28 +1905,62 @@ scp /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Host_t
 
 # Past
 scp /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Host_transdecoder_AllORFs/Past_Host_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF/
+```
 
-# Algae
+:seedling: Algae
+```
 mkdir /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF
-scp *reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/
 
-# Bacteria
+#Acer
+cd /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Algae_transdecoder_AllORFs
+scp Clade_A_Acer_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/
+
+#Mcav
+cd /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Algae_transdecoder_AllORFs
+scp Clade_C_Mcav_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/
+
+#Ofav
+cd /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Algae_transdecoder_AllORFs
+scp Clade_A_Ofav_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/
+
+#Past
+cd /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Algae_transdecoder_AllORFs
+scp Clade_A_Past_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/
+```
+
+:microbe: Bacteria
+```
 mkdir /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF
-mv *_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/
+
+# Acer
+# In performing this I used the mv command when I should have used scp. Keeping mv for records and making this note.
+mv /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Bacteria_transdecoder_AllORFs/Acer_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/
+
+# Mcav
+# In performing this I used the mv command when I should have used scp. Keeping mv for records and making this note.
+mv /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Bacteria_transdecoder_AllORFs/Mcav_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/
+
+# Ofav
+# In performing this I used the mv command when I should have used scp. Keeping mv for records and making this note.
+mv /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Bacteria_transdecoder_AllORFs/Ofav_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/
+
+# Past
+# In performing this I used the mv command when I should have used scp. Keeping mv for records and making this note.
+mv /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Bacteria_transdecoder_AllORFs/Past_Bacteria_reference_proteome_AllORF_SingleBestOnly.fa /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/
 ```
 
 Then within each folder as the active directory perform the Orthofinder Command:
 > This command performs OrthoFinder, comparing the predicted proteins among the reference_proteome.fa files
 ```
-# Host
+# 🪸 Host
 cd /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Host/SingleBestORF/
 python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinder.py -f . -t 50
 
-# Algae
+# :seedling: Algae
 cd /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/
 python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinder.py -f . -t 50
 
-# Bacteria
+# 🦠 Bacteria
 cd /home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/
 python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinder.py -f . -t 50
 ```
@@ -1930,7 +1982,8 @@ Orthogroups contain multiple transcripts. It is common for these transcripts to 
 > Annotation organization occurs through command-line to assign the annotation name to each coral dataset. Then the preffered approach listed above is applied in R.
 
 
-## Annotating Bacteria Orthogroups :microbe:
+### :microbe: Annotating Bacteria Orthogroups 
+
 First we need to create a file of the orthogroup transcripts. "_bac_Orthogroup_Transcripts.txt" from the Orthofinder results.
 Move these files from the server to your local computer.
 ```
@@ -1941,7 +1994,7 @@ scp nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA
 scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/OrthoFinder/Results_Dec21/Orthogroups/Comparative_Genomics_Statistics ./
 scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/OrthoFinder/Results_Dec21/Orthogroups/Species_Tree ./
 ```
-Organize Orthogroups.tsv to make "_bac_Orthogroup_Transcripts.txt" in R
+🦠 Organize Orthogroups.tsv to make "_bac_Orthogroup_Transcripts.txt" in R
 
 > This can be done in excel like so:
 > 1. Open Orthogroups.tsv in Excel
@@ -2031,7 +2084,7 @@ write.csv(Past_orthogroups,file="~/Desktop/Microbial Metatranscriptomics/OrthoFi
 
 ```
 
-Annotating Transcripts
+🦠 Annotating Transcripts
 ```
 mkdir Annotating_Orthogroups
 # Make an index of the reference proteome
@@ -2061,7 +2114,7 @@ awk '{if ($3 < 1e-05) print $1,$2,$3}' Past_Bac_orthologs_annotated.txt > Past_B
 
 ```
 In R:
-Read in Annotated Transcripts
+🦠 Read in Annotated Transcripts
 ```
 # In terminal: 
 scp nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Bacteria/SingleBestORF/*_Bac_orthologs_annotated_e-5.txt /Users/nicholas.macknight/Desktop/Microbial Metatranscriptomics/R/Bacteria/
@@ -2123,7 +2176,7 @@ Past_annot_transcripts$Transcript <- gsub("\\..*","",Past_annot_transcripts$Tran
 
 
 ```
-Annotate Orthogroups
+🦠 Annotate Orthogroups
 ```
 Acer_orthogroups_annot <- merge(Acer_orthogroups,Acer_annot_transcripts, by="Transcript")
 write.csv(Acer_orthogroups_annot,file="~/Desktop/Microbial Metatranscriptomics/OrthoFinder/Bacteria/SingleBestORF/AcerBac_orthogroup_tx2gene_annot.csv",row.names = FALSE)
@@ -2140,7 +2193,7 @@ write.csv(Past_orthogroups_annot,file="~/Desktop/Microbial Metatranscriptomics/O
 
 ```
 
-## Annotating Algae Orthogroups :seedling:
+### :seedling: Annotating Algae Orthogroups 
 First we need to create a file of the orthogroup transcripts. "_algae_Orthogroup_Transcripts.txt" from the Orthofinder results.
 Move these files from the server to your local computer.
 ```
@@ -2153,7 +2206,7 @@ scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLD
 scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/OrthoFinder/Results_Jan13/Species_Tree ./
 ```
 
-## Annotating Host Orthogroups 🪸
+### 🪸 Annotating Host Orthogroups 
 First we need to create a file of the orthogroup transcripts. "_host_Orthogroup_Transcripts.txt" from the Orthofinder results.
 Move these files from the server to your local computer.
 ```
@@ -2183,11 +2236,27 @@ scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLD
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta
 /home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta
+
+
+
+# Acer
+/home/cns.local/nicholas.macknight/software/bbmap/bbmap.sh ref=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/
+
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_Acer_reference_proteome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Acer/Acer_Clade_A_index
+# Mcav
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_C_Mcav_reference_proteome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Mcav/Mcav_Clade_C_index
+# Ofav
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_D_Ofav_algae_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Ofav/Ofav_Clade_D_index
+# Past
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_Past_algae_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Past/Past_Clade_A_index
+
+
  ```
 </details>
 
 <details>
 <summary>BBSplit - Assign Reads to Holobiont References</summary>
+
 # BBSplit
 ### Jan 20th 2025 BBSPLIT
 
@@ -2589,66 +2658,60 @@ Done
 
 <details>
 <summary>Salmon Indexing</summary>
+
 # Salmon
-> Index and then Read Quantification
+> Index and then perform Quantification
 
 **Salmon Indexing** 
 First have to build a salmon index for your transcriptome. Assume that transcripts.fa contains the set of transcripts you wish to quantify. 
 
-### Acer
+> The purpose of indexing the transcriptomes before running Salmon is to prepare the reference transcriptome in a way that enables fast and efficient quantification of RNA-seq reads. Indexing is a crucial preprocessing step that allows Salmon to rapidly match sequencing reads to the transcriptome without performing traditional alignment, significantly improving speed and computational efficiency.
+
+Acer Host
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Acer/Acer_index
 ```
 
-### Mcav
+Mcav Host
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Mcav/Mcav_index
 ```
 
-### Past
+Past Host
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Past/Past_index
 ```
 
-### Ofav
+Ofav Host
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Ofav_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Ofav/Ofav_index
 ```
 
 ## Index Building for Symbiont Transcriptomes 
-
-### Symbiodinium index - with reference genome
+Acer Symbiodinium
 ```
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_A_index -k 23
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_Acer_reference_proteome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Acer/Acer_Clade_A_index
 ```
-
-### Symbiodinium index - with bbsplit output transcriptome
+Mcav Cladicopium 
 ```
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_A_index -k 23
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_C_Mcav_reference_proteome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Mcav/Mcav_Clade_C_index
 ```
-
-### Breviolium index
+Ofav Durusdinium
 ```
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_B_index -k 23
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_D_Ofav_algae_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Ofav/Ofav_Clade_D_index
 ```
-
-### Cladicopium index
+Past Symbiodinium
 ```
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_C_index -k 23
-```
-
-### Durusdinium index
-```
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_D_index -k 23
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_Past_algae_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Past/Past_Clade_A_index
 ```
 
 
-### Index Building for Bacteria Transcriptomes
+Index Building for Bacteria Transcriptomes
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/bacteria_reference/concatenated_bacteria_genomes.fna -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Bacteria_index -k 23
 ```
 
-#### Salmon Example:
+Salmon Example:
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_A_index -l A -1 /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Acer/Acer_output_FR/AcerACDisease-7_S80_symbiodinium_GCA_001939145_1.fq -2 /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Acer/Acer_output_FR/AcerACDisease-7_S80_symbiodinium_GCA_001939145_2.fq -p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/AcerACDisease-7_S80_symbiodinium_quant
 ```
@@ -2661,8 +2724,10 @@ awk 'NR>1 && $5 >= 1 { count++ } END { print "Number of transcripts with NumRead
 <details>
 
 <summary>Salmon - Quantification</summary>
+
 # Salmon - Quantification
 
+> Salmon processes RNA reads by first matching them to a reference transcriptome. Once the reads are mapped, Salmon counts how many reads align to each gene, providing gene expression counts.
 
 ### Acropora cervicornis Salmon Loop
 >/home/cns.local/nicholas.macknight/SCTLDRNA/salmon/scripts
