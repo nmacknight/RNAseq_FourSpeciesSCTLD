@@ -2512,203 +2512,76 @@ for FILE in *.fq.gz; do
 /home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=Past_output_FR/${SAMP}_1.fq out2=Past_output_FR/${SAMP}_2.fq
 done
 ```
-
-
-### OLD BBSPLIT METHODS
-### Applied by For Loop. This doesnt work perfectly, it runs but doesnt apply to all samples and is inconsistent so I manually ran bbsplit which is referenced below. 
- ```
-#!/bin/bash
-
-# Add directories to the PATH
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
-PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
-
-# Define the reference directory
-DIR=/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references
-HDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer
-SDIR=/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer
-
-# Process each FASTQ file
-find ${SDIR} -name "*_R1_clean_merged.fastq.gz" | while read FILE; do
-    echo ${FILE}
-    SAMP=$(basename ${FILE} _R1_clean_merged.fastq.gz)
-    echo ${SAMP}
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="${SDIR}/${SAMP}_R1_clean_merged.fastq.gz" in2="${SDIR}/${SAMP}_R2_clean_merged.fastq.gz" ref="${HDIR}/Acer_coral_only_transcriptome.fa,${HDIR}/Acer_Bacteria_only_transcriptome.fa,${DIR}/symbiodinium_PR$
-basename="${SAMP}_%.fq.gz" refstats="${SAMP}_stats.txt" ambig=all ambig2=all
-outu1="${SAMP}_bboutu_1.fq.gz" outu2="${SAMP}_bboutu_2.fq.gz" &
-done
-```
-### Applied Manually:
-> Two samples as example, this will need to be scaled up for each sample, or get the for loop adapted to your project. 
-
-```
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-37_S86_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACControl-37_S86_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACControl-37_S86_%.fq.gz" refstats="AcerACControl-37_S86_stats.txt" ambig=all ambig2=all outu1="AcerACControl-37_S86_bboutu_1.fq.gz" outu2="AcerACControl-37_S86_bboutu_2.fq.gz"
-mv AcerAC* Acer_output
-rm nohup.out
-rm -r ref/
-nohup /home/cns.local/nicholas.macknight/software/bbmap/bbsplit.sh in1="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-14_S90_R1_clean_merged.fastq.gz" in2="/home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Acer/AcerACDisease-14_S90_R2_clean_merged.fastq.gz" ref="/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa,/home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/symbiodinium_GCA_001939145.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/breviolum_PRJNA274852.fa,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/CladeC_Symbiodinium_transcriptome/davies_cladeC_feb.fasta,/home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/durusdinium_PRJNA508937.fasta" basename="AcerACDisease-14_S90_%.fq.gz" refstats="AcerACDisease-14_S90_stats.txt" ambig=all ambig2=all outu1="AcerACDisease-14_S90_bboutu_1.fq.gz" outu2="AcerACDisease-14_S90_bboutu_2.fq.gz"
-```
-
-</details>
-
-
-
-
-
-
-<details>
-<summary> BBSplit - Seperate Forward and Reverse Reads</summary>
-	
-> Split bbsplit output into Forward and Reverse reads using BBmap
-
-**Example:**
-```
-#!/bin/bash
-PATH=$PATH:/opt/storage/opt_programs/bbmap/
-PATH=$PATH:/opt/storage/anaconda3/bin/java
-for FILE in *_host.fq.gz; do
-        echo ${FILE}
-        SAMP=$(basename -s .fq.gz $FILE)
-        echo $SAMP
-nohup /opt/storage/anaconda3/bin/java -ea -Xmx10g  -cp  /opt/storage/opt_programs/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=${SAMP}_1.fq out2=${SAMP}_2.fq
-done
-```
-
-**Modified - host**
-```
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
-PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
-for FILE in ./$(ls *_Acer_coral_only_transcriptome.fq.gz); do
-        echo ${FILE}
-        SAMP=$(basename -s .fq.gz $FILE)
-        echo $SAMP
-/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
-done
-```
-**Modified - bacteria**
-```
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
-PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
-for FILE in ./$(ls *_Acer_Bacteria_only_transcriptome.fq.gz); do
-        echo ${FILE}
-        SAMP=$(basename -s .fq.gz $FILE)
-        echo $SAMP
-/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
-done
-```
-**Modified - symbiodinium_GCA_001939145**
-```
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
-PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
-for FILE in ./$(ls *_symbiodinium_GCA_001939145.fq.gz); do
-        echo ${FILE}
-        SAMP=$(basename -s .fq.gz $FILE)
-        echo $SAMP
-/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
-done
-```
-
-**Modified - breviolum_PRJNA274852**
-```
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
-PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
-for FILE in ./$(ls *_breviolum_PRJNA274852.fq.gz); do
-        echo ${FILE}
-        SAMP=$(basename -s .fq.gz $FILE)
-        echo $SAMP
-/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
-done
-```
-
-**Modified - davies_cladeC_feb**
-```
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
-PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
-for FILE in ./$(ls *_davies_cladeC_feb.fq.gz); do
-        echo ${FILE}
-        SAMP=$(basename -s .fq.gz $FILE)
-        echo $SAMP
-/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
-done
-```
-
-**Modified - durusdinium_PRJNA508937**
-```
-#!/bin/bash
-PATH=$PATH:/home/cns.local/nicholas.macknight/software/bbmap/
-PATH=$PATH:/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/
-for FILE in ./$(ls *_durusdinium_PRJNA508937.fq.gz); do
-        echo ${FILE}
-        SAMP=$(basename -s .fq.gz $FILE)
-        echo $SAMP
-/home/cns.local/nicholas.macknight/.sdkman/candidates/java/current/bin/java -ea -Xmx10g  -cp  /home/cns.local/nicholas.macknight/software/bbmap/current/ jgi.ReformatReads in=${SAMP}.fq out1=../Acer_output_FR/${SAMP}_1.fq out2=../Acer_output_FR/${SAMP}_2.fq
-Done
-```
 </details>
 
 <details>
 <summary>Salmon Indexing</summary>
 
 # Salmon
+
 > Index and then perform Quantification
 
-**Salmon Indexing** 
-First have to build a salmon index for your transcriptome. Assume that transcripts.fa contains the set of transcripts you wish to quantify. 
+> First have to build a salmon index for your transcriptome. Assume that transcripts.fa contains the set of transcripts you wish to quantify. 
 
 > The purpose of indexing the transcriptomes before running Salmon is to prepare the reference transcriptome in a way that enables fast and efficient quantification of RNA-seq reads. Indexing is a crucial preprocessing step that allows Salmon to rapidly match sequencing reads to the transcriptome without performing traditional alignment, significantly improving speed and computational efficiency.
 
-Acer Host
+🪸 Acer Host
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Acer/Acer_index
 ```
 
-Mcav Host
+🪸 Mcav Host
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Mcav/Mcav_index
 ```
 
-Past Host
-```
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Past/Past_index
-```
-
-Ofav Host
+🪸 Ofav Host
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Ofav_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Ofav/Ofav_index
 ```
 
-## Index Building for Symbiont Transcriptomes 
-Acer Symbiodinium
+🪸 Past Host
+```
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_coral_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Past/Past_index
+```
+
+
+
+### Index Building for Symbiont Transcriptomes 
+:seedling: Acer Symbiodinium
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_Acer_reference_proteome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Acer/Acer_Clade_A_index
 ```
-Mcav Cladicopium 
+
+:seedling: Mcav Cladicopium 
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_C_Mcav_reference_proteome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Mcav/Mcav_Clade_C_index
 ```
-Ofav Durusdinium
+
+:seedling: Ofav Durusdinium
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_D_Ofav_algae_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Ofav/Ofav_Clade_D_index
 ```
-Past Symbiodinium
+
+:seedling: Past Symbiodinium
 ```
 /home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/Clade_A_Past_algae_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Past/Past_Clade_A_index
 ```
 
 
-Index Building for Bacteria Transcriptomes
+🦠 Index Building for Bacteria Transcriptomes
 ```
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/references/bacteria_reference/concatenated_bacteria_genomes.fna -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Bacteria_index -k 23
-```
+# Acer
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/Acer_Bacteria_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Bacteria_Acer_index -k 23
 
-Salmon Example:
-```
-/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon quant -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Clade_A_index -l A -1 /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Acer/Acer_output_FR/AcerACDisease-7_S80_symbiodinium_GCA_001939145_1.fq -2 /home/cns.local/nicholas.macknight/SCTLDRNA/bbsplit/Acer/Acer_output_FR/AcerACDisease-7_S80_symbiodinium_GCA_001939145_2.fq -p 8 --validateMappings -o /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/quants/AcerACDisease-7_S80_symbiodinium_quant
+# Mcav
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/Mcav_Bacteria_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Bacteria_Mcav_index -k 23
+
+# Ofav
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav_trinity_output/Ofav_Bacteria_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Bacteria_Ofav_index -k 23
+
+# Past
+/home/cns.local/nicholas.macknight/software/salmon-1.5.2_linux_x86_64/bin/salmon index -t /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/Past_Bacteria_only_transcriptome.fa -i /home/cns.local/nicholas.macknight/SCTLDRNA/salmon/Bacteria_Past_index -k 23
 ```
 
 count number of transcripts with a count equal or greater to 1
