@@ -1862,7 +1862,9 @@ mv Clade_A_Past_algae_only_transcriptome.fa.transdecoder.pep Clade_A_Past_algae_
 # Verify Single ORF
 ./check_single_orf.py Clade_A_Past_reference_proteome_AllORF_SingleBestOnly.fa
 ```
-
+</details>
+<details>
+<summary>OrthoFinder</summary>
 # OrthoFinder
 
 ### Move all the reference_proteome.fa into a new folder specific for each holobiont compartment (Host, Algae, Bacteria, so three folders total)
@@ -1911,9 +1913,6 @@ python /home/cns.local/nicholas.macknight/software/OrthoFinder_source/orthofinde
 ```
 
 </details>
-
-
-
 
 <details>
 <summary>Annotating OrthoGroups</summary>
