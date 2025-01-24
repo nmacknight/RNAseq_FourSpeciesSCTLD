@@ -19,11 +19,12 @@
 
 # Downloading Software
 
+> Notes for you, another user: I had user permission limitations due to this being conducted on a government server and did not and could not be granted admin privileges or the ability to use sudo. So, while this is how I installed and compiled the necessary software, if you have admin priviliges on your server, you are likely to run into less errors, hopefully. It also means the exact code to install the software may differ for you.
+
 > Notes for myself: I am installing this software on a server which required me to install basic software into my user folder because it was a blank slate. I did find a parent folder that had a lot of software, but there were inconsistencies on whether I could execute using those pre-installed software tools and certainly could not write new software into that parent folder. Also, some software, I believe Trinity and Samtools were successfully compiled either by ethernet connection in the aoml building like how I mentioned below, and/or by being in a conda environment and then performing the compiling or running the code.
 
-> Notes for you, another user: I had user permission limitations due to this being conducted on a government server and did not and could not be granted admin privileges or the ability to use sudo. So, while this is how I installed and compiled the necessary software, if you have admin priviliges on your server, you are likely to run into less errors, hopefully. It also means the exact code to install the software may differ for you. 
 
-### Anaconda
+**Anaconda**
 Download script to install anaconds:
 ```
 wget https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh
@@ -45,14 +46,14 @@ anaconda --version
 python --version
 ```
 
-### FASTP
+**FASTP**
 > Fastp is a tool designed to provide fast all-in-one preprocessing for FastQ files.
 ```
 wget http://opengene.org/fastp/fastp
 chmod a+x ./fastp
 ```
 
-### TRINITY
+**TRINITY**
 > Trinity is a de novo transcriptome assembler for RNA-Seq data.
 
 Requires dependencies to be installed too. 
@@ -158,14 +159,14 @@ export TRINITY_HOME=/space/home/cns.local/nicholas.macknight/software/Trinity/tr
 export PATH=$TRINITY_HOME:$TRINITY_HOME/util:$TRINITY_HOME/Inchworm:$TRINITY_HOME/Chrysalis:$TRINITY_HOME/Butterfly:$PATH
 ```
 
-### BLAST 
+**BLAST**
 > Extract Coral Only (or Symbiont Only or Bacteria Only) Transcripts
 ```
 wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.15.0+-x64-linux.tar.gz
 tar -xvzf ncbi-blast-2.15.0+-x64-linux.tar.gz
 ```
 
-### cd-hit
+**cd-hit**
 > Create BLAST Database
 ```
 wget https://github.com/weizhongli/cdhit/releases/download/V4.8.1/cd-hit-v4.8.1-2019-0228.tar.gz
@@ -175,41 +176,41 @@ cd cd-hit-auxtools
 make
 ```
 
-### cdbfasta
+**cdbfasta**
 > CDBFASTA is a tool used for indexing and querying large sequence sets in the FASTA format efficiently. It creates a hash index of sequences, allowing for fast retrieval and comparison of sequences based on their headers or identifiers.
 ```
 git clone https://github.com/gpertea/cdbfasta.git
 cd cdbfasta
 make
 ```
-### UNIPROT
+**UNIPROT**
 > This is the database that will be used to annotate sequences and assign an Entry ID and an E-value number which is a score on how well the sequence matches the database sequence. Low E values represent high sequence matching, so you want low e-values. As a standard bench mark, E-values with less than e^-05 or 0.00001 are retained and anything greater than that is filtered out.
 ```
 wget https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
 gunzip uniprot_sprot.fasta.gz
 ```
 
-### BOOST
+**BOOST**
 > This may have not been utilized. 
 ```
 wget https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
 ```
 
-### TOPHAT
+**TOPHAT**
 ```
 git clone https://github.com/infphilo/tophat.git
 ./bootstrap
 ./configure
 ```
 
-### DB_File
+**DB_File**
 ```
 cpan
 install DB_File
 exit
 ```
 
-### SAMTOOLS
+**SAMTOOLS**
 ```
 wget https://github.com/samtools/samtools/releases/download/1.14/samtools-1.14.tar.bz2
 tar -xjf samtools-1.14.tar.bz2
@@ -219,32 +220,32 @@ make
 > ERROR : Permission denied. Probably fixed by trying once connected to aoml ethernet
 
 
-### BBMAP
+**BBMAP**
 ```
 wget https://sourceforge.net/projects/bbmap/files/BBMap_38.90.tar.gz
 tar -xvzf BBMap_38.90.tar.gz
 ```
 
-### SALMON
+**SALMON**
 ```
 wget https://github.com/COMBINE-lab/salmon/releases/download/v1.5.2/Salmon-1.5.2_linux_x86_64.tar.gz
 tar -xvzf Salmon-1.5.2_linux_x86_64.tar.gz
 ```
 
-### OrthoFinder
+**OrthoFinder**
 ```
 wget https://github.com/davidemms/OrthoFinder/releases/download/2.5.5/OrthoFinder_source.tar.gz
 tar xzf OrthoFinder_source.tar.gz
 python OrthoFinder_source/orthofinder.py -h # to verify installation
 ```
 
-### Transdecoder
+**Transdecoder**
 ```
 wget https://github.com/TransDecoder/TransDecoder/archive/refs/tags/TransDecoder-v5.7.1.tar.gz
 tar -xvzf TransDecoder-v5.7.1.tar.gz
 ```
 
-### Singularity
+**Singularity**
 ```
 wget https://data.broadinstitute.org/Trinity/TRINITY_SINGULARITY/archived/trinityrnaseq.v2.15.0.simg
 tar -xzf trinityrnaseq.v2.15.0.simg
@@ -253,7 +254,7 @@ cd singularity
 make -C builddir
 ```
 
-### Libevent
+**Libevent**
 ```
 wget http://monkey.org/~provos/libevent-1.4.14b-stable.tar.gz
 tar xzf libevent-1.4.14b-stable.tar.gz
@@ -263,7 +264,7 @@ make
 make install #permission denied
 ```
 
-### ncurses
+**ncurses**
 ```
 wget http://invisible-mirror.net/archives/ncurses/current/ncurses.tar.gz
 tar xzf ncurses.tar.gz
@@ -272,7 +273,7 @@ cd ncurses-6.4-20240224
 make
 ```
 
-### tmux
+**tmux**
 ```
 wget https://github.com/tmux/tmux/releases/download/3.4/tmux-3.4.tar.gz
 tar xvf tmux-3.4.tar.gz
@@ -281,14 +282,14 @@ cd tmux-3.4/
 make
 ```
 
-### BLAST
+**BLAST**
 ```
 wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.15.0+-x64-linux.tar.gz
 tar -zxvf ncbi-blast-2.15.0+-x64-linux.tar.gz
 cd ncbi-blast-2.15.0+
 export PATH=$PATH:/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin
 ```
-### BUSCO
+**BUSCO**
 > BUSCO is a tool to determine how "complete" a transcriptome is by identiying the presence of highly conserved genes in your assembled transcriptome. It is a way to make sure even though you may have a lot of transcripts that it represents a "complete" biological organism and a nice checkpoint that things are on the right track.
 > Now, BUSCO requires a lot of dependencies or user permissions that I could not get (at the time of writing this).
 Below are the resources I have in my attempts to install BUSCO. 
@@ -332,8 +333,6 @@ busco -i [SEQUENCE_FILE] -m [MODE] [OTHER OPTIONS]
 
 # Downloading Data to Server
 
-
-> [!TIP]
 > Moving Sequence data from the sequencer to your server/local computer is going to be project specific. My first recommendation is to have a discussion with your sequencer on how to make the necessary transfer of data. Hopefully they have a tutorial with clear instructions. In the past I have used filezilla. For this project they uploaded the data on box but the amount of data was too large for box to be able to download to my computer or server. So, following my own advice I reached out to the sequencer and they transferred the data to an amazon host server and gave me instrucitons on how to transfer the data to my local computer, where I redundantly saved it to a local external hard drive and then moved it to my server. 
 
 Took 12 hours to download all 1232 files. 
@@ -351,7 +350,7 @@ It will tell you how many unique files are in the folder sRosales_OfavSCTLD/
 
 export PATH=/home/cns.local/nicholas.macknight/software:$PATH; for file1 in ./RNARawData/sRosales_OfavSCTLD/*_R1_*.fastq.gz; do base=$(basename "$file1" _R1_001.fastq.gz); file2="./RNARawData/sRosales_OfavSCTLD/${base}_R2_001.fastq.gz"; fastp --verbose -i "$file1" -I "$file2" -o "./Fastp_ProcessedData/${base}_clean_R1.fastq.gz" -O "./Fastp_ProcessedData/${base}_clean_R2.fastq.gz"; done
 
-# You can occassionally check on how many files are completed (after opening another terminal window) with:
+You can occassionally check on how many files are completed (after opening another terminal window) with:
 ```
 find ./Fastp_ProcessedData/ -maxdepth 1 -type f | wc -l
 ```
@@ -714,113 +713,8 @@ nohup /home/cns.local/nicholas.macknight/software/Trinity/trinityrnaseq-v2.15.0/
 /home/cns.local/nicholas.macknight/SCTLDRNA/MergedFastpProcessedData/Ofav/OfavS313Disease-1_S31_R2_clean_merged.fastq.gz \
 --CPU 64 --max_memory 400G --output Ofav_trinity_output
  ```
- </details>
- 
-<details>
-
-<summary>*BBSplit</summary>
-# BBSplit
-
-1/8/24: After digging into bbsplit methods (which involved a lot of optimization) here is what was performed. 
-
-Reliable Algal symbiont references were concatendated 
-Algal symbiont databases were made based on concatenated clade specific references.
-Trinity metatranscriptomes were blastn against symbiont databases.
-mapped transcripts were quality filtered.
-the sequences of QC passed transcripts were extracted via cdbyank from the metatranscritpomes to make clade only references. 
-These clade only references were input for bbsplit. 
-
-### End 1/8/24 Notes to self.
-
-> Aligns metatranscriptomes to multiple references simultaneously.
-
-> REFERENCE Transcriptomes: (From Kelsey Beavers) The publicly available data used in this study include the transcriptomes for Symbiodinium CassKB8 (transcriptome assembly: http://medinalab.org/zoox/, accession number PRJNA80085), Breviolum minutum (transcriptome assembly: http://zoox.reefgenomics.org/download/, accession number PRJNA274852), Cladocopium goreaui (transcriptome assembly: http://ssid.reefgenomics.org/download/, accession number PRJNA307543) and Durusdinium trenchii (transcriptome assembly: https://datadryad.org/stash/dataset/doi:10.5061/dryad.12j173m, accession number PRJNA508937), as well as the genomes for M. cavernosa (genome assembly: https://matzlab.weebly.com/data-code.html, accession number PRJNA679067) and O. faveolata (genome assembly: https://www.ncbi.nlm.nih.gov/genome/13173?genome_assembly_id=311351, accession number PRJNA381078). The Master Coral database used in this study is available in a public Zenodo repository https://doi.org/10.5281/zenodo.783898080.
- 
- ### Algal Symbiont
- > These references were selected because they were the refseq or highest quality reference available for the organism. 
- **Symbiodinium (Clade A):** https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001939145.1/ - GCA_001939145.1_ASM193914v1_genomic.fna.gz   
- **Breviolum minutum:** https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA274852
- **Cladocopium goreaui:** https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA307543
- **Durusdinium trenchii:** https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA508937
- 
-Symbiodinium file contains "@" instead of ">" at the beginning of the transcript ID. so we need to replace the @ with >
-***example:***
-```
-sed 's/@/>/g' input.fa > output.fa
-```
-***modified:***
-```
-sed 's/@/>/g' symbiodinium_PRJNA80085.fasta  > symbiodinium_PRJNA80085.fasta 
-```
-
-### CORAL ONLY
-
-Master Coral Database was made using the highest quality available species genomes.
- 
- 
-**Orbicella faveolata**  https://zenodo.org/records/10151798 - Orbicella_faveolata_gen_17.scaffolds.fa # Additional genomes - https://www.ncbi.nlm.nih.gov/datasets/genome/?taxon=1920453
-**Montastrea cavernosa** https://www.dropbox.com/s/yfqefzntt896xfz/Mcavernosa_genome.tgz?file_subpath=%2FMcav_genome%2FMcavernosa_July2018.fasta
-**Acropora cervicornis** https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_032359415.1/
- 		Acropora cervicornis https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/032/359/415/GCA_032359415.1_NEU_Acer_K2/ - GCA_032359415.1_NEU_Acer_K2_genomic.fna.gz 
- 		Acropora cervicornis https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/037/043/185/GCA_037043185.1_Acerv_M5/ - GCA_037043185.1_Acerv_M5_genomic.fna.gz
-**Porites astreoides**
- 		Porites astreoides - https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browser&acc=SRR19144705&display=download - SRR19144705.fasta.gz
- 		Porites lutea - https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_958299805.1/
- 		Porites australiensis - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/022/179/025/GCA_022179025.1_Paus_1.0/ - GCA_022179025.1_Paus_1.0_genomic.fna.gz 
- 		Porites lobata - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/942/486/035/GCA_942486035.1_PLOB_v1/ - GCA_942486035.1_PLOB_v1_genomic.fna.gz  
- 		Porites evermanni - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/942/486/025/GCA_942486025.1_PEVE_v1/ - GCA_942486025.1_PEVE_v1_genomic.fna.gz   
- 		Porites rus - https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/900/290/455/GCA_900290455.1_Prus/ - GCA_900290455.1_Prus_genomic.fna.gz  	
- 		
-To download the genome, .zip files were not downloading properly from NCBI. So, in the NCBI link for each genome, click the three vertical dots next to: "Submitted GenBank assembly
-GCA_958299805.1" and select "FTP", then select the .fna.gz file to download the genome. 
-
-Files moved from local computer to /home/cns.local/nicholas.macknight/references/Coral_Host/MasterCoral on holocron server.
- 
- ### Concatenate genomes to create a Master Coral Reference
- ```
- cat GCA_022179025.1_Paus_1.0_genomic.fna \
-    GCA_032359415.1_NEU_Acer_K2_genomic.fna \
-    GCA_037043185.1_Acerv_M5_genomic.fna \
-    GCA_900290455.1_Prus_genomic.fna \
-    GCA_942486025.1_PEVE_v1_genomic.fna \
-    GCA_942486035.1_PLOB_v1_genomic.fna \
-    GCA_958299805.1_jaPorLute2.1_alternate_haplotype_genomic.fna \
-    Mcavernosa_July2018.fasta \
-    Orbicella_faveolata_gen_17.scaffolds.fa \
-    > concatenated_genomes.fasta
-```
-
-Renaming to MasterCoral_db
-```
- /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb -in concatenated_genomes.fasta -parse_seqids -dbtype nucl -out MasterCoral_db
-```
-
-Gzipping genomes to reduce space.
-```
-gzip GCA_022179025.1_Paus_1.0_genomic.fna
-gzip GCA_032359415.1_NEU_Acer_K2_genomic.fna
-gzip GCA_037043185.1_Acerv_M5_genomic.fna
-gzip GCA_900290455.1_Prus_genomic.fna
-gzip GCA_942486025.1_PEVE_v1_genomic.fna
-gzip GCA_942486035.1_PLOB_v1_genomic.fna
-gzip GCA_958299805.1_jaPorLute2.1_alternate_haplotype_genomic.fna
-gzip Mcavernosa_July2018.fasta
-gzip Orbicella_faveolata_gen_17.scaffolds.fa
-```
- 
-  
-Transfering references from local computer to server, I have added the NCBI accession ID to the file so the source is traceable once the reference is on the server. 
-```
- scp SRR278715.fasta.gz nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/symbiodinium_PRJNA80085.fasta.gz
- scp Symbiodinium_minutum.tar.gz nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/breviolum_PRJNA274852.tar.gz
- scp CladeC_Symbiodinium_transcriptome.tar.gz nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/cladicopium_PRJNA307543.tar.gz
- scp Dtrenchii_rnaseq_assembly_v1.0.fasta nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/durusdinium_PRJNA508937.fasta
- scp MasterCoral.fasta.gz nicholas.macknight@holocron:/home/cns.local/nicholas.macknight/references/MasterCoral.fasta.gz
-```
-
-
 </details>
-
+ 
 <details>
 
 <summary>Longest Isoform</summary>
