@@ -1864,10 +1864,11 @@ mv Clade_A_Past_algae_only_transcriptome.fa.transdecoder.pep Clade_A_Past_algae_
 ```
 </details>
 <details>
-<summary>OrthoFinder</summary>
+<summary>OrthoFinder - Identify homologous sequences among species</summary>
+
 # OrthoFinder
 
-### Move all the reference_proteome.fa into a new folder specific for each holobiont compartment (Host, Algae, Bacteria, so three folders total)
+Move all the reference_proteome.fa into a new folder specific for each holobiont compartment (Host, Algae, Bacteria, so three folders total)
 Example of moving all reference_proteome.fa files into their respective newly created folder:
 ```
 # Host
