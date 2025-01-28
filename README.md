@@ -1,7 +1,7 @@
 # Welcome
 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling:
 
-Please visit the RNAseq Bioinformatics Pipeline.md for a full code pipeline on how this project bioinformatically processed RNAseq data.
+Please visit the [RNAseq Bioinformatics Pipeline.md](https://github.com/nmacknight/RNAseq_FourSpeciesSCTLD/blob/main/RNAseq%20Bioinformatics%20Pipeline.md) for a full code pipeline on how this project bioinformatically processed RNAseq data.
 
 **Project:** ***Acropora cervicornis***, ***Porites astreoides***, ***Montastraea cavernosa***, and ***Orbicella faveolata*** were exposed to Stony Coral Tissue Loss Disease. Tissue samples were collected to investigate the gene expression of each component of the coral holobiont with particular consideration of the Bacteria Gene expression as this focus has never been investigated and may lead to results that identify a bacteria disease causing agent and mechanistic etiology. 
 
