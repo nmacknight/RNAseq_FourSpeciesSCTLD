@@ -1,5 +1,5 @@
 # Welcome
-🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe:
+🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling: :microbe: 🪸 :seedling:
 
 Please visit the RNAseq Bioinformatics Pipeline.md for a full code pipeline on how this project bioinformatically processed RNAseq data.
 
