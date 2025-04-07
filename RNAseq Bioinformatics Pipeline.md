@@ -2198,12 +2198,220 @@ First we need to create a file of the orthogroup transcripts. "_algae_Orthogroup
 Move these files from the server to your local computer.
 ```
 # On my local computer (not in the server):
-cd /Users/nicholas.macknight/Desktop/Microbial Metatranscriptomics/OrthoFinder/Algae/
+cd /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/OrthoFinder/Algae/
 mkdir Results_Jan13
 scp nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/OrthoFinder/Results_Jan13/Orthogroups/Orthogroups.tsv ./
 scp nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/OrthoFinder/Results_Jan13/Orthogroups/Orthogroups_SingleCopyOrthologues.txt ./
 scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/OrthoFinder/Results_Jan13/Comparative_Genomics_Statistics ./
 scp -r nicholas.macknight@holocron:../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/Algae/SingleBestORF/OrthoFinder/Results_Jan13/Species_Tree ./
+```
+:seedling: Organize Orthogroups.tsv to make "_algae_Orthogroup_Transcripts.txt" in R
+
+> This can be done in excel like so:
+> 1. Open Orthogroups.tsv in Excel
+> 2. Click *Find & Select*
+> 3. Click *Go to Special*
+> 4. Choose *Blanks*
+> 5. Click OK and then all the *blank rows/cells will be highlighted*
+> 6. Choose the *Delete under Cells* section on the Home Tab
+> 7. Click *Delete Sheet Rows*
+> 8. Save as "algae_shared_orthogroups_SingleBestORF.csv"
+> Steps 1-8 were repeated 4 times so that all blank rows were eventually removed. I think
+the amount of data excel needed to process required these steps to be
+repeated.
+You can ensure you have the accurate final number of
+orthogroups by comparing your row count to the "Statistics_Overall" file
+in Comparative_Genomics_Statistics specifically the value in row "Number of orthogroups with all species present
+
+In R:
+```
+```{r algae Orthogroups}
+
+Orthogroups <- read.csv("~/Desktop/Microbial Metatranscriptomics/OrthoFinder/Algae/Results_Jan13/algae_shared_orthogroups.csv")
+
+# Acer Orthogroups
+Acer_orthogroups <- Orthogroups[,c(1,2)]
+Acer_orthogroups <- Acer_orthogroups %>% separate_rows(Clade_A_Acer_reference_proteome_AllORF_SingleBestOnly, sep = ", ")
+Acer_orthogroups <- Acer_orthogroups[,c(2,1)]
+colnames(Acer_orthogroups)[1] <- "Transcript"
+
+### Pull out Orthogroup transcripts for annotation:
+Acer_algae_Orthogroup_Transcripts <- Acer_orthogroups[c(1)]
+names(Acer_algae_Orthogroup_Transcripts)
+write.table(Acer_algae_Orthogroup_Transcripts, file="~/Desktop/Microbial Metatranscriptomics/R/algae/Acer_algae_Orthogroup_Transcripts.txt",quote = FALSE,row.names = FALSE)
+
+### Format Orthogroup Transcripts For R: 
+Acer_orthogroups$Transcript <- gsub("\\..*","",Acer_orthogroups$Transcript)
+Acer_orthogroups_annot <- merge(Acer_orthogroups,Acer_annot_transcripts, by="Transcript")
+write.csv(Acer_orthogroups,file="~/Desktop/Microbial Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Clade_A_Acer_orthogroup_tx2gene_SingleBestOnly.csv",row.names = FALSE)
+
+# Mcav Orthogroups
+Mcav_orthogroups <- Orthogroups[,c(1,3)]
+Mcav_orthogroups <- Mcav_orthogroups %>% separate_rows(Clade_C_Mcav_reference_proteome_AllORF_SingleBestOnly, sep = ", ")
+Mcav_orthogroups <- Mcav_orthogroups[,c(2,1)]
+colnames(Mcav_orthogroups)[1] <- "Transcript"
+
+### Pull out Orthogroup transcripts for annotation:
+Mcav_algae_Orthogroup_Transcripts <- Mcav_orthogroups[c(1)]
+names(Mcav_algae_Orthogroup_Transcripts)
+write.table(Mcav_algae_Orthogroup_Transcripts, file="~/Desktop/Microbial Metatranscriptomics/R/algae/Mcav_algae_Orthogroup_Transcripts.txt",quote = FALSE,row.names = FALSE)
+
+### Format Orthogroup Transcripts For R: 
+Mcav_orthogroups$Transcript <- gsub("\\..*","",Mcav_orthogroups$Transcript)
+Mcav_orthogroups_annot <- merge(Mcav_orthogroups,Mcav_annot_transcripts, by="Transcript")
+write.csv(Mcav_orthogroups,file="~/Desktop/Microbial Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Clade_C_Mcav_orthogroup_tx2gene_SingleBestOnly.csv",row.names = FALSE)
+
+# Ofav Orthogroups
+Ofav_orthogroups <- Orthogroups[,c(1,4)]
+Ofav_orthogroups <- Ofav_orthogroups %>% separate_rows(Clade_D_Ofav_reference_proteome_AllORF_SingleBestOnly, sep = ", ")
+Ofav_orthogroups <- Ofav_orthogroups[,c(2,1)]
+colnames(Ofav_orthogroups)[1] <- "Transcript"
+
+### Pull out Orthogroup transcripts for annotation:
+Ofav_algae_Orthogroup_Transcripts <- Ofav_orthogroups[c(1)]
+names(Ofav_algae_Orthogroup_Transcripts)
+write.table(Ofav_algae_Orthogroup_Transcripts, file="~/Desktop/Microbial Metatranscriptomics/R/algae/Ofav_algae_Orthogroup_Transcripts.txt",quote = FALSE,row.names = FALSE)
+
+### Format Orthogroup Transcripts For R: 
+Ofav_orthogroups$Transcript <- gsub("\\..*","",Ofav_orthogroups$Transcript)
+Ofav_orthogroups_annot <- merge(Ofav_orthogroups,Ofav_annot_transcripts, by="Transcript")
+write.csv(Ofav_orthogroups,file="~/Desktop/Microbial Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Clade_D_Ofav_orthogroup_tx2gene_SingleBestOnly.csv",row.names = FALSE)
+
+# Past Orthogroups
+Past_orthogroups <- Orthogroups[,c(1,5)]
+Past_orthogroups <- Past_orthogroups %>% separate_rows(Clade_A_Past_reference_proteome_AllORF_SingleBestOnly, sep = ", ")
+Past_orthogroups <- Past_orthogroups[,c(2,1)]
+colnames(Past_orthogroups)[1] <- "Transcript"
+
+### Pull out Orthogroup transcripts for annotation:
+Past_algae_Orthogroup_Transcripts <- Past_orthogroups[c(1)]
+names(Past_algae_Orthogroup_Transcripts)
+write.table(Past_algae_Orthogroup_Transcripts, file="~/Desktop/Microbial Metatranscriptomics/R/algae/Past_algae_Orthogroup_Transcripts.txt",quote = FALSE,row.names = FALSE)
+
+### Format Orthogroup Transcripts For R: 
+Past_orthogroups$Transcript <- gsub("\\..*","",Past_orthogroups$Transcript)
+Past_orthogroups_annot <- merge(Past_orthogroups,Past_annot_transcripts, by="Transcript")
+write.csv(Past_orthogroups,file="~/Desktop/Microbial Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Clade_A_Past_orthogroup_tx2gene_SingleBestOnly.csv",row.names = FALSE)
+
+```
+:seedling: Transfer Orthogroup Transcripts from local computer to server
+```
+# on local computer terminal
+scp ~/Desktop/Microbial\ Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Acer_algae_Orthogroup_Transcripts.txt nicholas.macknight@holocron:../../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/algae/Results_Jan13/
+scp ~/Desktop/Microbial\ Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Mcav_algae_Orthogroup_Transcripts.txt nicholas.macknight@holocron:../../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/algae/Results_Jan13/
+scp ~/Desktop/Microbial\ Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Ofav_algae_Orthogroup_Transcripts.txt nicholas.macknight@holocron:../../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/algae/Results_Jan13/
+scp ~/Desktop/Microbial\ Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Past_algae_Orthogroup_Transcripts.txt nicholas.macknight@holocron:../../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/algae/Results_Jan13/
+
+
+```
+
+:seedling: Annotating Transcripts
+```
+mkdir Annotating_Orthogroups
+# Make an index of the reference proteome
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta Clade_A_Acer_reference_proteome_AllORF_SingleBestOnly.fa
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta Clade_C_Mcav_reference_proteome_AllORF_SingleBestOnly.fa
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta Clade_D_Ofav_reference_proteome_AllORF_SingleBestOnly.fa
+/home/cns.local/nicholas.macknight/software/cdbfasta/cdbfasta Clade_A_Past_reference_proteome_AllORF_SingleBestOnly.fa
+
+# Extract the sequences of orthogroup transcripts from index: 
+cat Acer_algae_Orthogroup_Transcripts.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank Clade_A_Acer_reference_proteome_AllORF_SingleBestOnly.fa.cidx > Acer_algae_orthologs.fa
+cat Mcav_algae_Orthogroup_Transcripts.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank Clade_C_Mcav_reference_proteome_AllORF_SingleBestOnly.fa.cidx > Mcav_algae_orthologs.fa
+cat Ofav_algae_Orthogroup_Transcripts.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank Clade_D_Ofav_reference_proteome_AllORF_SingleBestOnly.fa.cidx > Ofav_algae_orthologs.fa
+cat Past_algae_Orthogroup_Transcripts.txt | /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank Clade_A_Past_reference_proteome_AllORF_SingleBestOnly.fa.cidx > Past_algae_orthologs.fa
+
+# Annotate extracted sequences with BLASTp:
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query Acer_algae_orthologs.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out Acer_algae_orthologs_annotated.txt -num_threads 60
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query Mcav_algae_orthologs.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out Mcav_algae_orthologs_annotated.txt -num_threads 60
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query Ofav_algae_orthologs.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out Ofav_algae_orthologs_annotated.txt -num_threads 60
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastp -query Past_algae_orthologs.fa -db /home/cns.local/nicholas.macknight/references/uniprot/uniprot_db -outfmt "6 sseqid qseqid evalue" -max_target_seqs 1 -out Past_algae_orthologs_annotated.txt -num_threads 60
+
+
+### Retain Only those with an e value of e^-5 or less
+awk '{if ($3 < 1e-05) print $1,$2,$3}' Acer_algae_orthologs_annotated.txt > Acer_algae_orthologs_annotated_e-5.txt
+awk '{if ($3 < 1e-05) print $1,$2,$3}' Mcav_algae_orthologs_annotated.txt > Mcav_algae_orthologs_annotated_e-5.txt
+awk '{if ($3 < 1e-05) print $1,$2,$3}' Ofav_algae_orthologs_annotated.txt > Ofav_algae_orthologs_annotated_e-5.txt
+awk '{if ($3 < 1e-05) print $1,$2,$3}' Past_algae_orthologs_annotated.txt > Past_algae_orthologs_annotated_e-5.txt
+
+```
+In R:
+:seedling: Read in Annotated Transcripts
+```
+# In terminal: 
+scp nicholas.macknight@holocron:../../../home/cns.local/nicholas.macknight/SCTLDRNA/Orthofinder/algae/Results_Jan13/*_algae_orthologs_annotated_e-5.txt /Users/nicholas.macknight/Desktop/Microbial\ Metatranscriptomics/R/Algae/
+  
+# Load required libraries
+library(dplyr)
+library(readr)
+
+# List of input file prefixes
+file_prefixes <- c("Acer", "Mcav", "Ofav", "Past")
+
+# Function to process a single file
+process_file <- function(prefix) {
+  # Construct file paths
+  input_file <- paste0(prefix, "_algae_orthologs_annotated_e-5.txt")
+  output_file <- paste0(prefix, "_algae_orthologs_annotated_e-5_formatted.txt")
+  
+  # Check if the input file exists
+  if (!file.exists(input_file)) {
+    message(paste("File not found:", input_file))
+    return(NULL)
+  }
+  
+  # Load the data
+  data <- read.table(input_file, header = FALSE, sep = " ", stringsAsFactors = FALSE)
+  
+  # Format the data
+  formatted_data <- data %>%
+    mutate(Entry = sub(".*\\|(.*)\\|.*", "\\1", V1)) %>%
+    select(Entry, Transcript = V2, Evalue = V3)
+  
+  # Write the output file
+  write.table(formatted_data, output_file, sep = "\t", row.names = FALSE, quote = FALSE, col.names = TRUE)
+  
+  # Return the formatted data for verification
+  return(formatted_data)
+}
+
+# Process each file and store results in a list
+formatted_results <- lapply(file_prefixes, process_file)
+
+# Optionally, print the first few rows of each processed file
+names(formatted_results) <- file_prefixes
+lapply(formatted_results, function(x) {
+  if (!is.null(x)) head(x) else NULL
+})
+
+Acer_annot_transcripts <- formatted_results$Acer
+Acer_annot_transcripts$Transcript <- gsub("\\..*","",Acer_annot_transcripts$Transcript) # Remove ORF Identifier
+
+Mcav_annot_transcripts <- formatted_results$Mcav
+Mcav_annot_transcripts$Transcript <- gsub("\\..*","",Mcav_annot_transcripts$Transcript)
+
+Ofav_annot_transcripts <- formatted_results$Ofav
+Ofav_annot_transcripts$Transcript <- gsub("\\..*","",Ofav_annot_transcripts$Transcript)
+
+Past_annot_transcripts <- formatted_results$Past
+Past_annot_transcripts$Transcript <- gsub("\\..*","",Past_annot_transcripts$Transcript)
+
+
+```
+:seedling: Annotate Orthogroups
+```
+Acer_orthogroups_annot <- merge(Acer_orthogroups,Acer_annot_transcripts, by="Transcript")
+write.csv(Acer_orthogroups_annot,file="~/Desktop/Microbial Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Aceralgae_orthogroup_tx2gene_annot.csv",row.names = FALSE)
+
+Mcav_orthogroups_annot <- merge(Mcav_orthogroups,Mcav_annot_transcripts, by="Transcript")
+write.csv(Mcav_orthogroups_annot,file="~/Desktop/Microbial Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Mcavalgae_orthogroup_tx2gene_annot.csv",row.names = FALSE)
+
+Ofav_orthogroups_annot <- merge(Ofav_orthogroups,Ofav_annot_transcripts, by="Transcript")
+write.csv(Ofav_orthogroups_annot,file="~/Desktop/Microbial Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Ofavalgae_orthogroup_tx2gene_annot.csv",row.names = FALSE)
+
+Past_orthogroups_annot <- merge(Past_orthogroups,Past_annot_transcripts, by="Transcript")
+write.csv(Past_orthogroups_annot,file="~/Desktop/Microbial Metatranscriptomics/OrthoFinder/algae/Results_Jan13/Pastalgae_orthogroup_tx2gene_annot.csv",row.names = FALSE)
+
+
 ```
 
 ### 🪸 Annotating Host Orthogroups 
