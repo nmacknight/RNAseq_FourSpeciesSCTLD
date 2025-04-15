@@ -933,7 +933,7 @@ Concatenate genomes
  	durusdinium_PRJNA508937.fasta \
     > concatenated_Clade_D_genomes.fasta
 ```
-# Make Clade Database
+Make Clade Database
 ```
 /home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb \
     -in concatenated_Clade_A_genomes.fasta \
@@ -960,6 +960,23 @@ grep -c "^>" Symbiodinium_Aranda2012.fa
 # 58592
 grep -c "^>" concatenated_Clade_A_genomes.fasta
 # 223223 # Concatenated transcript count equals sum of individual references.
+```
+
+Concatenate Algal genomes into Master Algal Genome
+```
+cat concatenated_Clade_A_genomes.fasta \
+	concatenated_Clade_B_genomes.fasta \
+	concatenated_Clade_C_genomes.fasta \
+	concatenated_Clade_D_genomes_unique.fasta \
+	> concatenated_Algal_genomes.fasta
+```
+
+Make Master Algal Symbiont Database
+
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/makeblastdb \
+    -in concatenated_Algal_genomes.fasta \
+    -parse_seqids -dbtype nucl -out MasterAlgal_db
 ```
 
 </details>
@@ -1273,6 +1290,49 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
     -outfmt "6 qseqid evalue pident length" \
     -max_target_seqs 1 \
     -out Clade_D_blastn_Past_results.txt \
+    -num_threads 20
+```
+
+Algal Blastn to MastAlgalDB
+
+🌱 Acer - Master Algal DB
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/MasterAlgal_db/MasterAlgal_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out MasterAlgal_blastn_Acer_results.txt \
+    -num_threads 20
+```
+🌱 Mcav - Master Algal DB
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/MasterAlgal_db/MasterAlgal_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out MasterAlgal_blastn_Mcav_results.txt \
+    -num_threads 20
+```
+🌱 Ofav - Master Algal DB
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Ofav_trinity_output.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/MasterAlgal_db/MasterAlgal_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out MasterAlgal_blastn_Ofav_results.txt \
+    -num_threads 20
+```
+🌱 Past - Master Algal DB
+```
+/home/cns.local/nicholas.macknight/software/ncbi-blast-2.15.0+/bin/blastn \
+    -query /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta \
+    -db /home/cns.local/nicholas.macknight/references/Algal_Symbiont_references/MasterAlgal_db/MasterAlgal_db \
+    -outfmt "6 qseqid evalue pident length" \
+    -max_target_seqs 1 \
+    -out MasterAlgal_blastn_Past_results.txt \
     -num_threads 20
 ```
 :seedling: :seedling: :seedling:
