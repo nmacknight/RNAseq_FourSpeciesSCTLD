@@ -1082,6 +1082,8 @@ grep -c ">" Past_Bacteria_only_transcriptome.fa
 
 <summary>Blastn - Assign metatranscriptome sequences to Host, Algal Symbiont, or Bacteria</summary>
 
+**Note to self, consider removing host and bacteria blastn portions of this Blastn section as being redundant to previous code which is already doing the blastn. What is below may be a workshopped older version. The algal aspect of this section is up to date though.** 
+
 🪸 Acer
 **blastn - Coral Host**
 ```
@@ -1304,6 +1306,13 @@ Algal Blastn to MastAlgalDB
     -max_target_seqs 1 \
     -out MasterAlgal_blastn_Acer_results.txt \
     -num_threads 20
+
+# Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
+awk '{if ($3 > 95) print $1,$2,$4 }' MasterAlgal_blastn_Acer_results.txt > Acer_MasterAlgal_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Acer_MasterAlgal_contigs_percent_95.txt > Acer_MasterAlgal_contigs_percent_95_bp_150.txt
+
+cat Acer_MasterAlgal_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Acer/trinity_out_dir.AllAcerSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Acer_MasterAlgal_only_transcriptome.fa
+
 ```
 🌱 Mcav - Master Algal DB
 ```
@@ -1314,6 +1323,13 @@ Algal Blastn to MastAlgalDB
     -max_target_seqs 1 \
     -out MasterAlgal_blastn_Mcav_results.txt \
     -num_threads 20
+
+# Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
+awk '{if ($3 > 95) print $1,$2,$4 }' MasterAlgal_blastn_Mcav_results.txt > Mcav_MasterAlgal_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Mcav_MasterAlgal_contigs_percent_95.txt > Mcav_MasterAlgal_contigs_percent_95_bp_150.txt
+
+cat Mcav_MasterAlgal_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Mcav/trinity_out_dir.AllMcavSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Mcav_MasterAlgal_only_transcriptome.fa
+
 ```
 🌱 Ofav - Master Algal DB
 ```
@@ -1324,6 +1340,13 @@ Algal Blastn to MastAlgalDB
     -max_target_seqs 1 \
     -out MasterAlgal_blastn_Ofav_results.txt \
     -num_threads 20
+
+# Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
+awk '{if ($3 > 95) print $1,$2,$4 }' MasterAlgal_blastn_Ofav_results.txt > Ofav_MasterAlgal_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Ofav_MasterAlgal_contigs_percent_95.txt > Ofav_MasterAlgal_contigs_percent_95_bp_150.txt
+
+cat Ofav_MasterAlgal_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Ofav/Ofav_trinity_output.LongestIsoform.Trinity.fasta.cidx > Ofav_MasterAlgal_only_transcriptome.fa
+
 ```
 🌱 Past - Master Algal DB
 ```
@@ -1334,6 +1357,13 @@ Algal Blastn to MastAlgalDB
     -max_target_seqs 1 \
     -out MasterAlgal_blastn_Past_results.txt \
     -num_threads 20
+
+# Reads with less than 95% percent identity and shorter than 150 bp long are filtered out:
+awk '{if ($3 > 95) print $1,$2,$4 }' MasterAlgal_blastn_Past_results.txt > Past_MasterAlgal_contigs_percent_95.txt
+awk '{if ($3 > 150) print $1}' Past_MasterAlgal_contigs_percent_95.txt > Past_MasterAlgal_contigs_percent_95_bp_150.txt
+
+cat Past_MasterAlgal_contigs_percent_95_bp_150.txt |  /home/cns.local/nicholas.macknight/software/cdbfasta/cdbyank /home/cns.local/nicholas.macknight/SCTLDRNA/trinity_output_tests/Past/trinity_out_dir.AllPastSamples_Lane1-8.LongestIsoform.Trinity.fasta.cidx > Past_MasterAlgal_only_transcriptome.fa
+
 ```
 :seedling: :seedling: :seedling:
 
