@@ -3,7 +3,10 @@
 
 ### Purpose: To visualize the experimental design and phenotypic outcome of the sctld transmission experiment as a foundation for 16s and rnaseq work.
 
-![image](https://github.com/user-attachments/assets/2dc84e3b-7ec0-4080-a2a6-9b0f688c34dd)
+<p align="center">
+  <strong>Final Figure</strong><br>
+  <img width="350" height="350" src="https://github.com/user-attachments/assets/2dc84e3b-7ec0-4080-a2a6-9b0f688c34dd">
+</p>
 
 
 ## Summary Experimental Outcome Table
@@ -66,6 +69,93 @@ infection_plot <- ggplot(infection_data, aes(x = reorder(Label, -Percent.Infecte
 print(infection_plot)
 ```
 
+<p align="center">
+  <strong>Disease Prevalence</strong><br>
+  <img width="350" src="https://github.com/user-attachments/assets/dde3297e-fa3e-4298-856e-a2ea2ed40421">
+</p>
+
+## Fisher's Exact Test
+```
+Determining if species disease prevalence is sigdiff.
+
+# Create a 4x2 contingency table: rows = species, cols = Disease / Not Diseased
+global_table <- metadata %>%
+  filter(Treatment == "Disease") %>%
+  mutate(Disease_Status = ifelse(Outcome == "Disease", "Diseased", "Not_Diseased")) %>%
+  count(Coral.Species, Disease_Status) %>%
+  pivot_wider(names_from = Disease_Status, values_from = n, values_fill = 0) %>%
+  column_to_rownames("Coral.Species") %>%
+  as.matrix()
+
+# Choose test based on cell counts
+if (any(global_table < 5)) {
+  global_test <- fisher.test(global_table)
+  cat("Fisher’s Exact Test (Global):\n")
+} else {
+  global_test <- chisq.test(global_table)
+  cat("Chi-squared Test (Global):\n")
+}
+
+print(global_table)
+cat("P-value:", global_test$p.value, "\n")
+
+
+# Prepare a 2x2 contingency table for each pairwise comparison
+species_list <- unique(metadata$Coral.Species)
+fisher_results <- list()
+
+# Loop through all pairwise combinations
+for (i in 1:(length(species_list) - 1)) {
+  for (j in (i + 1):length(species_list)) {
+    sp1 <- species_list[i]
+    sp2 <- species_list[j]
+    
+    # Subset metadata for the two species
+    sub_data <- metadata %>%
+      filter(Coral.Species %in% c(sp1, sp2), Treatment == "Disease") %>%
+      mutate(Disease_Status = ifelse(Outcome == "Disease", "Diseased", "Not_Diseased"))
+    
+    # Create contingency table
+    table_fisher <- table(sub_data$Coral.Species, sub_data$Disease_Status)
+    
+    # Perform Fisher's Exact Test
+    fisher_test <- fisher.test(table_fisher)
+    
+    # Save results
+    fisher_results[[paste(sp1, "vs", sp2)]] <- list(
+      table = table_fisher,
+      p.value = fisher_test$p.value,
+      odds.ratio = fisher_test$estimate
+    )
+  }
+}
+
+# Create an empty matrix to store p-values
+species_list <- unique(metadata$Coral.Species)
+pval_matrix <- matrix(NA, nrow = length(species_list), ncol = length(species_list),
+                      dimnames = list(species_list, species_list))
+
+# Fill in p-values
+for (i in 1:(length(species_list) - 1)) {
+  for (j in (i + 1):length(species_list)) {
+    sp1 <- species_list[i]
+    sp2 <- species_list[j]
+    key <- paste(sp1, "vs", sp2)
+    pval <- fisher_results[[key]]$p.value
+    pval_matrix[sp1, sp2] <- pval
+    pval_matrix[sp2, sp1] <- pval
+  }
+}
+
+# Display pairwise p-value matrix
+print(pval_matrix)
+```
+
+<p align="center">
+  <strong>Pairwise Fisher's P-value</strong><br>
+  <img width="500"  src="https://github.com/user-attachments/assets/6177b321-23cb-45f8-94e9-3a9412daf1a3">
+</p>
+
 
 ```
 ### Load necessary libraries
@@ -126,6 +216,11 @@ final_plot <- (summary_table_plot / infection_plot) +
 ### Print the final multi-panel figure
 print(final_plot)
 ```
+
+<p align="center">
+  <strong>Summary Plot</strong><br>
+  <img width="350" src="https://github.com/user-attachments/assets/d1e5c984-b0a3-4632-9bfb-ccc49d953247">
+</p>
 
 #<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
@@ -255,7 +350,7 @@ print(rr_plot)
 
 median_rr <- median(rr_long$RR)
 print(median_rr)
-
+# [1] 7.330393
 
 
 
@@ -265,6 +360,12 @@ final_plot <- (summary_table_plot / (infection_plot + rr_plot)) +
 ### Print the final multi-panel figure
 print(final_plot)
 ```
+
+<p align="center">
+  <strong>Relative Risk Plot</strong><br>
+  <img width="350" src="https://github.com/user-attachments/assets/43cb325f-e81f-4dd9-a074-59db2245f2dd">
+</p>
+
 
 ### Save rr_final to a CSV file
 ```
