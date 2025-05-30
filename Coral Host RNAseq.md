@@ -1719,7 +1719,8 @@ head(rld_grouped_with_entry)
 write.csv(rld_grouped_with_entry, "LS_ProteinName_Orthogroup_Heatmap_DataResults.csv", row.names = FALSE)
 
 ```
-[LS_ProteinName_Orthogroup_Heatmap.pdf](https://github.com/user-attachments/files/20524638/LS_ProteinName_Orthogroup_Heatmap.pdf)
+[LS_ProteinName_Orthogroup_Heatmap.pdf](https://github.com/user-attachments/files/20524719/LS_ProteinName_Orthogroup_Heatmap.pdf)
+
 
 
 # WGCNA
