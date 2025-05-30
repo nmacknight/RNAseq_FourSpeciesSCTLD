@@ -1,6 +1,9 @@
 
 # Coral Orthogroup RNAseq Analysis
 
+> [!WARNING]
+> This Github page is a work in progress. All of the current code is valid, however there is more to be added!
+
 ## Research Questions:
 
 ### 1. What is the proximal molecular mechanism that triggers Stony Coral Tissue Losss Disease? 
@@ -1716,8 +1719,8 @@ head(rld_grouped_with_entry)
 write.csv(rld_grouped_with_entry, "LS_ProteinName_Orthogroup_Heatmap_DataResults.csv", row.names = FALSE)
 
 ```
+[LS_ProteinName_Orthogroup_Heatmap.pdf](https://github.com/user-attachments/files/20524638/LS_ProteinName_Orthogroup_Heatmap.pdf)
 
-[LS_ProteinName_Orthogroup_Heatmap.pdf](https://github.com/user-attachments/files/20524501/LS_ProteinName_Orthogroup_Heatmap.pdf)
 
 # WGCNA
 ```{r, fig.width=14, fig.height=6}
