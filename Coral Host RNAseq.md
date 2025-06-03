@@ -1933,4 +1933,587 @@ labeledHeatmap(Matrix = module.trait.correlation,
 
 ```
 
-![image](https://github.com/user-attachments/assets/64965d75-34ed-4e03-9fb1-6c27c1747982)
+![image](https://github.com/user-attachments/assets/4751d05c-6690-4ecc-a563-fe219c9243ae)
+
+
+# Bact_ME_CellvibrionalesFiltered_brown - red Module
+```{r}
+
+# Target Gene Identification
+'''
+You can use the gene significance along with the genes intramodular connectivity to identify potential target genes associated with a particular trait of interest. For this analysis weight will be the clinical trait.
+
+Connectivity - how connected a speficic node is in the network (how many nodes have high correlation with that node). High connectivity indicates a hub gene (central to many nodes). Whole Network connectivity - a measure for how well the node is connected throughout the entire system Intramodular connectivity - a measure for how well the node is connected within its assigned module. Also an indicator for how well that node belongs to its module. This is also known as module membership.
+
+The module membership/intramodular connectivity is calculated as the correlation of the eigengene and the gene expression profile. This quantifies the similarity of all genes on the array to every module.
+'''
+# Define variable Bact_ME_CellvibrionalesFiltered_brown containing the Bact_ME_CellvibrionalesFiltered_brown column of datTrait
+Bact_ME_CellvibrionalesFiltered_brown = as.data.frame(datTraits$Bact_ME_CellvibrionalesFiltered_brown)
+names(Bact_ME_CellvibrionalesFiltered_brown) = "Bact_ME_CellvibrionalesFiltered_brown"
+
+modNames = substring(names(mergedMEs), 3) #extract module names
+
+#Calculate the module membership and the associated p-values
+geneModuleMembership = as.data.frame(cor(expression.data, mergedMEs, use = "p"))
+MMPvalue = as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamples))
+names(geneModuleMembership) = paste("MM", modNames, sep="")
+names(MMPvalue) = paste("p.MM", modNames, sep="")
+
+#Calculate the gene significance and associated p-values
+geneTraitSignificance = as.data.frame(cor(expression.data, Bact_ME_CellvibrionalesFiltered_brown, use = "p"))
+GSPvalue = as.data.frame(corPvalueStudent(as.matrix(geneTraitSignificance), nSamples))
+names(geneTraitSignificance) = paste("GS.", names(Bact_ME_CellvibrionalesFiltered_brown), sep="")
+names(GSPvalue) = paste("p.GS.", names(Bact_ME_CellvibrionalesFiltered_brown), sep="")
+head(GSPvalue)
+
+# Using the gene significance you can identify genes that have a high significance for Bact_ME_CellvibrionalesFiltered_brown Using the module membership measures you can identify genes with high module membership in interesting modules.
+
+# As an example, you can look at the red module as it has the highest significant association with weight (.59).
+#Plot a scatter plot of gene significance vs. module membership in the red module.
+
+par(mar=c(1,1,1,1))
+module = "red"
+column = match(module, modNames)
+moduleGenes = mergedColors==module
+verboseScatterplot(abs(geneModuleMembership[moduleGenes,column]),
+abs(geneTraitSignificance[moduleGenes,1]),
+xlab = paste("Module Membership in", module, "module"),
+ylab = "Gene significance for SCTLD Bact_ME_CellvibrionalesFiltered_brown",
+main = paste("Module membership vs. gene significance\n"),
+cex.main = 1.2, cex.lab = 1.2, cex.axis = 1.2, col = module)
+
+'''
+The red gene significance and module membership have a positive correlation of .73 with a very significant p-value. This indicates that the genes that are highly significantly associated with the trait (high gene significance) are also the genes that are the most connected within their module (high module membership). Therefore genes in the red module could be potential target genes when looking at Disease Bact_ME_CellvibrionalesFiltered_brown.
+'''
+```
+### Get a list of genes correlated to our trait of interest
+```{r}
+#Summary output of network analysis results
+
+names(expression.data)
+names(expression.data)[mergedColors=="red"]
+
+all_species_annot
+dim(all_species_annot)
+names(all_species_annot)
+probes = names(expression.data)[mergedColors=="red"]
+probes2annot = match(probes, all_species_annot$Orthogroup)
+# The following is the number or probes without annotation:
+sum(is.na(probes2annot))
+# Should return 0. It Doesnt. lol. Good luck.
+
+# Create the starting data frame
+geneInfo0 = data.frame(
+  Orthogroup = probes,
+  geneSymbol = all_species_annot$`Protein names`[probes2annot],
+  LocusLinkID = all_species_annot$Entry[probes2annot],
+  moduleColor = (ModuleColors[moduleGenes]),
+  GS.Bact_ME_CellvibrionalesFiltered_brown = geneTraitSignificance[moduleGenes, 1],
+  p.GS.Bact_ME_CellvibrionalesFiltered_brown = GSPvalue[moduleGenes, 1]
+)
+
+# Order modules by their significance with Bact_ME_CellvibrionalesFiltered_brown
+modOrder = order(-abs(cor(MEs, Bact_ME_CellvibrionalesFiltered_brown, use = "p")))
+
+# Loop through modules and append membership and p-values
+for (mod in 1:ncol(geneModuleMembership)) {
+  oldNames = names(geneInfo0)
+  
+  # Append module membership and its p-value
+  geneInfo0 = data.frame(
+    geneInfo0,
+    MM = geneModuleMembership[moduleGenes, modOrder[mod]],
+    pMM = MMPvalue[moduleGenes, modOrder[mod]]
+  )
+  
+  # Rename new columns with module names
+  names(geneInfo0) = c(
+    oldNames,
+    paste("MM.", modNames[modOrder[mod]], sep = ""),
+    paste("p.MM.", modNames[modOrder[mod]], sep = "")
+  )
+}
+
+# Order the genes in the geneInfo variable first by module color, then by geneTraitSignificance
+geneOrder = order(geneInfo0$moduleColor, -abs(geneInfo0$GS.Bact_ME_CellvibrionalesFiltered_brown));
+geneInfo = geneInfo0[geneOrder, ]
+
+write.csv(geneInfo, file = "geneInfo_redModule_HV_Bact_ME_CellvibrionalesFiltered_brown.csv")
+
+geneInfo$geneSymbol
+```
+
+### Functional Redundancy
+
+> These next three code chunks will extract the genes that are signficantly correlated to traits of interest (our bacteria from 16s ancombc2 that sig increased in disease treated coral). We will identify the genes that are the most frequently correlated to these bacteria, identify the bacteria they are correlated to and then finally include the GS values which tells us if that correlation is positive or negative between a specific gene and specific bacteria.
+>
+> ```{r, fig.height=16, fig.width=12}
+# Load libraries
+library(WGCNA)
+library(dplyr)
+library(ggplot2)
+
+# ---- INPUTS ----
+traitList <- c("JTB23_f87fd1fab019a118b3a6505944739d22_JTB23",
+               "Verrucomicrobiales_99810b14f7cf45a9a4b2ddca790e5519_Verrucomicrobiales",
+               "Rhodobacterales_48a6a0e363dfb3823afdb092a0bb834d_Rhodobacterales",
+               "Cellvibrionales_bb2b2e03048bf07414f3dfb6a85ca835_Cellvibrionales",
+               "Vibrionales_d0c7ebb307c0dae2345e684d9904b117_Vibrionales",
+               "Peptostreptococcales.Tissierellales_1219316521169aa7d8fa7e220ffeb483_Peptostreptococcales.Tissierellales",
+               "Desulfovibrionales_e9590b36781b69df7b2f7958c8003724_Desulfovibrionales",
+               "Campylobacterales_07420998b15f4c1a118e96daa30c2f18_Campylobacterales",
+               "Bacteroidales_f5f370a81cdaa64e8fd99723045ebe33_Bacteroidales",
+               "Francisellales_f6878fcb75e7a023b6012c9b023c6e35_Francisellales"
+)
+
+# ---- CALCULATE MODULE MEMBERSHIP ----
+modNames <- substring(names(mergedMEs), 3) # Remove 'ME' prefix
+
+geneModuleMembership <- as.data.frame(cor(expression.data, mergedMEs, use = "p"))
+MMPvalue <- as.data.frame(corPvalueStudent(as.matrix(geneModuleMembership), nSamples))
+names(geneModuleMembership) <- paste("MM", modNames, sep = "")
+names(MMPvalue) <- paste("p.MM", modNames, sep = "")
+
+# ---- CALCULATE GENE SIGNIFICANCE TO BACTERIA ----
+bacteria_matrix <- datTraits[, traitList]
+geneTraitSignificance <- as.data.frame(cor(expression.data, bacteria_matrix, use = "p"))
+GSPvalue <- as.data.frame(corPvalueStudent(as.matrix(geneTraitSignificance), nSamples))
+names(geneTraitSignificance) <- paste("GS.", traitList, sep = "")
+names(GSPvalue) <- paste("p.GS.", traitList, sep = "")
+
+# ---- BUILD GENE INFO TABLE BY MODULE ----
+all_geneInfo <- list()
+
+# Define full column structure to standardize
+trait_cols <- unlist(lapply(traitList, function(trait) c(paste0("GS.", trait), paste0("p.GS.", trait))))
+mm_cols <- unlist(lapply(modNames, function(mod) c(paste0("MM.", mod), paste0("p.MM.", mod))))
+full_colnames <- c("Orthogroup", "geneSymbol", "LocusLinkID", "moduleColor", trait_cols, mm_cols)
+
+# Define empty list to hold gene info tables
+all_geneInfo <- list()
+
+for (mod in modNames) {
+  cat("Processing module:", mod, "\n")
+  
+  moduleGenes <- mergedColors == mod
+  probes <- names(expression.data)[moduleGenes]
+  probes2annot <- match(probes, all_species_annot$Orthogroup)
+
+  geneInfo0 <- data.frame(
+    Orthogroup = probes,
+    geneSymbol = all_species_annot$`Protein names`[probes2annot],
+    LocusLinkID = all_species_annot$Entry[probes2annot],
+    moduleColor = mod,
+    stringsAsFactors = FALSE
+  )
+
+  # Add gene significance and p-value columns
+  for (i in seq_along(traitList)) {
+    trait <- traitList[i]
+    gs_col <- paste0("GS.", trait)
+    pgs_col <- paste0("p.GS.", trait)
+
+    geneInfo0[[gs_col]] <- geneTraitSignificance[moduleGenes, i]
+    geneInfo0[[pgs_col]] <- GSPvalue[moduleGenes, i]
+  }
+
+  # Add module membership only for *this* module
+  mm_col <- paste0("MM.", mod)
+  pmm_col <- paste0("p.MM.", mod)
+  geneInfo0[[mm_col]] <- geneModuleMembership[moduleGenes, mm_col]
+  geneInfo0[[pmm_col]] <- MMPvalue[moduleGenes, pmm_col]
+
+  # Store this table
+  all_geneInfo[[mod]] <- geneInfo0
+}
+
+# ---- FINAL GENE INFO TABLE ----
+final_geneInfo <- do.call(rbind, all_geneInfo)
+
+# Optional: Save to CSV
+# write.csv(final_geneInfo, "geneInfo_correlated_to_bacteria.csv", row.names = FALSE)
+
+# ---- FIND SIGNIFICANT CORRELATIONS TO BACTERIA (p < 0.1) ----
+library(tidyr)
+library(dplyr)
+
+sig_genes_long <- final_geneInfo %>%
+  select(Orthogroup, geneSymbol, starts_with("GS."), starts_with("p.GS.")) %>%
+  pivot_longer(
+    cols = starts_with("p.GS."),
+    names_to = "Trait",
+    values_to = "p_value"
+  ) %>%
+  mutate(Trait = gsub("p.GS.", "", Trait)) %>%
+  filter(p_value < 0.1)
+
+# ---- FREQUENCY TABLE OF SIGNIFICANT GENE APPEARANCES ----
+freq_table <- sig_genes_long %>%
+  group_by(geneSymbol) %>%
+  summarise(Frequency = n()) %>%
+  arrange(desc(Frequency)) %>%
+  filter(!is.na(geneSymbol))
+
+# ---- PLOT TOP FUNCTIONALLY REDUNDANT GENES ----
+library(ggplot2)
+ggplot(freq_table[1:100, ], aes(x = reorder(geneSymbol, Frequency), y = Frequency)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Most Frequently Correlated Genes Across Bacteria",
+       x = "Protein Name", y = "Count of Significant Correlations")
+
+freq_table[1:100, ]$geneSymbol
+```
+
+```{r}
+# ---- FIND SIGNIFICANT CORRELATIONS TO BACTERIA (p < 0.1) ----
+library(tidyr)
+library(dplyr)
+
+# Pivot to long format, filter for significant correlations (p < 0.1)
+sig_genes_long <- final_geneInfo %>%
+  select(Orthogroup, geneSymbol, starts_with("GS."), starts_with("p.GS.")) %>%
+  pivot_longer(cols = starts_with("p.GS."),
+               names_to = "Trait",
+               values_to = "p_value") %>%
+  mutate(Trait = gsub("p.GS.", "", Trait)) %>%
+  filter(p_value < 0.1)
+
+# Attach GO terms and Entry ID
+sig_genes_long <- sig_genes_long %>%
+  left_join(all_species_annot %>%
+              select(Orthogroup, Entry, `Gene ontology IDs`),
+            by = "Orthogroup")
+
+# ---- CREATE TABLE OF GENES AND THEIR CORRELATED BACTERIA ----
+# This will show each significant gene–bacteria correlation
+sig_gene_bacteria_table <- sig_genes_long %>%
+  select(geneSymbol, Trait, Entry, `Gene ontology IDs`) %>%
+  distinct() %>%
+  arrange(geneSymbol)
+
+# Optional: Save table for GOMWU
+# write.table(sig_gene_bacteria_table, "sig_gene_bacteria_GO.tsv", sep = "\t", row.names = FALSE, quote = FALSE)
+
+# ---- PLOT GENE-BY-BACTERIA COUNTS (instead of just frequency) ----
+# This gives number of *bacteria* traits each gene was significantly correlated with
+freq_table <- sig_gene_bacteria_table %>%
+  group_by(geneSymbol) %>%
+  summarise(Significant_Bacteria = paste(unique(Trait), collapse = ", "),
+            Count = n()) %>%
+  arrange(desc(Count)) %>%
+  filter(!is.na(geneSymbol))
+
+# ---- PLOT ----
+ggplot(freq_table[1:100, ], aes(x = reorder(geneSymbol, Count), y = Count)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Top Genes Correlated with Multiple Bacteria",
+       x = "Protein Name", y = "Number of Significant Bacterial Correlations")
+
+# Output table
+head(freq_table, 20)
+
+
+write.csv(freq_table, file="Host_HV_freqtabletoPathogens.csv")
+
+```
+The first few rows of what freq_table looks like:
+![image](https://github.com/user-attachments/assets/32a2899d-6515-4c89-a2a3-283a7a83f049)
+
+
+### Include GS values
+```{r}
+# ---- LOAD LIBRARIES ----
+library(dplyr)
+library(tidyr)
+
+# ---- STEP 1: Filter for Significant Correlations ----
+gs_sig_long <- final_geneInfo %>%
+  select(geneSymbol, starts_with("GS."), starts_with("p.GS.")) %>%
+  pivot_longer(cols = starts_with("p.GS."),
+               names_to = "Trait",
+               values_to = "p_value") %>%
+  mutate(Trait = gsub("p.GS.", "", Trait)) %>%
+  filter(p_value < 0.1)
+
+# Attach GS values corresponding to each Trait
+gs_sig_long <- gs_sig_long %>%
+  rowwise() %>%
+  mutate(GS_value = final_geneInfo[[paste0("GS.", Trait)]][match(geneSymbol, final_geneInfo$geneSymbol)]) %>%
+  ungroup()
+
+# Remove potential duplicates (if any)
+gs_sig_long_clean <- gs_sig_long %>%
+  distinct(geneSymbol, Trait, GS_value)
+
+# ---- STEP 2: Pivot to Wide Format ----
+sig_gs_wide <- gs_sig_long_clean %>%
+  pivot_wider(names_from = Trait, values_from = GS_value)
+
+# ---- STEP 3: Add Frequency Column ----
+gene_freq <- gs_sig_long_clean %>%
+  group_by(geneSymbol) %>%
+  summarise(Frequency = n(), .groups = "drop")
+
+# ---- STEP 4: Merge and Rank ----
+sig_gs_wide_ranked <- gene_freq %>%
+  left_join(sig_gs_wide, by = "geneSymbol") %>%
+  arrange(desc(Frequency))
+
+# View top rows
+sig_gs_wide_ranked
+
+
+# ---- Optional: Save ----
+#write.csv(sig_gs_wide_ranked, "Host_HV_freqtabletoPathogens_GS.csv")
+
+```
+The first few rows of what sig_gs_wide_ranked looks like:
+![image](https://github.com/user-attachments/assets/52386ff7-5270-402a-a056-da3bf8caa604)
+
+
+## WGCNA - LS_metadata
+```{r, fig.width=14, fig.height=6}
+#install.packages('BiocManager')
+#library(BiocManager)
+#BiocManager::install('WGCNA')
+#BiocManager::install('flashClust')
+
+library(WGCNA)
+library(flashClust)
+library(curl)
+
+head(LS_metadata)
+
+# Retaining only Expression data
+expression.data <- LS_metadata[,12:length(LS_metadata)] #removing variables not holding expression data
+row.names(expression.data) <- LS_metadata[,1]
+names(expression.data)
+
+
+# Identifying Good Genes
+gsg <-goodSamplesGenes(expression.data)
+summary(gsg)
+
+#If the allOK object returns true, which it does in this case, there are no outliers present. If it doesn’t return true, we need to filter out the outliers manually using the following code --> See "https://fuzzyatelin.github.io/bioanth-stats/module-F21-Group1/module-F21-Group1.html" for WGCNA tutorial.
+gsg$allOK
+
+
+# Another way to identify outliers is to visualize by hierarchical tree
+sampleTree <- hclust(dist(expression.data), method = "average") #Clustering samples based on distance 
+
+#Setting the graphical parameters
+par(cex = 0.6);
+par(mar = c(0,4,2,0))
+
+#Plotting the cluster dendrogram
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,
+cex.axis = 1.5, cex.main = 2)
+
+# You can remove the outlier using a cutree function.
+#Setting the graphical parameters
+par(cex = 0.6);
+par(mar = c(0,4,2,0))
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,
+cex.axis = 1.5, cex.main = 2)
+#draw on line to show cutoff height
+abline(h = 50, col = "red"); # 50 is an arbitrart cutoff, however it is visually guided.
+
+# 43 and 57 appear to be outliers and can be removed by setting the cut height to 50 here:
+#cut.sampleTree <- cutreeStatic(sampleTree, cutHeight = 50, minSize = 10) #returns numeric vector
+#Remove outlier
+#expression.data <- expression.data[cut.sampleTree==1, ]
+
+
+#Pick the Soft Threshold Power
+spt <- pickSoftThreshold(expression.data) 
+spt
+
+# Plot the r2 values as a function of the soft thresholds
+#We should be maximizing the r2 value and minimizing mean connectivity.
+par(mar=c(1,1,1,1))
+plot(spt$fitIndices[,1],spt$fitIndices[,2],
+xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
+main = paste("Scale independence"))
+text(spt$fitIndices[,1],spt$fitIndices[,2],col="red")
+abline(h=0.80,col="red")
+
+# Plot the Mean Connectivity (This was not working in rmakrdonw I needed to copy and paiste into the console to work. Odd)
+par(mar=c(1,1,1,1))
+plot(spt$fitIndices[,1], spt$fitIndices[,5],
+xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
+main = paste("Mean connectivity"))
+text(spt$fitIndices[,1], spt$fitIndices[,5], labels= spt$fitIndices[,1],col="red")
+
+#You can determine the soft power threshold should be set to 5 as it is the spt that retains the highest mean connectivity while reaching an r2 value above 0.80.
+#NOTE: the higher the value, the stronger the connection strength will be of highly correlated gene expression profiles and the more devalued low correlations will be.
+
+# Calling the Adjacency Function
+#Now that you have the soft threshold power determined you can call on the adjacency() function of the WGCNA package.
+
+#REMINDER: This function calculates the similarity measurement and transforms the similarity by the adjacency function and generates a weighted network adjacency matrix.
+
+softPower <- 15
+adjacency <- adjacency(expression.data, power = softPower)
+
+# Module Construction
+TOM <- TOMsimilarity(adjacency)
+
+# To convert this matrix into a dissimilarity matrix you can subtract the TOM object from 1.
+TOM.dissimilarity <- 1-TOM
+
+#creating the dendrogram 
+geneTree <- hclust(as.dist(TOM.dissimilarity), method = "average") 
+
+#plotting the dendrogram
+sizeGrWindow(12,9)
+plot(geneTree, xlab="", sub="", main = "Gene clustering on TOM-based dissimilarity", 
+labels = FALSE, hang = 0.04)
+
+# Identify Modules - Set ClusterSize 30 is default.
+Modules <- cutreeDynamic(dendro = geneTree, distM = TOM.dissimilarity, deepSplit = 2, pamRespectsDendro = FALSE, minClusterSize = 10)
+
+table(Modules) #returns a table of the counts of factor levels in an object. In this case how many genes are assigned to each created module. 
+
+#Plot the module assignment under the gene dendrogram for visualization.
+ModuleColors <- labels2colors(Modules) #assigns each module number a color
+table(ModuleColors) #returns the counts for each color (aka the number of genes within each module)
+
+#plots the gene dendrogram with the module colors
+plotDendroAndColors(geneTree, ModuleColors,"Module",
+dendroLabels = FALSE, hang = 0.03,
+addGuide = TRUE, guideHang = 0.05,
+main = "Gene dendrogram and module colors")
+
+
+# Module Eigengene Identification
+#A ME (Module Eigengene) is the standardized gene expression profile for a given module.(Summary statistic of Expression)
+#To identify the Module Eigengene you can call on the expression data into the moduleEigengenes() function.
+MElist <- moduleEigengenes(expression.data, colors = ModuleColors) 
+MEs <- MElist$eigengenes 
+head(MEs)
+
+# Module Merging (optional)
+
+#To further condense the clusters (branches) into more meaningful modules you can cluster modules based on pairwise eigengene correlations and merge the modules that have similar expression profiles.
+
+#REMINDER: An eigengene is the gene whose expression is representative of the the majority of genes expressed within a module.
+
+ME.dissimilarity = 1-cor(MElist$eigengenes, use="complete") #Calculate eigengene dissimilarity
+
+#Plot
+METree = hclust(as.dist(ME.dissimilarity), method = "average") #Clustering eigengenes 
+par(mar = c(0,4,2,0)) #seting margin sizes
+par(cex = 0.6);#scaling the graphic
+plot(METree)
+abline(h=.25, col = "red") #a height of .25 corresponds to correlation of .75
+
+
+merge <- mergeCloseModules(expression.data, ModuleColors, cutHeight = .25)
+
+# The merged module colors, assigning one color to each module
+mergedColors = merge$colors
+# Eigengenes of the new merged modules
+mergedMEs = merge$newMEs
+
+# The similar modules are now merged! Let’s compare them with the original modules by creating another dendrogram
+plotDendroAndColors(geneTree, cbind(ModuleColors, mergedColors), 
+c("Original Module", "Merged Module"),
+dendroLabels = FALSE, hang = 0.03,
+addGuide = TRUE, guideHang = 0.05,
+main = "Gene dendrogram and module colors for original and merged modules")
+
+
+# External Trait Matching
+#Once you have constructed the network (the adjacency matrix) and divided it into meaningful modules, you can begin to relate the network to external traits.
+
+#Start by reading in Trait Data Table
+#allTraits <- read.csv("~/Desktop/Microbial Metatranscriptomics/R/MetaData_WGCNA.csv") # I took the file MetaData.csv and converted some of the categorical phenotype data into continuous data and added relative risk and disease prevalence. We can also add bacteria abundances, bacteria gene expression, and algal gene expression in time.
+
+# Combine module eigengenes with traits
+#allTraits <- read.csv("~/Desktop/Microbial Metatranscriptomics/R/MetaData_WGCNA_ME.csv")
+# Load metadata and remove first two columns (assumed to be unnamed row numbers or irrelevant columns)
+#allTraits <- read.csv("~/Desktop/Microbial Metatranscriptomics/R/MetaData_WGCNA_ME_Bac16s_Net.csv")
+allTraits <- read.csv("~/Desktop/Microbial Metatranscriptomics/R/MetaData_WGCNA_ME_Bac16s_Net_5.19.csv")
+
+
+# Keep SampleID and all trait columns
+#allTraits <- allTraits[, -c(1)]  # You can remove this line if SampleID is not duplicated or has been moved up
+
+# Extract SampleIDs from expression data to ensure matching
+Samples <- rownames(expression.data)
+
+# Make sure SampleID column exists in allTraits (sometimes it's rownames instead)
+if (!"SampleID" %in% colnames(allTraits)) {
+  allTraits <- allTraits %>% rownames_to_column("SampleID")
+}
+
+# Keep only the traits for matched samples (in expression data)
+datTraits <- allTraits %>% filter(SampleID %in% Samples)
+rownames(datTraits) <- datTraits$SampleID
+
+# Add SampleID column to mergedMEs if it's not already there
+if (!"SampleID" %in% colnames(mergedMEs)) {
+  mergedMEs <- mergedMEs %>% rownames_to_column("SampleID")
+}
+
+# Perform clean merge
+merged_data <- mergedMEs %>%
+  left_join(datTraits, by = "SampleID")
+
+
+# Remove NAs caused by missing eigengenes
+merged_data_clean <- merged_data
+#merged_data_clean <- na.omit(merged_data)
+
+# Separate back into matrices
+mergedMEs_clean <- merged_data_clean %>% select(starts_with("ME")) %>% as.data.frame()
+datTraits_clean <- merged_data_clean %>% select(-SampleID, -starts_with("ME")) %>% as.data.frame()
+
+# Run correlations
+nSamples <- nrow(mergedMEs_clean)
+module.trait.correlation <- cor(mergedMEs_clean, datTraits_clean, use = "p")
+module.trait.Pvalue <- corPvalueStudent(module.trait.correlation, nSamples)
+
+# Prepare text matrix for heatmap
+textMatrix <- paste(signif(module.trait.correlation, 2), "\n(",
+                    signif(module.trait.Pvalue, 1), ")", sep = "")
+dim(textMatrix) <- dim(module.trait.correlation)
+
+# Plot heatmap
+#par(mar = c(15, 12, 0.1, 5))
+labeledHeatmap(Matrix = module.trait.correlation,
+               xLabels = names(datTraits_clean),
+               yLabels = names(mergedMEs_clean),
+               ySymbols = names(mergedMEs_clean),
+               colorLabels = FALSE,
+               colors = blueWhiteRed(50),
+               textMatrix = textMatrix,
+               setStdMargins = FALSE,
+               cex.text = 0.8,
+               zlim = c(-1,1),
+               main = paste("Lineage-Specific Host Module-trait relationships"))
+
+
+pdf("Host_LS_WGCNAHeatmap.pdf", width = 18, height = 8)
+labeledHeatmap(Matrix = module.trait.correlation,
+               xLabels = names(datTraits_clean),
+               yLabels = names(mergedMEs_clean),
+               ySymbols = names(mergedMEs_clean),
+               colorLabels = FALSE,
+               colors = blueWhiteRed(50),
+               textMatrix = textMatrix,
+               setStdMargins = FALSE,
+               cex.text = 0.8,
+               zlim = c(-1,1),
+               main = paste("Lineage-Specific Host Module-trait relationships"))
+dev.off()
+
+```
+
+![image](https://github.com/user-attachments/assets/e3cccabb-7d1c-4010-b436-3f69a0b4dc47)
+
+
