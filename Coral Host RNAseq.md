@@ -1,3 +1,8 @@
+<div align="center">
+  <img width="75" style="opacity: 0.8; margin: 0 10px;" src="https://github.com/user-attachments/assets/aba7fade-7367-4282-ab30-92096ea1afa8" alt="image" />
+  <img width="150" style="margin: 0 10px;" src="https://github.com/user-attachments/assets/b17ae489-cb10-46f0-992e-d436cc4ac872" alt="image" />
+  <img width="75" style="opacity: 0.2; margin: 0 10px;" src="https://github.com/user-attachments/assets/c1ffc07b-a4b2-4769-95d4-f6cc1b1e2d74" alt="image" />
+</div>
 
 # Coral Orthogroup RNAseq Analysis
 
